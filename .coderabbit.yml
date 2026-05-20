@@ -6,34 +6,35 @@ reviews:
   auto_approve_small_prs: false
   review_status: true
   auto_label: true
-  max_files_to_review: 120
 
-rules:
-  - type: pattern
-    pattern: |
-      ^(build|\.dart_tool|pubspec\.lock|\.flutter-plugins-dependencies|\.metadata|\.DS_Store)
-    exclude: true
-  - type: pattern
-    pattern: |
-      ^(android|ios|macos|web)/
-    exclude: true
-  - type: pattern
-    pattern: |
-      ^assets/
-    exclude: true
-  - type: pattern
-    pattern: |
-      ^test/|_test\.dart$
-    exclude: true
-  - type: pattern
-    pattern: |
-      ^(docs|\.github/workflows)|\.md$|\.env\.example|\.fvmrc|devtools_options\.yaml|analysis_options\.yaml
-    exclude: true
-  - type: pattern
-    pattern: |
-      (\.freezed\.dart|\.g\.dart|\.config\.dart|\.part\.dart|generated_|l10n/)
-    exclude: true
-  - type: pattern
-    pattern: |
-      ^lib/features/(community/presentation/view|ecommerce/presentation/widgets/buy_pet|store_profile|my_pets/presentation/widgets)/
-    exclude: true
+exclude:
+  - build/
+  - .dart_tool/
+  - pubspec.lock
+  - .flutter-plugins-dependencies
+  - .metadata
+  - .DS_Store
+  - "**/*.freezed.dart"
+  - "**/*.g.dart"
+  - "**/*.config.dart"
+  - "**/*.part.dart"
+  - android/
+  - ios/
+  - macos/
+  - web/
+  - assets/
+  - test/
+  - "**/*_test.dart"
+  - docs/
+  - "**/*.md"
+  - .env.example
+  - .fvmrc
+  - devtools_options.yaml
+  - analysis_options.yaml
+  - .github/workflows/
+  - lib/core/localization/generated_*
+  - lib/l10n/
+  - lib/features/community/presentation/view/**
+  - lib/features/ecommerce/presentation/widgets/buy_pet/**
+  - lib/features/store_profile/**
+  - lib/features/my_pets/presentation/widgets/**
