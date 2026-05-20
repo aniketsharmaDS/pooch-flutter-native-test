@@ -1,40 +1,42 @@
 reviews:
   request_changes: false
+
   auto_review:
     enabled: true
     drafts: false
+
   auto_approve_small_prs: false
   review_status: true
   auto_label: true
 
-exclude:
-  - build/
-  - .dart_tool/
-  - pubspec.lock
-  - .flutter-plugins-dependencies
-  - .metadata
-  - .DS_Store
-  - "**/*.freezed.dart"
-  - "**/*.g.dart"
-  - "**/*.config.dart"
-  - "**/*.part.dart"
-  - android/
-  - ios/
-  - macos/
-  - web/
-  - assets/
-  - test/
-  - "**/*_test.dart"
-  - docs/
-  - "**/*.md"
-  - .env.example
-  - .fvmrc
-  - devtools_options.yaml
-  - analysis_options.yaml
-  - .github/workflows/
-  - lib/core/localization/generated_*
-  - lib/l10n/
-  - lib/features/community/presentation/view/**
-  - lib/features/ecommerce/presentation/widgets/buy_pet/**
-  - lib/features/store_profile/**
-  - lib/features/my_pets/presentation/widgets/**
+path_filters:
+  - "!build/**"
+  - "!.dart_tool/**"
+  - "!pubspec.lock"
+  - "!.flutter-plugins-dependencies"
+  - "!.metadata"
+  - "!.DS_Store"
+  - "!**/*.freezed.dart"
+  - "!**/*.g.dart"
+  - "!**/*.config.dart"
+  - "!**/*.part.dart"
+  - "!android/**"
+  - "!ios/**"
+  - "!macos/**"
+  - "!web/**"
+  - "!assets/**"
+  - "!test/**"
+  - "!**/*_test.dart"
+  - "!docs/**"
+  - "!**/*.md"
+  - "!.env.example"
+  - "!.fvmrc"
+  - "!devtools_options.yaml"
+  - "!analysis_options.yaml"
+  - "!.github/workflows/**"
+  - "!lib/core/localization/generated_*"
+  - "!lib/l10n/**"
+  - "!lib/features/community/presentation/view/**"
+  - "!lib/features/ecommerce/presentation/widgets/buy_pet/**"
+  - "!lib/features/store_profile/**"
+  - "!lib/features/my_pets/presentation/widgets/**"
