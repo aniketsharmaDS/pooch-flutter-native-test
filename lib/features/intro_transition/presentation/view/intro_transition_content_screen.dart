@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:poochcare/core/theme/app_colors.dart';
 import 'package:poochcare/core/theme/app_font_size.dart';
@@ -16,14 +15,12 @@ class IntroTransitionContent extends StatefulWidget {
   final IntroTransitionModel data;
   final VoidCallback onSkip;
   final bool isActive;
-  final String? localFallbackImage;
 
   const IntroTransitionContent({
     super.key,
     required this.data,
     required this.onSkip,
     required this.isActive,
-    this.localFallbackImage,
   });
 
   @override
@@ -92,7 +89,19 @@ class _IntroTransitionContentState extends State<IntroTransitionContent>
               alignment: Alignment.bottomCenter,
               child: FadeTransition(
                 opacity: _imageOpacity,
-                child: _buildMainImage(),
+                child: Image.asset(
+                  widget.data.imagePath,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Container(
+                      height: MediaQuery.of(context).size.height * 0.6,
+                      color: Colors.black12,
+                      alignment: Alignment.center,
+                      child: const Text('Image placeholder'),
+                    );
+                  },
+                ),
               ),
             ),
 
@@ -191,51 +200,6 @@ class _IntroTransitionContentState extends State<IntroTransitionContent>
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildMainImage() {
-    final String path = widget.data.imagePath;
-    final bool isNetwork =
-        path.startsWith('http://') || path.startsWith('https://');
-
-    if (isNetwork) {
-      return Image(
-        image: CachedNetworkImageProvider(path),
-        width: double.infinity,
-        fit: BoxFit.cover,
-        errorBuilder: (context, error, stackTrace) {
-          final String fallback =
-              widget.localFallbackImage ?? widget.data.imagePath;
-          return Image.asset(
-            fallback,
-            width: double.infinity,
-            fit: BoxFit.cover,
-            errorBuilder: (context, error, stackTrace) {
-              return Container(
-                height: MediaQuery.of(context).size.height * 0.6,
-                color: Colors.black12,
-                alignment: Alignment.center,
-                child: const Text('Image placeholder'),
-              );
-            },
-          );
-        },
-      );
-    }
-
-    return Image.asset(
-      path,
-      width: double.infinity,
-      fit: BoxFit.cover,
-      errorBuilder: (context, error, stackTrace) {
-        return Container(
-          height: MediaQuery.of(context).size.height * 0.6,
-          color: Colors.black12,
-          alignment: Alignment.center,
-          child: const Text('Image placeholder'),
-        );
-      },
     );
   }
 }

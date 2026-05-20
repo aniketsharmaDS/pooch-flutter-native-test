@@ -20,46 +20,51 @@ class AccessorySummaryItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            clipBehavior: Clip.hardEdge,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(AppRadiusSize.r10),
-            ),
-            width: 91.w,
-            height: 77.h,
-            child: AppImageFrame(
+      child: Container(
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.s16,
+        ).copyWith(top: AppSpacing.s14),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              clipBehavior: Clip.hardEdge,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(AppRadiusSize.r10),
+              ),
               width: 91.w,
               height: 77.h,
-              imageUrl: imageUrl,
-              // fit: BoxFit.contain,
+              child: AppImageFrame(
+                width: 91.w,
+                height: 77.h,
+                imageUrl: imageUrl,
+                // fit: BoxFit.contain,
+              ),
             ),
-          ),
-          const SizedBox(width: AppSpacing.s10),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                AppText.h4(
-                  'Virtual Accessory',
-                  fontSize: AppFontSize.fs14,
-                  maxLines: 2,
-                ),
-                const SizedBox(height: AppSpacing.s5),
+            const SizedBox(width: AppSpacing.s10),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  AppText.h4(
+                    'Virtual Accessory',
+                    fontSize: AppFontSize.fs14,
+                    maxLines: 2,
+                  ),
+                  const SizedBox(height: AppSpacing.s5),
 
-                AppText.h4(
-                  accessoryCategory,
-                  fontSize: AppFontSize.fs10,
-                  color: AppColors.p4_300,
-                ),
-                const SizedBox(height: AppSpacing.s14),
-                AppText.h1(price, fontSize: AppFontSize.fs14, maxLines: 2),
-              ],
+                  AppText.h4(
+                    accessoryCategory,
+                    fontSize: AppFontSize.fs10,
+                    color: AppColors.p4_300,
+                  ),
+                  const SizedBox(height: AppSpacing.s14),
+                  AppText.h1(price, fontSize: AppFontSize.fs14, maxLines: 2),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

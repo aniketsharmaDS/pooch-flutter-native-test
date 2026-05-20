@@ -45,9 +45,20 @@ class StateWrapper extends StatelessWidget {
     // 3. Handle Loading & Success States
     // We use a Stack so the loader appears over the child/shimmer
     // without changing the widget tree's height.
-    return isLoading
-        ? const Center(child: CircularProgressIndicator.adaptive())
-        : child;
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        // The actual content
+        Opacity(
+          opacity: isLoading ? 0.3 : 1.0,
+          child: AbsorbPointer(absorbing: isLoading, child: child),
+        ),
+
+        // The Loader
+        if (isLoading)
+          const Center(child: CircularProgressIndicator.adaptive()),
+      ],
+    );
   }
 
   Widget _buildCenteredMessage({

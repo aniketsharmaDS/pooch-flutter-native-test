@@ -80,18 +80,17 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  if (leaderboardLen >= 2) ...[
+                                  if (leaderboardLen >= 1) ...[
                                     RankingBar(
                                       userImage:
-                                          leaderboardItems[1].profilePicture,
-                                      userName: leaderboardItems[1].name,
+                                          leaderboardItems.first.profilePicture,
+                                      userName: leaderboardItems.first.name,
                                       userPoints:
-                                          '${leaderboardItems[1].points} pt',
+                                          '${leaderboardItems.first.points} pt',
                                       heigh: 104.h,
-                                      text: leaderboardItems[1].rank
+                                      text: leaderboardItems.first.rank
                                           .toString()
                                           .padLeft(2, '0'),
-
                                       type: SlantType.left,
                                       colors: const [
                                         Color(0xFF188C43),
@@ -101,15 +100,15 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
                                     const SizedBox(width: AppSpacing.s2),
                                   ],
 
-                                  if (leaderboardLen >= 1) ...[
+                                  if (leaderboardLen >= 2) ...[
                                     RankingBar(
                                       userImage:
-                                          leaderboardItems.first.profilePicture,
-                                      userName: leaderboardItems.first.name,
+                                          leaderboardItems[1].profilePicture,
+                                      userName: leaderboardItems[1].name,
                                       userPoints:
-                                          '${leaderboardItems.first.points} pt',
+                                          '${leaderboardItems[1].points} pt',
                                       heigh: 144.h,
-                                      text: leaderboardItems.first.rank
+                                      text: leaderboardItems[1].rank
                                           .toString()
                                           .padLeft(2, '0'),
                                       type: SlantType.both,
@@ -317,7 +316,7 @@ class RankingBar extends StatelessWidget {
         const SizedBox(height: AppSpacing.s2),
         AnimatedContainer(
           duration: const Duration(milliseconds: 200),
-          alignment: Alignment.topCenter,
+          alignment: Alignment.center,
           height: heigh,
           width: 113.h,
           decoration: BoxDecoration(
@@ -327,8 +326,11 @@ class RankingBar extends StatelessWidget {
               end: AlignmentGeometry.bottomCenter,
             ),
           ),
-          padding: const EdgeInsets.only(top: AppSpacing.s25),
-          child: AppText.displayXL(text, color: AppColors.white),
+          child: AppText.displayXL(
+            text,
+            // fontSize: AppFontSize.fs60,
+            color: AppColors.white,
+          ),
         ),
       ],
     );

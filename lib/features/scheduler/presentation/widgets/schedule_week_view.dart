@@ -5,7 +5,7 @@ import 'package:poochcare/core/widgets/texts/app_text.dart';
 import 'package:poochcare/features/scheduler/domain/ui_models/schedule_item_ui_model.dart';
 // import 'package:poochcare/features/scheduler/presentation/widgets/schedule_week_header.dart';
 
-class ScheduleWeekView extends StatefulWidget {
+class ScheduleWeekView extends StatelessWidget {
   const ScheduleWeekView({
     super.key,
     required this.events,
@@ -26,20 +26,13 @@ class ScheduleWeekView extends StatefulWidget {
   final ValueChanged<CalendarEventData<Object?>>? onEventTap;
   final bool showMonth;
 
-  @override
-  State<ScheduleWeekView> createState() => _ScheduleWeekViewState();
-}
+  EventController<Object?> _buildController() {
+    final controller = EventController<Object?>();
 
-class _ScheduleWeekViewState extends State<ScheduleWeekView> {
-  // EventController<Object?> _buildController() {
-  //   final controller = EventController<Object?>();
+    controller.addAll(events);
 
-  //   controller.addAll(widget.events);
-
-  //   return controller;
-  // }
-
-  late final EventController<Object?> _controller;
+    return controller;
+  }
 
   String _monthName(int month) {
     const months = [
@@ -60,33 +53,8 @@ class _ScheduleWeekViewState extends State<ScheduleWeekView> {
   }
 
   @override
-  void initState() {
-    super.initState();
-
-    _controller = EventController<Object?>();
-
-    _controller.addAll(widget.events);
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-
-    super.dispose();
-  }
-
-  @override
-  void didUpdateWidget(covariant ScheduleWeekView oldWidget) {
-    super.didUpdateWidget(oldWidget);
-
-    _controller.removeWhere((_) => true);
-
-    _controller.addAll(widget.events);
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final controller = _controller;
+    final controller = _buildController();
     // final startOfWeek = selectedDate.subtract(
     //   Duration(days: selectedDate.weekday - 1),
     // );
@@ -110,11 +78,7 @@ class _ScheduleWeekViewState extends State<ScheduleWeekView> {
           // const SizedBox(height: 12),
           Expanded(
             child: WeekView<Object?>(
-              key: ValueKey(
-                '${widget.selectedDate.year}-${widget.selectedDate.month}-${widget.selectedDate.day}',
-              ),
               controller: controller,
-              initialDay: widget.selectedDate,
               weekDayBuilder: (date) {
                 final short = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
                 return SizedBox.expand(
@@ -135,7 +99,7 @@ class _ScheduleWeekViewState extends State<ScheduleWeekView> {
               backgroundColor: Colors.white,
 
               onPageChange: (date, pageIndex) {
-                widget.onPageChange(date);
+                onPageChange(date);
               },
 
               // weekTitleHeight: 0,
@@ -147,7 +111,7 @@ class _ScheduleWeekViewState extends State<ScheduleWeekView> {
 
               ///  remove built-in weekday row
               weekNumberBuilder: (date) {
-                if (!widget.showMonth) return const SizedBox.shrink();
+                if (!showMonth) return const SizedBox.shrink();
                 return Center(
                   child: AppText.bodyM(
                     '${date.year}\n${_monthName(date.month)}',
@@ -169,7 +133,7 @@ class _ScheduleWeekViewState extends State<ScheduleWeekView> {
 
                 return GestureDetector(
                   onTap: () {
-                    widget.onEventTap?.call(event);
+                    onEventTap?.call(event);
                   },
                   child: Align(
                     alignment: Alignment.topCenter,

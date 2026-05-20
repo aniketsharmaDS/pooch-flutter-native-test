@@ -1,5 +1,4 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:poochcare/core/theme/app_font_size.dart';
@@ -253,7 +252,7 @@ class _MonthlyExpenseTrackerViewState extends State<MonthlyExpenseTrackerView> {
 
                         /// VIEW DETAILS BUTTON
                         AppButton(
-                          label: 'common.viewDetails'.tr(),
+                          label: 'View Details',
                           padding: const EdgeInsets.symmetric(
                             horizontal: AppSpacing.s16,
                           ),

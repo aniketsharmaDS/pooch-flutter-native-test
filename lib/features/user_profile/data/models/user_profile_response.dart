@@ -27,7 +27,6 @@ class UserProfileResponse with UserProfileResponseMappable {
     this.isOnboarded = false,
     this.isProfileCompleted = false,
     this.isPetOnboarded = false,
-    this.hasBoughtPet = false,
     this.points = 0,
     this.createdAt = '',
     this.updatedAt = '',
@@ -100,9 +99,6 @@ class UserProfileResponse with UserProfileResponseMappable {
 
   @MappableField(hook: SafeBoolHook())
   final bool isPetOnboarded;
-
-  @MappableField(hook: SafeBoolHook())
-  final bool hasBoughtPet;
 
   @MappableField(hook: SafeIntHook())
   final int points;

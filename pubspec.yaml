@@ -87,7 +87,6 @@ dependencies:
   http: ^1.6.0
   webview_flutter: ^4.13.1
   flutter_pdfview: ^1.4.4
-  fpdart: ^1.2.0
   easy_localization: ^3.0.8
 
 dev_dependencies:
@@ -141,7 +140,6 @@ flutter:
     - assets/images/png/explore/
     - assets/images/png/register/
     - assets/images/png/transitions/
-    - assets/images/png/bcs/
     - assets/lottie/
     - assets/images/png/verify_biometrics/
     - assets/videos/

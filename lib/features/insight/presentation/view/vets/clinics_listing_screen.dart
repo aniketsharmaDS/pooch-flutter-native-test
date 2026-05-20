@@ -309,10 +309,6 @@ class _ClinicsListingScreenState extends State<ClinicsListingScreen> {
             (_activeRequest.city ?? []).isNotEmpty ||
             (_activeRequest.yearsOfService ?? []).isNotEmpty ||
             (_activeRequest.priceRange ?? []).isNotEmpty) {
-          _selectedSpecializations = _activeRequest.specializations ?? [];
-          _selectedPriceRange = _activeRequest.priceRange ?? [];
-          _selectedLocations = _activeRequest.city ?? [];
-          _selectedYearsOfExp = _activeRequest.yearsOfService ?? [];
           setState(() {
             isFilterApplied = true;
           });
@@ -349,31 +345,18 @@ class _ClinicsListingScreenState extends State<ClinicsListingScreen> {
                 },
                 clinicsData: clinicsData,
               ),
-              Stack(
-                children: [
-                  ClinicFilterWidget(
-                    isFilterApplied: isFilterApplied,
-                    initialValues: {
-                      'locations': _selectedLocations.toSet(),
-                      'specializations': _selectedSpecializations.toSet(),
-                      'yearsOfExperience': _selectedYearsOfExp.toSet(),
-                      'priceRange': _selectedPriceRange.toSet(),
-                    },
-                    clinicsData: clinicsData,
-                    onFilterApplied: (value) {
-                      onFilterApply(value);
-                    },
-                  ),
-                  Positioned(
-                    right: 9,
-                    top: 7,
-                    child: Badge(
-                      isLabelVisible: isFilterApplied,
-                      smallSize: 8,
-                      backgroundColor: AppColors.black,
-                    ),
-                  ),
-                ],
+              ClinicFilterWidget(
+                isFilterApplied: isFilterApplied,
+                initialValues: {
+                  'locations': _selectedLocations.toSet(),
+                  'specializations': _selectedSpecializations.toSet(),
+                  'yearsOfExperience': _selectedYearsOfExp.toSet(),
+                  'priceRange': _selectedPriceRange.toSet(),
+                },
+                clinicsData: clinicsData,
+                onFilterApplied: (value) {
+                  onFilterApply(value);
+                },
               ),
             ],
           ),
@@ -486,9 +469,7 @@ class ClinicFilterWidget extends StatelessWidget {
         onFilterApplied(data);
       },
       bgColor: AppColors.white,
-      icon: isFilterApplied
-          ? AppIcons.svg.generic.filterFillter
-          : AppIcons.svg.generic.filter,
+      icon: AppIcons.svg.generic.filter,
       iconSize: 20,
     );
   }

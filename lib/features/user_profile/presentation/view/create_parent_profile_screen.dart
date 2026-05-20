@@ -9,8 +9,6 @@ import 'package:poochcare/core/services/notification_service.dart';
 import 'package:poochcare/core/services/toast_service.dart';
 import 'package:poochcare/core/store/auth/auth_store_bloc.dart';
 import 'package:poochcare/core/store/auth/auth_store_event.dart';
-import 'package:poochcare/core/store/onboarding/onboarding_journey_store_bloc.dart';
-import 'package:poochcare/core/store/onboarding/onboarding_journey_store_event.dart';
 import 'package:poochcare/core/theme/app_colors.dart';
 import 'package:poochcare/core/theme/app_font_size.dart';
 import 'package:poochcare/core/theme/app_icons.dart';
@@ -98,7 +96,6 @@ class _CreateParentProfileScreenState extends State<CreateParentProfileScreen> {
 
   void _initializeFromAuthStore() {
     final authStore = getIt<AuthStoreBloc>();
-    context.read<UserProfileBloc>().add(const GetParentGroupsEvent());
     final user = authStore.state.user;
 
     final phone = (user?.phone ?? '').trim();
@@ -503,11 +500,6 @@ class _CreateParentProfileScreenState extends State<CreateParentProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final bool isBuyPetJourney = context
-        .select<OnboardingJourneyStoreBloc, bool>(
-          (bloc) => bloc.state.isBuyPet,
-        );
-
     return MultiBlocProvider(
       providers: [
         BlocProvider<UserProfileBloc>.value(
@@ -543,18 +535,6 @@ class _CreateParentProfileScreenState extends State<CreateParentProfileScreen> {
               (element) => element.user?.isOnboarded ?? false,
             );
             if (!context.mounted) {
-              return;
-            }
-            final journeyBloc = context.read<OnboardingJourneyStoreBloc>();
-            if (journeyBloc.state.isBuyPet) {
-              // NAVIGATE first while journey state is still set
-              // AppFlowGuard will see isBuyPetJourney=true and allow the navigation
-              context.router.replaceAll([const HomeRoute()]);
-
-              // THEN clear the journey state after navigation
-              await Future<void>.delayed(const Duration(milliseconds: 200));
-              if (!context.mounted) return;
-              journeyBloc.add(const OnboardingJourneyCleared());
               return;
             }
             // context.read<AuthStoreBloc>().add(const ProfileCompletionUpdated());
@@ -847,26 +827,25 @@ class _CreateParentProfileScreenState extends State<CreateParentProfileScreen> {
                                             },
                                           ),
                                           AppSpacing.s5.hBox,
-                                          if (!isBuyPetJourney)
-                                            Center(
-                                              child: AppButton(
-                                                label: 'Add Co-Parent',
-                                                variant: AppButtonVariant.text,
-                                                size: AppButtonSize.small,
-                                                width: null,
-                                                trailingSvgAsset: AppIcons
-                                                    .svg
-                                                    .generic
-                                                    .chevronRight,
-                                                onPressed: () {
-                                                  InviteBottomSheet.show(
-                                                    context: context,
-                                                    inviteType:
-                                                        InviteType.coparent,
-                                                  );
-                                                },
-                                              ),
+                                          Center(
+                                            child: AppButton(
+                                              label: 'Add Co-Parent',
+                                              variant: AppButtonVariant.text,
+                                              size: AppButtonSize.small,
+                                              width: null,
+                                              trailingSvgAsset: AppIcons
+                                                  .svg
+                                                  .generic
+                                                  .chevronRight,
+                                              onPressed: () {
+                                                InviteBottomSheet.show(
+                                                  context: context,
+                                                  inviteType:
+                                                      InviteType.coparent,
+                                                );
+                                              },
                                             ),
+                                          ),
                                         ],
                                       ),
                                     ),

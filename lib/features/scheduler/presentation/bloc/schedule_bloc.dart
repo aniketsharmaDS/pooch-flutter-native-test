@@ -15,29 +15,20 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
   ScheduleBloc(this._repo)
     : super(
         ScheduleState(
-          // selectedMonth: DateTime.now().month,
+          selectedMonth: DateTime.now().month,
 
-          // selectedYear: DateTime.now().year,
+          selectedYear: DateTime.now().year,
 
-          // selectedDate: DateTime.now(),
-          focusedDate: DateTime.now(),
+          selectedDate: DateTime.now(),
         ),
       ) {
     on<LoadMonthlySchedule>(_onLoadMonthlySchedule);
 
-    // on<ChangeScheduleMonth>(_onChangeMonth);
+    on<ChangeScheduleMonth>(_onChangeMonth);
 
-    // on<ChangeScheduleYear>(_onChangeYear);
+    on<ChangeScheduleYear>(_onChangeYear);
 
-    // on<ChangeSelectedDate>(_onChangeSelectedDate);
-
-    // on<ChangeVisibleMonthYear>(_onChangeVisibleMonthYear);
-
-    // on<ChangeVisibleWeekDate>((event, emit) {
-    //   emit(state.copyWith(visibleWeekDate: event.date));
-    // });
-
-    on<ChangeFocusedDate>(_onChangeFocusedDate);
+    on<ChangeSelectedDate>(_onChangeSelectedDate);
 
     on<CreateReminder>(_onCreateReminder);
 
@@ -48,13 +39,6 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
     on<UpdateEvent>(_onUpdateEvent);
 
     on<DeleteSchedule>(_onDeleteSchedule);
-
-    add(
-      LoadMonthlySchedule(
-        month: state.focusedDate.month,
-        year: state.focusedDate.year,
-      ),
-    );
   }
 
   Future<void> _onLoadMonthlySchedule(
@@ -75,9 +59,9 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
 
           isLoading: false,
 
-          // selectedMonth: event.month,
+          selectedMonth: event.month,
 
-          // selectedYear: event.year,
+          selectedYear: event.year,
         ),
       );
     } catch (e) {
@@ -85,49 +69,49 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
     }
   }
 
-  // Future<void> _onChangeMonth(
-  //   ChangeScheduleMonth event,
-  //   Emitter<ScheduleState> emit,
-  // ) async {
-  //   /// prevent duplicate reload
-  //   if (event.month == state.selectedMonth) {
-  //     return;
-  //   }
+  Future<void> _onChangeMonth(
+    ChangeScheduleMonth event,
+    Emitter<ScheduleState> emit,
+  ) async {
+    /// prevent duplicate reload
+    if (event.month == state.selectedMonth) {
+      return;
+    }
 
-  //   emit(state.copyWith(selectedMonth: event.month));
+    emit(state.copyWith(selectedMonth: event.month));
 
-  //   add(LoadMonthlySchedule(month: event.month, year: state.selectedYear));
-  // }
+    add(LoadMonthlySchedule(month: event.month, year: state.selectedYear));
+  }
 
-  // Future<void> _onChangeYear(
-  //   ChangeScheduleYear event,
-  //   Emitter<ScheduleState> emit,
-  // ) async {
-  //   /// prevent duplicate reload
-  //   if (event.year == state.selectedYear) {
-  //     return;
-  //   }
+  Future<void> _onChangeYear(
+    ChangeScheduleYear event,
+    Emitter<ScheduleState> emit,
+  ) async {
+    /// prevent duplicate reload
+    if (event.year == state.selectedYear) {
+      return;
+    }
 
-  //   final currentDate = state.selectedDate;
+    final currentDate = state.selectedDate;
 
-  //   /// preserve month/day while changing year
-  //   final updatedDate = DateTime(
-  //     event.year,
-  //     currentDate.month,
-  //     currentDate.day,
-  //   );
+    /// preserve month/day while changing year
+    final updatedDate = DateTime(
+      event.year,
+      currentDate.month,
+      currentDate.day,
+    );
 
-  //   emit(state.copyWith(selectedYear: event.year, selectedDate: updatedDate));
+    emit(state.copyWith(selectedYear: event.year, selectedDate: updatedDate));
 
-  //   add(LoadMonthlySchedule(month: updatedDate.month, year: updatedDate.year));
-  // }
+    add(LoadMonthlySchedule(month: updatedDate.month, year: updatedDate.year));
+  }
 
-  // Future<void> _onChangeSelectedDate(
-  //   ChangeSelectedDate event,
-  //   Emitter<ScheduleState> emit,
-  // ) async {
-  //   emit(state.copyWith(selectedDate: event.date));
-  // }
+  Future<void> _onChangeSelectedDate(
+    ChangeSelectedDate event,
+    Emitter<ScheduleState> emit,
+  ) async {
+    emit(state.copyWith(selectedDate: event.date));
+  }
 
   Future<void> _onCreateReminder(
     CreateReminder event,
@@ -150,39 +134,13 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
       /// RELOAD CURRENT MONTH
       add(
         LoadMonthlySchedule(
-          month: state.focusedDate.month,
-          year: state.focusedDate.year,
+          month: state.selectedMonth,
+
+          year: state.selectedYear,
         ),
       );
     } catch (e) {
       emit(state.copyWith(isSubmitting: false, error: e.toString()));
-    }
-  }
-
-  // void _onChangeVisibleMonthYear(
-  //   ChangeVisibleMonthYear event,
-  //   Emitter<ScheduleState> emit,
-  // ) {
-  //   emit(state.copyWith(selectedMonth: event.month, selectedYear: event.year));
-  // }
-
-  Future<void> _onChangeFocusedDate(
-    ChangeFocusedDate event,
-    Emitter<ScheduleState> emit,
-  ) async {
-    // emit(state.copyWith(focusedDate: event.date));
-
-    // add(LoadMonthlySchedule(month: event.date.month, year: event.date.year));
-
-    final previous = state.focusedDate;
-
-    emit(state.copyWith(focusedDate: event.date));
-
-    final monthChanged =
-        previous.month != event.date.month || previous.year != event.date.year;
-
-    if (monthChanged) {
-      add(LoadMonthlySchedule(month: event.date.month, year: event.date.year));
     }
   }
 
@@ -206,8 +164,8 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
       // refresh calendar
       add(
         LoadMonthlySchedule(
-          month: state.focusedDate.month,
-          year: state.focusedDate.year,
+          month: state.selectedMonth,
+          year: state.selectedYear,
         ),
       );
     } catch (e) {
@@ -226,8 +184,8 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
 
       add(
         LoadMonthlySchedule(
-          month: state.focusedDate.month,
-          year: state.focusedDate.year,
+          month: state.selectedMonth,
+          year: state.selectedYear,
         ),
       );
 
@@ -274,8 +232,8 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
 
       add(
         LoadMonthlySchedule(
-          month: state.focusedDate.month,
-          year: state.focusedDate.year,
+          month: state.selectedMonth,
+          year: state.selectedYear,
         ),
       );
     } catch (e) {
@@ -322,8 +280,8 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
 
       add(
         LoadMonthlySchedule(
-          month: state.focusedDate.month,
-          year: state.focusedDate.year,
+          month: state.selectedMonth,
+          year: state.selectedYear,
         ),
       );
     } catch (e) {
@@ -424,10 +382,10 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
     }
 
     final updatedDate = DateTime.tryParse(updatedItem.date);
-    final inFocusedMonth =
+    final inSelectedMonth =
         updatedDate != null &&
-        updatedDate.month == state.focusedDate.month &&
-        updatedDate.year == state.focusedDate.year;
+        updatedDate.month == state.selectedMonth &&
+        updatedDate.year == state.selectedYear;
 
     final updatedDays = <ScheduleDayUIModel>[];
     var inserted = false;
@@ -442,7 +400,7 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
           day.parsedDate.month == updatedDate.month &&
           day.parsedDate.day == updatedDate.day;
 
-      if (sameDay && inFocusedMonth) {
+      if (sameDay && inSelectedMonth) {
         final items = [...filtered, updatedItem]
           ..sort((a, b) => a.startDateTime.compareTo(b.startDateTime));
         updatedDays.add(
@@ -474,7 +432,7 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
       }
     }
 
-    if (inFocusedMonth && !inserted) {
+    if (inSelectedMonth && !inserted) {
       updatedDays.add(
         ScheduleDayUIModel(
           date: updatedItem.date,

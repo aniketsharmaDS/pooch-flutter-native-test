@@ -5,7 +5,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:poochcare/core/services/toast_service.dart';
 import 'package:poochcare/core/theme/app_colors.dart';
-import 'package:poochcare/core/theme/app_font_size.dart';
 import 'package:poochcare/core/theme/app_icons.dart';
 import 'package:poochcare/core/widgets/buttons/app_button.dart';
 import 'package:poochcare/core/widgets/buttons/app_circle_button.dart';
@@ -147,9 +146,10 @@ class _ReasonForCancellationSectionState
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: AppText.h1(
-              'Reason for Cancel',
+              'Reason for Return',
               color: const Color(0xFF260B01),
-              fontSize: AppFontSize.fs16,
+              fontSize: 16.sp,
+              style: const TextStyle(fontWeight: FontWeight.w600),
             ),
           ),
 

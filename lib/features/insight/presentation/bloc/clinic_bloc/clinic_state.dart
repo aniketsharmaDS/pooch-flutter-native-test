@@ -77,7 +77,6 @@ class ClinicState extends Equatable {
     ClinicListResponseModel? popularClinicsData,
     AppointmentDetailsStatus? appointmentDetailsStatus,
     AppointmentApiModel? appointmentDetails,
-    bool clearData = false,
   }) {
     return ClinicState(
       clinicDetailsStatus: clinicDetailsStatus ?? this.clinicDetailsStatus,
@@ -87,7 +86,7 @@ class ClinicState extends Equatable {
       errorMessage: errorMessage,
       successMessage: successMessage,
       clinicDetailsData: clinicDetailsData ?? this.clinicDetailsData,
-      clinicsData: clearData ? null : (clinicsData ?? this.clinicsData),
+      clinicsData: clinicsData,
       findVetForm: findVetForm ?? this.findVetForm,
       clinicPlanStatus: clinicPlanStatus ?? this.clinicPlanStatus,
       clinicPlanResponseData:

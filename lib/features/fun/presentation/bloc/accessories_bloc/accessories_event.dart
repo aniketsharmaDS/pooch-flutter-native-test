@@ -22,14 +22,10 @@ class FetchAccessoriesEvent extends AccessoriesEvent {
 }
 
 class FetchMyAccessoriesEvent extends AccessoriesEvent {
-  const FetchMyAccessoriesEvent();
-}
-
-class SelectAccessoriesItemEvent extends AccessoriesEvent {
-  final String accessoryId;
-
-  const SelectAccessoriesItemEvent({required this.accessoryId});
+  final int? page;
+  final bool isForceRefresh;
+  const FetchMyAccessoriesEvent(this.page, this.isForceRefresh);
 
   @override
-  List<Object?> get props => [accessoryId];
+  List<Object?> get props => [page, isForceRefresh];
 }

@@ -5,8 +5,9 @@ import 'package:poochcare/router/app_router.dart';
 
 @RoutePage()
 class PetAddedSuccessfulTransitionScreen extends StatelessWidget {
+  final VoidCallback? onAddAnotherPet;
 
-  const PetAddedSuccessfulTransitionScreen({super.key});
+  const PetAddedSuccessfulTransitionScreen({super.key, this.onAddAnotherPet});
 
   @override
   Widget build(BuildContext context) {
@@ -17,6 +18,7 @@ class PetAddedSuccessfulTransitionScreen extends StatelessWidget {
       },
       onSecondaryPressed: () {
         context.router.maybePop();
+        onAddAnotherPet?.call();
       },
     );
   }

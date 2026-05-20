@@ -8,7 +8,6 @@ class UserProfileMapper {
     final details = response.profile;
 
     return UserProfile(
-      hasBoughtPet: response.hasBoughtPet,
       id: response.id,
       name: response.name,
       email: response.email,

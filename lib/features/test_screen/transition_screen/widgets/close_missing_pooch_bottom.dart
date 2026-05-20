@@ -6,15 +6,11 @@ import 'package:poochcare/core/widgets/texts/app_text.dart';
 class CloseMissingPoochBottom extends StatelessWidget {
   final VoidCallback? onKeepOpenPressed;
   final VoidCallback? onCloseReportPressed;
-  final bool isPrimaryLoader;
-  final bool isSecondaryLoader;
 
   const CloseMissingPoochBottom({
     super.key,
     this.onKeepOpenPressed,
     this.onCloseReportPressed,
-    this.isPrimaryLoader = false,
-    this.isSecondaryLoader = false,
   });
 
   @override
@@ -31,19 +27,12 @@ class CloseMissingPoochBottom extends StatelessWidget {
         ),
         SizedBox(height: 18.h),
         AppButton(
-          isLoading: isSecondaryLoader,
-          isDisabled: (isPrimaryLoader || isSecondaryLoader),
           label: 'Keep It Open',
           variant: AppButtonVariant.outlined,
           onPressed: onKeepOpenPressed,
         ),
         SizedBox(height: 12.h),
-        AppButton(
-          isLoading: isPrimaryLoader,
-          isDisabled: (isPrimaryLoader || isSecondaryLoader),
-          label: 'Close Report',
-          onPressed: onCloseReportPressed,
-        ),
+        AppButton(label: 'Close Report', onPressed: onCloseReportPressed),
       ],
     );
   }

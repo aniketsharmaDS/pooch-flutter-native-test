@@ -464,7 +464,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                         padding: EdgeInsets.symmetric(
                           horizontal: AppSpacing.s16.w,
                         ),
-                        child: _communityActivityCard(context),
+                        child: _communityActivityCard(),
                       ),
                       AppSpacing.s40.hBox,
                     ],
@@ -762,51 +762,40 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   }
 
   /// ================= COMMUNITY ACTIVITY =================
-  Widget _communityActivityCard(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        context.router.push(
-          MyCommunityHomeRoute(
-            children: [
-              MyPostTabRoute(children: const [MyPostedAllRoute()]),
-            ],
-          ),
-        );
-      },
-      child: AppWaveCard(
-        backgroundColor: const Color(0xffFEF2EF),
-        borderRadius: AppRadiusSize.r16,
-        notchHeight: 25,
-        notchWidth: 20,
-        variant: AppCardNotchVariant.bottomRight,
-        padding: EdgeInsets.symmetric(
-          horizontal: AppSpacing.s16.w,
-          vertical: AppSpacing.s16.h,
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            // Icon
-            AppIcon(AppIcons.svg.community.viewMyCommunityVector),
-            AppSpacing.s12.wBox,
+  Widget _communityActivityCard() {
+    return AppWaveCard(
+      backgroundColor: const Color(0xffFEF2EF),
+      borderRadius: AppRadiusSize.r16,
+      notchHeight: 25,
+      notchWidth: 20,
+      variant: AppCardNotchVariant.bottomRight,
+      padding: EdgeInsets.symmetric(
+        horizontal: AppSpacing.s16.w,
+        vertical: AppSpacing.s16.h,
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          // Icon
+          AppIcon(AppIcons.svg.community.viewMyCommunityVector),
+          AppSpacing.s12.wBox,
 
-            // Text
-            Expanded(
-              child: AppText.h1(
-                'View My Community Activity',
-                fontSize: AppFontSize.fs16,
-                color: AppColors.p4_900,
-              ),
-            ),
-
-            // Right Arrow
-            AppIcon(
-              AppIcons.svg.generic.chevronRight,
-              size: AppIconSize.is14,
+          // Text
+          Expanded(
+            child: AppText.h1(
+              'View My Community Activity',
+              fontSize: AppFontSize.fs16,
               color: AppColors.p4_900,
             ),
-          ],
-        ),
+          ),
+
+          // Right Arrow
+          AppIcon(
+            AppIcons.svg.generic.chevronRight,
+            size: AppIconSize.is14,
+            color: AppColors.p4_900,
+          ),
+        ],
       ),
     );
   }

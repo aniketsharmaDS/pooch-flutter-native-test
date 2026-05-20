@@ -2,10 +2,7 @@ import 'dart:ui' as ui;
 
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
-import 'package:poochcare/core/store/onboarding/onboarding_journey_store_bloc.dart';
-import 'package:poochcare/core/store/onboarding/onboarding_journey_store_state.dart';
 import 'package:poochcare/core/theme/app_icons.dart';
 import 'package:poochcare/core/theme/app_spacing.dart';
 import 'package:poochcare/core/widgets/buttons/app_button.dart';
@@ -206,19 +203,6 @@ class _OrderSuccessTransitionScreenState
                                 label: 'Continue',
                                 enableGlass: true,
                                 onPressed: () {
-                                  final journeyType = context
-                                      .read<OnboardingJourneyStoreBloc>()
-                                      .state
-                                      .journeyType;
-
-                                  if (journeyType ==
-                                      OnboardingJourneyType.buyPet) {
-                                    context.router.replaceAll([
-                                      CreateParentProfileRoute(),
-                                    ]);
-                                    return;
-                                  }
-
                                   context.router.replaceAll([
                                     const HomeRoute(),
                                     const OrdersListingRoute(),

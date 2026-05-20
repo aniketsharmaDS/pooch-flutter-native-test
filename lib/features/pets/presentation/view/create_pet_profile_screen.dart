@@ -263,7 +263,9 @@ class _CreatePetProfileScreenState extends State<CreatePetProfileScreen> {
   }
 
   void _showPetAddedSuccessTransition() {
-    context.router.push(const PetAddedSuccessfulTransitionRoute());
+    context.router.push(
+      PetAddedSuccessfulTransitionRoute(onAddAnotherPet: _resetForm),
+    );
   }
 
   void _onBack() {
@@ -401,10 +403,7 @@ class _CreatePetProfileScreenState extends State<CreatePetProfileScreen> {
       healthInfo: healthInfo.isEmpty ? null : healthInfo,
     );
 
-    final isParentGroupAvailable =
-        getIt<UserProfileBloc>().state.parentGroups.isNotEmpty;
-
-    if (widget.isAddPetFlow && isParentGroupAvailable) {
+    if (widget.isAddPetFlow) {
       context.read<PetsBloc>().add(AddPetRequested(pet));
     } else {
       context.read<PetsBloc>().add(CreatePetEvent(pet));
@@ -489,40 +488,22 @@ class _CreatePetProfileScreenState extends State<CreatePetProfileScreen> {
           },
           listener: (context, state) {
             final genericError = (state.errorMessage ?? '').trim();
-            final isParentGroupAvailable =
-                getIt<UserProfileBloc>().state.parentGroups.isNotEmpty;
             if (genericError.isNotEmpty) {
               ToastService.showError(genericError);
             }
 
-            if (widget.isAddPetFlow && isParentGroupAvailable) {
-              // When parent groups is created
+            if (widget.isAddPetFlow) {
               final error = (state.addPetErrorMessage ?? '').trim();
               if (error.isNotEmpty) {
                 ToastService.showError(error);
               }
 
-              if (state.addPetStatus == AddPetStatus.success ||
-                  state.status == PetsStatus.success) {
+              if (state.addPetStatus == AddPetStatus.success) {
                 getIt<UserProfileBloc>().add(const GetUserPetsEvent());
-                _resetForm();
                 _showPetAddedSuccessTransition();
               }
 
               return;
-            } else if (widget.isAddPetFlow && !isParentGroupAvailable) {
-              final profileBloc = getIt<UserProfileBloc>();
-              final error = (state.errorMessage ?? '').trim();
-              if (error.isNotEmpty) {
-                ToastService.showError(error);
-              }
-
-              if (state.status == PetsStatus.success) {
-                profileBloc.add(const GetUserPetsEvent());
-
-                _resetForm();
-                context.router.push(SaveHouseDetailsRoute(isMultiplePet: true));
-              }
             }
 
             if (state.status == PetsStatus.success) {
@@ -562,6 +543,7 @@ class _CreatePetProfileScreenState extends State<CreatePetProfileScreen> {
                               text: '${currentPage + 1}',
                               style: TextStyle(
                                 fontSize: AppFontSize.fs14,
+                                fontFamily: 'Gilroy600',
                                 color: AppColors.p4_900,
                               ),
                             ),
@@ -569,6 +551,7 @@ class _CreatePetProfileScreenState extends State<CreatePetProfileScreen> {
                               text: '/3',
                               style: TextStyle(
                                 fontSize: AppFontSize.fs14,
+                                fontFamily: 'Gilroy400',
                                 color: AppColors.p4_900,
                               ),
                             ),

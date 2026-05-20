@@ -136,22 +136,9 @@ class _HealthOfPetState extends State<HealthOfPet> {
 
   @override
   Widget build(BuildContext context) {
-    String petImage = AppIcons.png.bcs.bcsDogSmallDefault;
-    if (widget.petType == 'dog') {
-      if (widget.selectedSize.value == 'Toy') {
-        petImage = AppIcons.png.bcs.bcsDogToyDefault;
-      } else if (widget.selectedSize.value == 'Small') {
-        petImage = AppIcons.png.bcs.bcsDogSmallDefault;
-      } else if (widget.selectedSize.value == 'Medium') {
-        petImage = AppIcons.png.bcs.bcsDogMediumDefault;
-      } else if (widget.selectedSize.value == 'Large') {
-        petImage = AppIcons.png.bcs.bcsDogLargeDefault;
-      } else if (widget.selectedSize.value == 'Giant') {
-        petImage = AppIcons.png.bcs.bcsDogGiantDefault;
-      }
-    } else if (widget.petType == 'cat') {
-      petImage = AppIcons.png.bcs.bcsCatDefault;
-    }
+    final String petImage = widget.petType == 'cat'
+        ? AppIcons.jpg.onboarding.catSpecies
+        : AppIcons.jpg.onboarding.dogSpecies;
 
     return SingleChildScrollView(
       controller: _scrollController,
@@ -194,21 +181,10 @@ class _HealthOfPetState extends State<HealthOfPet> {
             child: Padding(
               padding: const EdgeInsets.only(left: AppSpacing.s20),
 
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  AppText.bodyM(
-                    'Size',
-                    fontSize: AppFontSize.fs10,
-                    color: AppColors.p4_300,
-                  ),
-                  AppText.bodyS(
-                    widget.selectedSize.value ?? '',
-                    fontSize: AppFontSize.fs14,
-                    color: AppColors.buttonDisabledBg,
-                  ),
-                ],
+              child: AppText.bodyS(
+                widget.selectedSize.value ?? '',
+                fontSize: AppFontSize.fs14,
+                color: AppColors.buttonDisabledBg,
               ),
             ),
           ),
@@ -239,15 +215,12 @@ class _HealthOfPetState extends State<HealthOfPet> {
           Container(
             height: AppSpacing.s220.h,
             decoration: BoxDecoration(
-              color: AppColors.white,
+              color: AppColors.white.withValues(alpha: 0.8),
               borderRadius: BorderRadius.circular(AppRadiusSize.r20),
               border: Border.all(color: AppColors.textFieldBorderDefault),
             ),
             clipBehavior: Clip.antiAlias,
-            child: AppIcon(
-              petImage,
-              // fit: BoxFit.contain
-            ),
+            child: AppIcon(petImage, fit: BoxFit.cover),
           ),
           AppSpacing.s12.hBox,
           Container(

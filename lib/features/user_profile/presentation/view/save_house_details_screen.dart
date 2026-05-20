@@ -19,9 +19,18 @@ import 'package:poochcare/router/app_router.dart';
 
 @RoutePage()
 class SaveHouseDetailsScreen extends StatefulWidget {
-  const SaveHouseDetailsScreen({super.key, required this.isMultiplePet});
+  const SaveHouseDetailsScreen({
+    super.key,
+    required this.isMultiplePet,
+    this.initialPhoneNumber,
+    this.initialEmail,
+    this.initialCountryCode,
+  });
 
   final bool isMultiplePet;
+  final String? initialPhoneNumber;
+  final String? initialEmail;
+  final String? initialCountryCode;
 
   @override
   State<SaveHouseDetailsScreen> createState() => _SaveHouseDetailsScreenState();
@@ -29,45 +38,45 @@ class SaveHouseDetailsScreen extends StatefulWidget {
 
 class _SaveHouseDetailsScreenState extends State<SaveHouseDetailsScreen> {
   final TextEditingController _nicknameController = TextEditingController();
-  // final TextEditingController _houseNameController = TextEditingController();
+  final TextEditingController _houseNameController = TextEditingController();
   final ValueNotifier<bool> _isSubmitEnabled = ValueNotifier<bool>(false);
 
   @override
   void initState() {
     super.initState();
     _nicknameController.addListener(_updateSubmitState);
-    // _houseNameController.addListener(_updateSubmitState);
+    _houseNameController.addListener(_updateSubmitState);
     _updateSubmitState();
   }
 
   @override
   void dispose() {
     _nicknameController.removeListener(_updateSubmitState);
-    // _houseNameController.removeListener(_updateSubmitState);
+    _houseNameController.removeListener(_updateSubmitState);
     _nicknameController.dispose();
-    // _houseNameController.dispose();
+    _houseNameController.dispose();
     _isSubmitEnabled.dispose();
     super.dispose();
   }
 
-  // bool get _showHouseNameField => widget.isMultiplePet;
+  bool get _showHouseNameField => widget.isMultiplePet;
 
   void _submit(BuildContext context) {
     final nickname = _nicknameController.text.trim();
-    // final houseName = _houseNameController.text.trim();
+    final houseName = _houseNameController.text.trim();
 
     if (nickname.isEmpty) {
       ToastService.showError('Please enter a nickname.');
       return;
     }
 
-    // if (_showHouseNameField && houseName.isEmpty) {
-    //   ToastService.showError('Please enter a parent group name.');
-    //   return;
-    // }
+    if (_showHouseNameField && houseName.isEmpty) {
+      ToastService.showError('Please enter a parent group name.');
+      return;
+    }
 
     final parentName = nickname;
-    final parentGroupName = nickname; // _showHouseNameField ? houseName : '';
+    final parentGroupName = _showHouseNameField ? houseName : '';
 
     context.read<SaveHouseDetailsBloc>().add(
       SaveHouseDetailsSubmitted(
@@ -81,11 +90,11 @@ class _SaveHouseDetailsScreenState extends State<SaveHouseDetailsScreen> {
 
   void _updateSubmitState() {
     final nickname = _nicknameController.text.trim();
-    // final houseName = _houseNameController.text.trim();
+    final houseName = _houseNameController.text.trim();
     final hasNickname = nickname.isNotEmpty;
-    // final hasHouseName = !_showHouseNameField || houseName.isNotEmpty;
+    final hasHouseName = !_showHouseNameField || houseName.isNotEmpty;
 
-    _isSubmitEnabled.value = hasNickname;
+    _isSubmitEnabled.value = hasNickname && hasHouseName;
   }
 
   @override
@@ -107,10 +116,10 @@ class _SaveHouseDetailsScreenState extends State<SaveHouseDetailsScreen> {
               }
 
               if (state.status == SaveHouseDetailsStatus.success) {
-                final authStoreBloc = getIt<AuthStoreBloc>();
-                // authStoreBloc.add(
-                //   ParentNameUpdated(name: _nicknameController.text.trim()),
-                // );
+                final authStoreBloc = context.read<AuthStoreBloc>();
+                authStoreBloc.add(
+                  ParentNameUpdated(name: _nicknameController.text.trim()),
+                );
                 authStoreBloc.add(const PetOnboardingCompleted());
                 await authStoreBloc.stream.firstWhere(
                   (element) => element.user?.isPetOnboarded == true,
@@ -118,14 +127,7 @@ class _SaveHouseDetailsScreenState extends State<SaveHouseDetailsScreen> {
                 if (!context.mounted) {
                   return;
                 }
-                if (authStoreBloc.state.user?.hasBoughtPet == true &&
-                    authStoreBloc.state.user?.isOnboarded == true) {
-                  context.router.push(
-                    const PetAddedSuccessfulTransitionRoute(),
-                  );
-                } else {
-                  context.router.replaceAll([CreateParentProfileRoute()]);
-                }
+                context.router.replaceAll([CreateParentProfileRoute()]);
               }
             },
             child: AppPrimaryBgContainer(
@@ -155,15 +157,15 @@ class _SaveHouseDetailsScreenState extends State<SaveHouseDetailsScreen> {
                                 controller: _nicknameController,
                                 textInputAction: TextInputAction.done,
                               ),
-                              // AppSpacing.s16.hBox,
-                              // if (_showHouseNameField) ...[
-                              //   AppTextField(
-                              //     label: 'Parent group name',
-                              //     controller: _houseNameController,
-                              //     textInputAction: TextInputAction.done,
-                              //   ),
-                              //   AppSpacing.s16.hBox,
-                              // ],
+                              AppSpacing.s16.hBox,
+                              if (_showHouseNameField) ...[
+                                AppTextField(
+                                  label: 'Parent group name',
+                                  controller: _houseNameController,
+                                  textInputAction: TextInputAction.done,
+                                ),
+                                AppSpacing.s16.hBox,
+                              ],
                             ],
                           ),
                         ),

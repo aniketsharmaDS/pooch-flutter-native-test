@@ -68,29 +68,28 @@ class OrderListCard extends StatelessWidget {
   }
 
   Widget _buildContentCard() {
-    return ConstrainedBox(
-      constraints: BoxConstraints(maxHeight: 117.h, maxWidth: double.maxFinite),
-      child: Container(
-        width: double.infinity,
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.all(Radius.circular(12.h)),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.03),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.all(Radius.circular(12.h)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.03),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: IntrinsicHeight(
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            AppImageFrame(width: 98.w, height: 80.h, imageUrl: item.image),
+            AppImageFrame(width: 98, height: 73, imageUrl: item.image),
             SizedBox(width: 12.w),
             Expanded(child: _buildContentSection()),
-            SizedBox(width: 4.w),
+            SizedBox(width: 8.w),
             _buildRightColumn(),
           ],
         ),
@@ -107,22 +106,13 @@ class OrderListCard extends StatelessWidget {
             item.title,
             maxLines: 2,
             color: AppColors.textSecondary,
-            style: TextStyle(height: 1.2, fontSize: AppFontSize.fs14),
           ),
           const SizedBox(height: 4),
           ...[
-            AppText.bodyS(
-              item.subtitle,
-              color: const Color(0xFFB3958B),
-              style: const TextStyle(height: 1.2),
-            ),
+            AppText.bodyS(item.subtitle, color: const Color(0xFFB3958B)),
             const SizedBox(height: 4),
           ],
-          AppText.bodyS(
-            item.dateTime,
-            color: const Color(0xFFB3958B),
-            style: const TextStyle(height: 1.2),
-          ),
+          AppText.bodyS(item.dateTime, color: const Color(0xFFB3958B)),
           const SizedBox(height: 4),
           _buildPriceRow(),
         ],
@@ -138,7 +128,6 @@ class OrderListCard extends StatelessWidget {
           'INR ${item.price}',
           color: AppColors.black,
           fontSize: AppFontSize.fs14,
-          style: const TextStyle(height: 1.2),
         ),
         if (original != null && original > item.price) ...[
           const SizedBox(width: 6),
@@ -214,8 +203,6 @@ class OrderListCard extends StatelessWidget {
 
   Widget _builtActionButton() {
     return AppButton(
-      padding: EdgeInsets.zero,
-      removePadding: true,
       label: actionLabel,
       onPressed: onAction,
       variant: AppButtonVariant.outlined,

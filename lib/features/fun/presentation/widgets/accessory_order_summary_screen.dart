@@ -6,7 +6,6 @@ import 'package:poochcare/core/services/snackbar_service.dart';
 import 'package:poochcare/core/theme/app_colors.dart';
 import 'package:poochcare/core/theme/app_spacing.dart';
 import 'package:poochcare/core/utils/app_extensions/price_formatter_extension.dart';
-import 'package:poochcare/core/utils/app_extensions/string_capitalise_extension.dart';
 import 'package:poochcare/core/widgets/buttons/app_button.dart';
 import 'package:poochcare/core/widgets/dialogs/app_dialog.dart';
 import 'package:poochcare/core/widgets/others/price_summary_section.dart';
@@ -65,9 +64,7 @@ class _AccessoryOrderSummaryScreenState
   @override
   void initState() {
     super.initState();
-    context.read<CouponsBloc>().add(
-      const FetchCouponsEvent(couponType: 'accessories'),
-    );
+    context.read<CouponsBloc>().add(const FetchCouponsEvent());
   }
 
   @override
@@ -125,8 +122,7 @@ class _AccessoryOrderSummaryScreenState
                     ),
                     child: AccessorySummaryItem(
                       imageUrl: data?.accessory.thumbnail ?? '',
-                      accessoryCategory:
-                          data?.accessory.accessoryCategory.capitalize() ?? '',
+                      accessoryCategory: 'Hat',
                       price:
                           '${data?.pricing.currency} ${data?.pricing.basePrice.formatPrice()}',
                     ),

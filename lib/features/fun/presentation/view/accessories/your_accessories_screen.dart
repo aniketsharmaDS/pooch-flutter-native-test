@@ -29,164 +29,133 @@ class YourAccessoriesScreen extends StatefulWidget implements AutoRouteWrapper {
   @override
   Widget wrappedRoute(BuildContext context) {
     return BlocProvider.value(
-      value: getIt<AccessoriesBloc>()..add(const FetchMyAccessoriesEvent()),
+      value: getIt<AccessoriesBloc>()
+        ..add(const FetchMyAccessoriesEvent(1, true)),
       child: this,
     );
   }
 }
 
 class _YourAccessoriesScreenState extends State<YourAccessoriesScreen> {
+  int? _selectedIndex;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: AppPrimaryBgContainer(
         child: SafeArea(
-          child: RefreshIndicator(
-            onRefresh: () async {
-              final accessoryBloc = context.read<AccessoriesBloc>();
-              accessoryBloc.add(const FetchMyAccessoriesEvent());
-              await accessoryBloc.stream.firstWhere(
-                (element) => element.status == AccessoriesStatus.success,
-              );
-            },
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.s12),
-                child: Column(
-                  children: [
-                    const PoochScreenAppBar(title: 'Your accessories'),
-                    const SizedBox(height: AppSpacing.s10),
-                    Container(
-                      alignment: Alignment.center,
-                      height: 69.h,
-                      decoration: BoxDecoration(
-                        color: AppColors.white,
-                        borderRadius: BorderRadius.circular(AppRadiusSize.r12),
-                      ),
-                      padding: const EdgeInsets.only(
-                        left: AppSpacing.s16,
-                        right: AppSpacing.s10,
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              AppText.h1(
-                                '200 AED to unlock new skill',
-                                fontSize: AppFontSize.fs14,
-                              ),
-                              const SubscribedButton(),
-                            ],
-                          ),
-                          const SizedBox(height: AppSpacing.s10),
-                          const LinearProgressIndicator(
-                            value: 0.8,
-                            color: AppColors.p2,
-                            backgroundColor: AppColors.p2_100,
-                          ),
-                        ],
-                      ),
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.s12),
+              child: Column(
+                children: [
+                  const PoochScreenAppBar(title: 'Your accessories'),
+                  const SizedBox(height: AppSpacing.s10),
+                  Container(
+                    alignment: Alignment.center,
+                    height: 69.h,
+                    decoration: BoxDecoration(
+                      color: AppColors.white,
+                      borderRadius: BorderRadius.circular(AppRadiusSize.r12),
                     ),
+                    padding: const EdgeInsets.only(
+                      left: AppSpacing.s16,
+                      right: AppSpacing.s10,
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            AppText.h1(
+                              '200 AED to unlock new skill',
+                              fontSize: AppFontSize.fs14,
+                            ),
+                            const SubscribedButton(),
+                          ],
+                        ),
+                        const SizedBox(height: AppSpacing.s10),
+                        const LinearProgressIndicator(
+                          value: 0.8,
+                          color: AppColors.p2,
+                          backgroundColor: AppColors.p2_100,
+                        ),
+                      ],
+                    ),
+                  ),
 
-                    const SizedBox(height: AppSpacing.s16),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: AppSpacing.s14,
-                        vertical: AppSpacing.s16,
-                      ),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(AppRadiusSize.r16),
-                        color: AppColors.white,
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              AppText.h3(
-                                'Virtual Pet',
-                                fontSize: AppFontSize.fs20,
-                              ),
-                            ],
-                          ),
+                  const SizedBox(height: AppSpacing.s16),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppSpacing.s14,
+                      vertical: AppSpacing.s16,
+                    ),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(AppRadiusSize.r16),
+                      color: AppColors.white,
+                    ),
+                    child: Column(
+                      children: [
+                        Row(
+                          children: [
+                            AppText.h3(
+                              'Virtual Pet',
+                              fontSize: AppFontSize.fs20,
+                            ),
+                          ],
+                        ),
 
-                          const SizedBox(height: AppSpacing.s16),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              AppIcon(
-                                AppIcons.png.transitions.funPuppyWithCap,
-                                height: 187.h,
-                              ),
-                            ],
-                          ),
+                        const SizedBox(height: AppSpacing.s16),
+                        AppIcon(
+                          AppIcons.png.transitions.funPuppyWithCap,
+                          height: 187.h,
+                        ),
 
-                          const SizedBox(height: AppSpacing.s40),
+                        const SizedBox(height: AppSpacing.s40),
 
-                          Row(
-                            children: [
-                              AppText.h1(
-                                'Select Accessories',
-                                fontSize: AppFontSize.fs14,
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: AppSpacing.s20),
-                          SizedBox(
-                            height: 220.h,
-                            child: BlocBuilder<AccessoriesBloc, AccessoriesState>(
-                              buildWhen: (previous, current) =>
-                                  previous != current,
-                              builder: (context, state) {
-                                final accessoriesItem = state.myAccessories;
-                                return StateWrapper(
-                                  onRetry: () {
-                                    context.read<AccessoriesBloc>().add(
-                                      const FetchMyAccessoriesEvent(),
-                                    );
-                                  },
-                                  isLoading:
-                                      state.myAccessoriesStatus ==
-                                          MyAccessoriesStatus.loading &&
-                                      state.myAccessories.isEmpty,
-                                  isError:
-                                      state.myAccessoriesStatus ==
-                                      MyAccessoriesStatus.failure,
-                                  isEmpty: accessoriesItem.isEmpty,
-                                  title: 'Accessories',
-                                  child: NotificationListener(
-                                    onNotification:
-                                        (ScrollNotification scrollInfo) {
-                                          if (scrollInfo.metrics.pixels >=
-                                              scrollInfo
-                                                      .metrics
-                                                      .maxScrollExtent *
-                                                  0.8) {
-                                            context.read<AccessoriesBloc>().add(
-                                              const FetchMyAccessoriesEvent(),
-                                            );
-                                          }
-                                          return false;
-                                        },
-                                    child: AccessoriesWidget(
-                                      accessoryType: AccessoryType.my,
-                                      state: state,
-                                      accessories: accessoriesItem,
-                                      onChange: (selectedAccessory) {},
-                                    ),
-                                  ),
+                        Row(
+                          children: [
+                            AppText.h1(
+                              'Select Accessories',
+                              fontSize: AppFontSize.fs14,
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: AppSpacing.s20),
+                        BlocBuilder<AccessoriesBloc, AccessoriesState>(
+                          builder: (context, state) {
+                            final accessoriesItem = state.myAccessories;
+                            return StateWrapper(
+                              onRetry: () {
+                                context.read<AccessoriesBloc>().add(
+                                  const FetchMyAccessoriesEvent(1, true),
                                 );
                               },
-                            ),
-                          ),
-                        ],
-                      ),
+                              isLoading:
+                                  state.myAccessoriesStatus ==
+                                  MyAccessoriesStatus.loading,
+                              isError:
+                                  state.myAccessoriesStatus ==
+                                  MyAccessoriesStatus.failure,
+                              isEmpty: accessoriesItem.isEmpty,
+                              title: 'Accessories',
+                              child: AccessoriesWidget(
+                                accessories: accessoriesItem,
+                                selectedIndex: _selectedIndex,
+                                onChange: (selectedIndex) {
+                                  _selectedIndex = selectedIndex;
+                                  setState(() {});
+                                },
+                              ),
+                            );
+                          },
+                        ),
+                      ],
                     ),
-                    const SizedBox(height: AppSpacing.s100),
-                  ],
-                ),
+                  ),
+                  const SizedBox(height: AppSpacing.s100),
+                ],
               ),
             ),
           ),

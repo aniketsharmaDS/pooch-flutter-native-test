@@ -206,58 +206,18 @@ class AddPetFoundRoute extends PageRouteInfo<void> {
 
 /// generated route for
 /// [AddPetMedicalRecordsTabScreen]
-class AddPetMedicalRecordsTabRoute
-    extends PageRouteInfo<AddPetMedicalRecordsTabRouteArgs> {
-  AddPetMedicalRecordsTabRoute({
-    Key? key,
-    int initialTabIndex = 0,
-    List<PageRouteInfo>? children,
-  }) : super(
-         AddPetMedicalRecordsTabRoute.name,
-         args: AddPetMedicalRecordsTabRouteArgs(
-           key: key,
-           initialTabIndex: initialTabIndex,
-         ),
-         initialChildren: children,
-       );
+class AddPetMedicalRecordsTabRoute extends PageRouteInfo<void> {
+  const AddPetMedicalRecordsTabRoute({List<PageRouteInfo>? children})
+    : super(AddPetMedicalRecordsTabRoute.name, initialChildren: children);
 
   static const String name = 'AddPetMedicalRecordsTabRoute';
 
   static PageInfo page = PageInfo(
     name,
     builder: (data) {
-      final args = data.argsAs<AddPetMedicalRecordsTabRouteArgs>(
-        orElse: () => const AddPetMedicalRecordsTabRouteArgs(),
-      );
-      return AddPetMedicalRecordsTabScreen(
-        key: args.key,
-        initialTabIndex: args.initialTabIndex,
-      );
+      return const AddPetMedicalRecordsTabScreen();
     },
   );
-}
-
-class AddPetMedicalRecordsTabRouteArgs {
-  const AddPetMedicalRecordsTabRouteArgs({this.key, this.initialTabIndex = 0});
-
-  final Key? key;
-
-  final int initialTabIndex;
-
-  @override
-  String toString() {
-    return 'AddPetMedicalRecordsTabRouteArgs{key: $key, initialTabIndex: $initialTabIndex}';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    if (other is! AddPetMedicalRecordsTabRouteArgs) return false;
-    return key == other.key && initialTabIndex == other.initialTabIndex;
-  }
-
-  @override
-  int get hashCode => key.hashCode ^ initialTabIndex.hashCode;
 }
 
 /// generated route for
@@ -804,53 +764,18 @@ class AppointmentPaymentSummaryRouteArgs {
 
 /// generated route for
 /// [AppointmentTransitionScreen]
-class AppointmentTransitionRoute
-    extends PageRouteInfo<AppointmentTransitionRouteArgs> {
-  AppointmentTransitionRoute({
-    required String planStatus,
-    Key? key,
-    List<PageRouteInfo>? children,
-  }) : super(
-         AppointmentTransitionRoute.name,
-         args: AppointmentTransitionRouteArgs(planStatus: planStatus, key: key),
-         initialChildren: children,
-       );
+class AppointmentTransitionRoute extends PageRouteInfo<void> {
+  const AppointmentTransitionRoute({List<PageRouteInfo>? children})
+    : super(AppointmentTransitionRoute.name, initialChildren: children);
 
   static const String name = 'AppointmentTransitionRoute';
 
   static PageInfo page = PageInfo(
     name,
     builder: (data) {
-      final args = data.argsAs<AppointmentTransitionRouteArgs>();
-      return AppointmentTransitionScreen(
-        planStatus: args.planStatus,
-        key: args.key,
-      );
+      return const AppointmentTransitionScreen();
     },
   );
-}
-
-class AppointmentTransitionRouteArgs {
-  const AppointmentTransitionRouteArgs({required this.planStatus, this.key});
-
-  final String planStatus;
-
-  final Key? key;
-
-  @override
-  String toString() {
-    return 'AppointmentTransitionRouteArgs{planStatus: $planStatus, key: $key}';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    if (other is! AppointmentTransitionRouteArgs) return false;
-    return planStatus == other.planStatus && key == other.key;
-  }
-
-  @override
-  int get hashCode => planStatus.hashCode ^ key.hashCode;
 }
 
 /// generated route for
@@ -1474,7 +1399,7 @@ class CommunityTabRoute extends PageRouteInfo<void> {
   static PageInfo page = PageInfo(
     name,
     builder: (data) {
-      return WrappedRoute(child: const CommunityTabScreen());
+      return const CommunityTabScreen();
     },
   );
 }
@@ -3562,18 +3487,58 @@ class ParentVetChatRouteArgs {
 
 /// generated route for
 /// [PetAddedSuccessfulTransitionScreen]
-class PetAddedSuccessfulTransitionRoute extends PageRouteInfo<void> {
-  const PetAddedSuccessfulTransitionRoute({List<PageRouteInfo>? children})
-    : super(PetAddedSuccessfulTransitionRoute.name, initialChildren: children);
+class PetAddedSuccessfulTransitionRoute
+    extends PageRouteInfo<PetAddedSuccessfulTransitionRouteArgs> {
+  PetAddedSuccessfulTransitionRoute({
+    Key? key,
+    VoidCallback? onAddAnotherPet,
+    List<PageRouteInfo>? children,
+  }) : super(
+         PetAddedSuccessfulTransitionRoute.name,
+         args: PetAddedSuccessfulTransitionRouteArgs(
+           key: key,
+           onAddAnotherPet: onAddAnotherPet,
+         ),
+         initialChildren: children,
+       );
 
   static const String name = 'PetAddedSuccessfulTransitionRoute';
 
   static PageInfo page = PageInfo(
     name,
     builder: (data) {
-      return const PetAddedSuccessfulTransitionScreen();
+      final args = data.argsAs<PetAddedSuccessfulTransitionRouteArgs>(
+        orElse: () => const PetAddedSuccessfulTransitionRouteArgs(),
+      );
+      return PetAddedSuccessfulTransitionScreen(
+        key: args.key,
+        onAddAnotherPet: args.onAddAnotherPet,
+      );
     },
   );
+}
+
+class PetAddedSuccessfulTransitionRouteArgs {
+  const PetAddedSuccessfulTransitionRouteArgs({this.key, this.onAddAnotherPet});
+
+  final Key? key;
+
+  final VoidCallback? onAddAnotherPet;
+
+  @override
+  String toString() {
+    return 'PetAddedSuccessfulTransitionRouteArgs{key: $key, onAddAnotherPet: $onAddAnotherPet}';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! PetAddedSuccessfulTransitionRouteArgs) return false;
+    return key == other.key && onAddAnotherPet == other.onAddAnotherPet;
+  }
+
+  @override
+  int get hashCode => key.hashCode ^ onAddAnotherPet.hashCode;
 }
 
 /// generated route for
@@ -3590,73 +3555,6 @@ class PetAppointmentsHistoryRoute extends PageRouteInfo<void> {
       return const PetAppointmentsHistoryScreen();
     },
   );
-}
-
-/// generated route for
-/// [PetIsHomeTransitionScreen]
-class PetIsHomeTransitionRoute
-    extends PageRouteInfo<PetIsHomeTransitionRouteArgs> {
-  PetIsHomeTransitionRoute({
-    Key? key,
-    required String petId,
-    required String reportId,
-    List<PageRouteInfo>? children,
-  }) : super(
-         PetIsHomeTransitionRoute.name,
-         args: PetIsHomeTransitionRouteArgs(
-           key: key,
-           petId: petId,
-           reportId: reportId,
-         ),
-         initialChildren: children,
-       );
-
-  static const String name = 'PetIsHomeTransitionRoute';
-
-  static PageInfo page = PageInfo(
-    name,
-    builder: (data) {
-      final args = data.argsAs<PetIsHomeTransitionRouteArgs>();
-      return WrappedRoute(
-        child: PetIsHomeTransitionScreen(
-          key: args.key,
-          petId: args.petId,
-          reportId: args.reportId,
-        ),
-      );
-    },
-  );
-}
-
-class PetIsHomeTransitionRouteArgs {
-  const PetIsHomeTransitionRouteArgs({
-    this.key,
-    required this.petId,
-    required this.reportId,
-  });
-
-  final Key? key;
-
-  final String petId;
-
-  final String reportId;
-
-  @override
-  String toString() {
-    return 'PetIsHomeTransitionRouteArgs{key: $key, petId: $petId, reportId: $reportId}';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    if (other is! PetIsHomeTransitionRouteArgs) return false;
-    return key == other.key &&
-        petId == other.petId &&
-        reportId == other.reportId;
-  }
-
-  @override
-  int get hashCode => key.hashCode ^ petId.hashCode ^ reportId.hashCode;
 }
 
 /// generated route for
@@ -3846,54 +3744,6 @@ class PetMedicalVaccinationListRoute extends PageRouteInfo<void> {
       return const PetMedicalVaccinationListScreen();
     },
   );
-}
-
-/// generated route for
-/// [PetStillMissingTransitionScreen]
-class PetStillMissingTransitionRoute
-    extends PageRouteInfo<PetStillMissingTransitionRouteArgs> {
-  PetStillMissingTransitionRoute({
-    Key? key,
-    required String petId,
-    List<PageRouteInfo>? children,
-  }) : super(
-         PetStillMissingTransitionRoute.name,
-         args: PetStillMissingTransitionRouteArgs(key: key, petId: petId),
-         initialChildren: children,
-       );
-
-  static const String name = 'PetStillMissingTransitionRoute';
-
-  static PageInfo page = PageInfo(
-    name,
-    builder: (data) {
-      final args = data.argsAs<PetStillMissingTransitionRouteArgs>();
-      return PetStillMissingTransitionScreen(key: args.key, petId: args.petId);
-    },
-  );
-}
-
-class PetStillMissingTransitionRouteArgs {
-  const PetStillMissingTransitionRouteArgs({this.key, required this.petId});
-
-  final Key? key;
-
-  final String petId;
-
-  @override
-  String toString() {
-    return 'PetStillMissingTransitionRouteArgs{key: $key, petId: $petId}';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    if (other is! PetStillMissingTransitionRouteArgs) return false;
-    return key == other.key && petId == other.petId;
-  }
-
-  @override
-  int get hashCode => key.hashCode ^ petId.hashCode;
 }
 
 /// generated route for
@@ -4240,12 +4090,18 @@ class SaveHouseDetailsRoute extends PageRouteInfo<SaveHouseDetailsRouteArgs> {
   SaveHouseDetailsRoute({
     Key? key,
     required bool isMultiplePet,
+    String? initialPhoneNumber,
+    String? initialEmail,
+    String? initialCountryCode,
     List<PageRouteInfo>? children,
   }) : super(
          SaveHouseDetailsRoute.name,
          args: SaveHouseDetailsRouteArgs(
            key: key,
            isMultiplePet: isMultiplePet,
+           initialPhoneNumber: initialPhoneNumber,
+           initialEmail: initialEmail,
+           initialCountryCode: initialCountryCode,
          ),
          initialChildren: children,
        );
@@ -4259,32 +4115,56 @@ class SaveHouseDetailsRoute extends PageRouteInfo<SaveHouseDetailsRouteArgs> {
       return SaveHouseDetailsScreen(
         key: args.key,
         isMultiplePet: args.isMultiplePet,
+        initialPhoneNumber: args.initialPhoneNumber,
+        initialEmail: args.initialEmail,
+        initialCountryCode: args.initialCountryCode,
       );
     },
   );
 }
 
 class SaveHouseDetailsRouteArgs {
-  const SaveHouseDetailsRouteArgs({this.key, required this.isMultiplePet});
+  const SaveHouseDetailsRouteArgs({
+    this.key,
+    required this.isMultiplePet,
+    this.initialPhoneNumber,
+    this.initialEmail,
+    this.initialCountryCode,
+  });
 
   final Key? key;
 
   final bool isMultiplePet;
 
+  final String? initialPhoneNumber;
+
+  final String? initialEmail;
+
+  final String? initialCountryCode;
+
   @override
   String toString() {
-    return 'SaveHouseDetailsRouteArgs{key: $key, isMultiplePet: $isMultiplePet}';
+    return 'SaveHouseDetailsRouteArgs{key: $key, isMultiplePet: $isMultiplePet, initialPhoneNumber: $initialPhoneNumber, initialEmail: $initialEmail, initialCountryCode: $initialCountryCode}';
   }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
     if (other is! SaveHouseDetailsRouteArgs) return false;
-    return key == other.key && isMultiplePet == other.isMultiplePet;
+    return key == other.key &&
+        isMultiplePet == other.isMultiplePet &&
+        initialPhoneNumber == other.initialPhoneNumber &&
+        initialEmail == other.initialEmail &&
+        initialCountryCode == other.initialCountryCode;
   }
 
   @override
-  int get hashCode => key.hashCode ^ isMultiplePet.hashCode;
+  int get hashCode =>
+      key.hashCode ^
+      isMultiplePet.hashCode ^
+      initialPhoneNumber.hashCode ^
+      initialEmail.hashCode ^
+      initialCountryCode.hashCode;
 }
 
 /// generated route for
@@ -4766,8 +4646,6 @@ class TransitionRoute extends PageRouteInfo<TransitionRouteArgs> {
     VoidCallback? onPrimaryPressed,
     VoidCallback? onSecondaryPressed,
     VoidCallback? onTertiaryPressed,
-    bool isPrimaryLoader = false,
-    bool isSecondaryLoader = false,
     String? petName,
     List<PageRouteInfo>? children,
   }) : super(
@@ -4778,8 +4656,6 @@ class TransitionRoute extends PageRouteInfo<TransitionRouteArgs> {
            onPrimaryPressed: onPrimaryPressed,
            onSecondaryPressed: onSecondaryPressed,
            onTertiaryPressed: onTertiaryPressed,
-           isPrimaryLoader: isPrimaryLoader,
-           isSecondaryLoader: isSecondaryLoader,
            petName: petName,
          ),
          initialChildren: children,
@@ -4797,8 +4673,6 @@ class TransitionRoute extends PageRouteInfo<TransitionRouteArgs> {
         onPrimaryPressed: args.onPrimaryPressed,
         onSecondaryPressed: args.onSecondaryPressed,
         onTertiaryPressed: args.onTertiaryPressed,
-        isPrimaryLoader: args.isPrimaryLoader,
-        isSecondaryLoader: args.isSecondaryLoader,
         petName: args.petName,
       );
     },
@@ -4812,8 +4686,6 @@ class TransitionRouteArgs {
     this.onPrimaryPressed,
     this.onSecondaryPressed,
     this.onTertiaryPressed,
-    this.isPrimaryLoader = false,
-    this.isSecondaryLoader = false,
     this.petName,
   });
 
@@ -4827,15 +4699,11 @@ class TransitionRouteArgs {
 
   final VoidCallback? onTertiaryPressed;
 
-  final bool isPrimaryLoader;
-
-  final bool isSecondaryLoader;
-
   final String? petName;
 
   @override
   String toString() {
-    return 'TransitionRouteArgs{key: $key, variant: $variant, onPrimaryPressed: $onPrimaryPressed, onSecondaryPressed: $onSecondaryPressed, onTertiaryPressed: $onTertiaryPressed, isPrimaryLoader: $isPrimaryLoader, isSecondaryLoader: $isSecondaryLoader, petName: $petName}';
+    return 'TransitionRouteArgs{key: $key, variant: $variant, onPrimaryPressed: $onPrimaryPressed, onSecondaryPressed: $onSecondaryPressed, onTertiaryPressed: $onTertiaryPressed, petName: $petName}';
   }
 
   @override
@@ -4847,8 +4715,6 @@ class TransitionRouteArgs {
         onPrimaryPressed == other.onPrimaryPressed &&
         onSecondaryPressed == other.onSecondaryPressed &&
         onTertiaryPressed == other.onTertiaryPressed &&
-        isPrimaryLoader == other.isPrimaryLoader &&
-        isSecondaryLoader == other.isSecondaryLoader &&
         petName == other.petName;
   }
 
@@ -4859,8 +4725,6 @@ class TransitionRouteArgs {
       onPrimaryPressed.hashCode ^
       onSecondaryPressed.hashCode ^
       onTertiaryPressed.hashCode ^
-      isPrimaryLoader.hashCode ^
-      isSecondaryLoader.hashCode ^
       petName.hashCode;
 }
 

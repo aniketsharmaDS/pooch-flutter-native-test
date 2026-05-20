@@ -48,7 +48,7 @@ class _PurchaseSuccessScreenState extends State<PurchaseSuccessScreen>
 
   @override
   Widget build(BuildContext context) {
-    // final bottomInset = MediaQuery.of(context).padding.bottom;
+    final bottomInset = MediaQuery.of(context).padding.bottom;
 
     return Scaffold(
       body: Container(
@@ -59,194 +59,189 @@ class _PurchaseSuccessScreenState extends State<PurchaseSuccessScreen>
             colors: [Color(0xFFEADBC8), Color(0xFFE6B75C)],
           ),
         ),
-        child: SafeArea(
-          child: Stack(
-            children: [
-              Column(
-                children: [
-                  const SizedBox(height: 120),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 24),
-                    child: AppText.h4(
-                      'Thank You\nFor the Love',
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        fontSize: 42,
-                        fontWeight: FontWeight.w400,
-                      ),
+        child: Stack(
+          children: [
+            Column(
+              children: [
+                const SizedBox(height: 120),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  child: AppText.h4(
+                    'Thank You\nFor the Love',
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontSize: 42,
+                      fontWeight: FontWeight.w400,
                     ),
                   ),
-                  const SizedBox(height: 12),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 32),
-                    child: AppText.bodyL(
-                      'Your ₹200 is helping\nthousands of animals.',
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w400,
-                        height: 1.4,
-                      ),
+                ),
+                const SizedBox(height: 12),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 32),
+                  child: AppText.bodyL(
+                    'Your ₹200 is helping\nthousands of animals.',
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w400,
+                      height: 1.4,
                     ),
                   ),
-                  const SizedBox(height: 30),
-                  Expanded(
-                    child: Stack(
-                      alignment: Alignment.center,
-                      clipBehavior: Clip.none,
-                      children: [
-                        Align(
+                ),
+                const SizedBox(height: 30),
+                Expanded(
+                  child: Stack(
+                    alignment: Alignment.center,
+                    clipBehavior: Clip.none,
+                    children: [
+                      Align(
+                        alignment: Alignment.bottomCenter,
+                        child: FadeTransition(
+                          opacity: _imageOpacity,
+                          child: Image.asset(
+                            AppIcons.png.transitions.funPuppyWithCap,
+                            width: double.infinity,
+                            fit: BoxFit.cover,
+                            frameBuilder:
+                                (
+                                  context,
+                                  child,
+                                  frame,
+                                  wasSynchronouslyLoaded,
+                                ) {
+                                  if (wasSynchronouslyLoaded || frame != null) {
+                                    WidgetsBinding.instance
+                                        .addPostFrameCallback((_) {
+                                          if (mounted &&
+                                              !_animationController
+                                                  .isAnimating &&
+                                              _animationController.value == 0) {
+                                            _animationController.forward();
+                                          }
+                                        });
+                                  }
+                                  return child;
+                                },
+                            errorBuilder: (context, error, stackTrace) {
+                              return Container(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.6,
+                                color: Colors.black12,
+                                alignment: Alignment.center,
+                                child: const Text('Image placeholder'),
+                              );
+                            },
+                          ),
+                        ),
+                      ),
+                      Align(
+                        alignment: const Alignment(1, -0.80),
+                        child: TransitionFloatingAnimatedCard(
+                          data: FloatingCardData(
+                            title: 'Small Act,\nBig Heart',
+                            position: const Alignment(1, -0.80),
+                            slideFrom: SlideFrom.right,
+                            delay: 200,
+                            customContent: Lottie.asset(
+                              AppIcons.lottie.animalFriendly,
+                              height: 50.h,
+                              width: 50.h,
+                              repeat: false,
+                            ),
+                          ),
+                          isActive: true,
+                        ),
+                      ),
+                      Align(
+                        alignment: const Alignment(-1.0, 0.24),
+                        child: TransitionFloatingAnimatedCard(
+                          data: FloatingCardData(
+                            title: 'New Look',
+                            position: const Alignment(-1.0, 0.24),
+                            delay: 400,
+                          ),
+                          isActive: true,
+                        ),
+                      ),
+                      Align(
+                        alignment: const Alignment(0.0, 1.0),
+                        child: Stack(
                           alignment: Alignment.bottomCenter,
-                          child: FadeTransition(
-                            opacity: _imageOpacity,
-                            child: Image.asset(
-                              AppIcons.png.transitions.funPuppyWithCap,
-                              width: double.infinity,
-                              fit: BoxFit.cover,
-                              frameBuilder:
-                                  (
-                                    context,
-                                    child,
-                                    frame,
-                                    wasSynchronouslyLoaded,
-                                  ) {
-                                    if (wasSynchronouslyLoaded ||
-                                        frame != null) {
-                                      WidgetsBinding.instance
-                                          .addPostFrameCallback((_) {
-                                            if (mounted &&
-                                                !_animationController
-                                                    .isAnimating &&
-                                                _animationController.value ==
-                                                    0) {
-                                              _animationController.forward();
-                                            }
-                                          });
-                                    }
-                                    return child;
-                                  },
-                              errorBuilder: (context, error, stackTrace) {
-                                return Container(
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.6,
-                                  color: Colors.black12,
-                                  alignment: Alignment.center,
-                                  child: const Text('Image placeholder'),
-                                );
-                              },
-                            ),
-                          ),
-                        ),
-                        Align(
-                          alignment: const Alignment(1, -0.80),
-                          child: TransitionFloatingAnimatedCard(
-                            data: FloatingCardData(
-                              title: 'Small Act,\nBig Heart',
-                              position: const Alignment(1, -0.80),
-                              slideFrom: SlideFrom.right,
-                              delay: 200,
-                              contentHeight: 50.w,
-                              contentWidth: 50.w,
-                              customContent: Lottie.asset(
-                                AppIcons.lottie.animalFriendly,
-
-                                repeat: false,
-                              ),
-                            ),
-                            isActive: true,
-                          ),
-                        ),
-                        Align(
-                          alignment: const Alignment(-1.0, 0.24),
-                          child: TransitionFloatingAnimatedCard(
-                            data: FloatingCardData(
-                              title: 'New Look',
-                              position: const Alignment(-1.0, 0.24),
-                              delay: 400,
-                            ),
-                            isActive: true,
-                          ),
-                        ),
-                        Align(
-                          alignment: const Alignment(0.0, 1.0),
-                          child: Stack(
-                            alignment: Alignment.bottomCenter,
-                            children: [
-                              ClipRect(
-                                child: BackdropFilter(
-                                  filter: ui.ImageFilter.blur(
-                                    sigmaX: 2,
-                                    sigmaY: 2,
-                                  ),
-                                  child: Container(
-                                    width: double.infinity,
-                                    height: 120,
-                                    decoration: BoxDecoration(
-                                      gradient: LinearGradient(
-                                        begin: Alignment.bottomCenter,
-                                        end: Alignment.topCenter,
-                                        colors: [
-                                          Colors.black.withValues(alpha: 0.3),
-                                          Colors.transparent,
-                                        ],
-                                      ),
+                          children: [
+                            ClipRect(
+                              child: BackdropFilter(
+                                filter: ui.ImageFilter.blur(
+                                  sigmaX: 2,
+                                  sigmaY: 2,
+                                ),
+                                child: Container(
+                                  width: double.infinity,
+                                  height: 120,
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                      begin: Alignment.bottomCenter,
+                                      end: Alignment.topCenter,
+                                      colors: [
+                                        Colors.black.withValues(alpha: 0.3),
+                                        Colors.transparent,
+                                      ],
                                     ),
                                   ),
                                 ),
                               ),
-                              Padding(
-                                padding: const EdgeInsets.fromLTRB(
-                                  24,
-                                  0,
-                                  24,
-                                  20,
-                                ),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    AppButton(
-                                      textStyle: AppTypography.h1.copyWith(
-                                        fontSize: AppFontSize.fs14,
-                                      ),
-                                      size: AppButtonSize.medium,
-                                      label: 'Continue To Virtual Pet',
-                                      enableGlass: true,
-                                      onPressed: () {
-                                        context.router.replaceAll([
-                                          const HomeRoute(),
-                                          AccessoriesRoute(),
-                                          const YourAccessoriesRoute(),
-                                        ]);
-                                      },
-                                    ),
-                                    const SizedBox(height: AppSpacing.s10),
-                                    AppButton(
-                                      textStyle: AppTypography.h1.copyWith(
-                                        fontSize: AppFontSize.fs14,
-                                      ),
-
-                                      backgroundColor: AppColors.p1,
-                                      foregroundColor: AppColors.black,
-                                      label: 'View Leaderboard',
-                                      onPressed: () {
-                                        context.router.push(
-                                          const LeaderboardRoute(),
-                                        );
-                                      },
-                                      size: AppButtonSize.medium,
-                                    ),
-                                  ],
-                                ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.fromLTRB(
+                                24,
+                                0,
+                                24,
+                                75 + bottomInset,
                               ),
-                            ],
-                          ),
+                              child: AppButton(
+                                textStyle: AppTypography.h1.copyWith(
+                                  fontSize: AppFontSize.fs14,
+                                ),
+                                size: AppButtonSize.medium,
+                                label: 'Continue To Virtual Pet',
+                                enableGlass: true,
+                                onPressed: () {
+                                  context.router.replaceAll([
+                                    const HomeRoute(),
+                                    AccessoriesRoute(),
+                                    const YourAccessoriesRoute(),
+                                  ]);
+                                },
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.fromLTRB(
+                                24,
+                                0,
+                                24,
+                                15 + bottomInset,
+                              ),
+                              child: AppButton(
+                                textStyle: AppTypography.h1.copyWith(
+                                  fontSize: AppFontSize.fs14,
+                                ),
+
+                                backgroundColor: AppColors.p1,
+                                foregroundColor: AppColors.black,
+                                label: 'View Leaderboard',
+                                onPressed: () {
+                                  context.router.push(const LeaderboardRoute());
+                                },
+                                size: AppButtonSize.medium,
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            ],
-          ),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );

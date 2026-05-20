@@ -43,9 +43,6 @@ void main() async {
       fallbackLocale: const Locale('en'),
 
       assetLoader: const MultiJsonLoader(),
-      // child: DevicePreview(
-      //   builder: (context) => PoochCareApp(),
-      // )
       child: PoochCareApp(),
     ),
   );

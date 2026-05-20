@@ -70,12 +70,7 @@ class ClinicBloc extends Bloc<ClinicEvent, ClinicState> {
     FetchClinicsEvent event,
     Emitter<ClinicState> emit,
   ) async {
-    emit(
-      state.copyWith(
-        status: ClinicStatus.loading,
-        clearData: event.clinicListRequestModel.page == 1 ? true : false,
-      ),
-    );
+    emit(state.copyWith(status: ClinicStatus.loading));
 
     try {
       final data = event.clinicType == ClinicType.normal
@@ -92,6 +87,7 @@ class ClinicBloc extends Bloc<ClinicEvent, ClinicState> {
           appliedFilters: data.appliedFilters,
           availableFilters: data.availableFilters,
         );
+
         emit(state.copyWith(status: ClinicStatus.success, clinicsData: merged));
       } else {
         emit(state.copyWith(status: ClinicStatus.success, clinicsData: data));

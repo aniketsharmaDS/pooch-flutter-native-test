@@ -5,7 +5,6 @@ import 'package:poochcare/core/network/api_response.dart';
 import 'package:poochcare/features/medical_history/data/models/diagnosis_type_response.dart';
 import 'package:poochcare/features/medical_history/data/models/lab_report_type_response.dart';
 import 'package:poochcare/features/medical_history/data/models/medical_history_records_page_response.dart';
-import 'package:poochcare/features/medical_history/data/models/symptom_type_response.dart';
 import 'package:poochcare/features/medical_history/data/models/vaccination_type_response.dart';
 
 class MedicalHistoryApiService {
@@ -17,7 +16,6 @@ class MedicalHistoryApiService {
       '/medical-history/vaccination-types';
   static const String _labReportTypesPath = '/medical-history/lab-report-types';
   static const String _diagnosisTypesPath = '/medical-history/diagnosis-types';
-  static const String _symptomTypesPath = '/medical-history/symptom-types';
 
   static const String _createMedicalRecordPath = '/medical-history';
   static const String _createVaccinationRecordPath =
@@ -176,48 +174,6 @@ class MedicalHistoryApiService {
       return diagnosisTypes
           .whereType<Map<String, dynamic>>()
           .map(DiagnosisTypeResponse.fromMap)
-          .where((item) => item.code.trim().isNotEmpty)
-          .toList(growable: false);
-    } on DioException catch (error) {
-      throw _mapDioError(error);
-    }
-  }
-
-  Future<List<SymptomTypeResponse>> getSymptomTypes() async {
-    try {
-      final Response<dynamic> response = await _dio.get<dynamic>(
-        _symptomTypesPath,
-      );
-      final dynamic body = response.data;
-
-      if (body is! Map<String, dynamic>) {
-        return const <SymptomTypeResponse>[];
-      }
-
-      final ApiResponse envelope = ApiResponseMapper.fromMap(body);
-      if (!envelope.success) {
-        throw ApiException(
-          envelope.message.isNotEmpty
-              ? envelope.message
-              : 'Unable to fetch symptom types',
-          code: 'API_ERROR',
-          statusCode: envelope.status,
-        );
-      }
-
-      final dynamic payload = envelope.data;
-      if (payload is! Map<String, dynamic>) {
-        return const <SymptomTypeResponse>[];
-      }
-
-      final dynamic symptomTypes = payload['symptomTypes'];
-      if (symptomTypes is! List) {
-        return const <SymptomTypeResponse>[];
-      }
-
-      return symptomTypes
-          .whereType<Map<String, dynamic>>()
-          .map(SymptomTypeResponse.fromMap)
           .where((item) => item.code.trim().isNotEmpty)
           .toList(growable: false);
     } on DioException catch (error) {

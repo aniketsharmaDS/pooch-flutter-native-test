@@ -1,3 +1,90 @@
+// import 'package:flutter/material.dart';
+// import 'package:poochcare/core/theme/app_colors.dart';
+// import 'package:poochcare/core/theme/app_radius_size.dart';
+// import 'package:poochcare/core/theme/app_spacing.dart';
+// import 'package:poochcare/core/widgets/texts/app_text.dart';
+// import 'package:poochcare/features/scheduler/presentation/widgets/schedule_calendar_cell.dart';
+
+// class ScheduleCalendarDayModel {
+//   final DateTime date;
+//   final bool isCurrentMonth;
+//   final List<Color> indicators;
+
+//   const ScheduleCalendarDayModel({
+//     required this.date,
+//     required this.isCurrentMonth,
+//     this.indicators = const [],
+//   });
+// }
+
+// class ScheduleMonthView extends StatelessWidget {
+//   const ScheduleMonthView({
+//     super.key,
+//     required this.days,
+//     required DateTime selectedDate,
+//     required ValueChanged<DateTime> onDateSelected,
+//   });
+
+//   final List<ScheduleCalendarDayModel> days;
+
+//   @override
+//   Widget build(BuildContext context) {
+//     const weekDays = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
+
+//     return Container(
+//       margin: const EdgeInsets.all(AppSpacing.s11),
+//       padding: const EdgeInsets.all(AppSpacing.s12),
+//       decoration: const BoxDecoration(
+//         color: Colors.white,
+//         borderRadius: BorderRadius.only(
+//           topLeft: Radius.circular(AppRadiusSize.r20),
+//           topRight: Radius.circular(AppRadiusSize.r20),
+//         ),
+//       ),
+//       child: Column(
+//         children: [
+//           Padding(
+//             padding: const EdgeInsets.only(top: 10),
+//             child: Row(
+//               children: weekDays
+//                   .map(
+//                     (e) => Expanded(
+//                       child: Center(
+//                         child: AppText.h3(e, color: AppColors.textPrimary),
+//                       ),
+//                     ),
+//                   )
+//                   .toList(),
+//             ),
+//           ),
+
+//           const SizedBox(height: 12),
+
+//           GridView.builder(
+//             shrinkWrap: true,
+//             physics: const NeverScrollableScrollPhysics(),
+//             itemCount: days.length,
+//             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+//               crossAxisCount: 7,
+//               mainAxisSpacing: 2.h,
+//               crossAxisSpacing: 1.w,
+//             ),
+//             itemBuilder: (context, index) {
+//               final item = days[index];
+
+//               return ScheduleCalendarCell(
+//                 day: item.date.day,
+//                 isCurrentMonth: item.isCurrentMonth,
+//                 indicators: item.indicators,
+//               );
+//             },
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }
+
 import 'package:calendar_view/calendar_view.dart';
 import 'package:flutter/material.dart';
 import 'package:poochcare/core/widgets/texts/app_text.dart';
@@ -10,13 +97,11 @@ class ScheduleMonthView extends StatefulWidget {
     required this.onDateSelected,
     required this.onPageChanged,
     required this.onDayEventsTap,
-    required this.selectedDate,
   });
 
   final List<CalendarEventData<Object?>> events;
   final ValueChanged<DateTime> onDateSelected;
   final ValueChanged<DateTime> onPageChanged;
-  final DateTime selectedDate;
   final void Function(DateTime date, List<CalendarEventData<Object?>> events)
   onDayEventsTap;
 
@@ -25,9 +110,9 @@ class ScheduleMonthView extends StatefulWidget {
 }
 
 class _ScheduleMonthViewState extends State<ScheduleMonthView> {
-  late final EventController<Object?> _controller;
+  // late final EventController<Object?> _controller;
 
-  // DateTime selectedDate = DateTime.now();
+  DateTime selectedDate = DateTime.now();
 
   final List<String> _weekDays = const [
     'Su',
@@ -39,6 +124,29 @@ class _ScheduleMonthViewState extends State<ScheduleMonthView> {
     'Sa',
   ];
 
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   _controller = EventController<Object?>();
+  //   _controller.addAll(widget.events);
+  // }
+
+  // @override
+  // void didUpdateWidget(covariant ScheduleMonthView oldWidget) {
+  //   super.didUpdateWidget(oldWidget);
+
+  //   if (oldWidget.events != widget.events) {
+  //     _controller.removeWhere((_) => true);
+  //     _controller.addAll(widget.events);
+  //   }
+  // }
+
+  // @override
+  // void dispose() {
+  //   _controller.dispose();
+  //   super.dispose();
+  // }
+
   Widget _buildWeekHeader() {
     return Row(
       children: _weekDays
@@ -48,28 +156,10 @@ class _ScheduleMonthViewState extends State<ScheduleMonthView> {
   }
 
   @override
-  void initState() {
-    super.initState();
-
-    _controller = EventController<Object?>();
-
-    _controller.addAll(widget.events);
-  }
-
-  @override
-  void didUpdateWidget(covariant ScheduleMonthView oldWidget) {
-    super.didUpdateWidget(oldWidget);
-
-    _controller.removeWhere((_) => true);
-
-    _controller.addAll(widget.events);
-  }
-
-  @override
   Widget build(BuildContext context) {
-    // final controller = EventController<Object?>();
+    final controller = EventController<Object?>();
 
-    // controller.addAll(widget.events);
+    controller.addAll(widget.events);
 
     return Container(
       margin: const EdgeInsets.all(12),
@@ -99,17 +189,11 @@ class _ScheduleMonthViewState extends State<ScheduleMonthView> {
           AspectRatio(
             aspectRatio: 7 / 6,
             child: MonthView<Object?>(
-              key: ValueKey(
-                '${widget.selectedDate.year}-${widget.selectedDate.month}',
-              ),
-              controller: _controller,
+              controller: controller,
 
-              monthViewStyle: MonthViewStyle(
-                initialMonth: widget.selectedDate,
+              monthViewStyle: const MonthViewStyle(
                 showBorder: false,
-                safeAreaOption: const SafeAreaOption(
-                  maintainBottomViewPadding: true,
-                ),
+                safeAreaOption: SafeAreaOption(maintainBottomViewPadding: true),
                 cellAspectRatio: 1,
                 hideDaysNotInMonth: true,
                 showWeekTileBorder: false,
@@ -141,9 +225,9 @@ class _ScheduleMonthViewState extends State<ScheduleMonthView> {
                           .toList();
 
                       final isSelected =
-                          date.year == widget.selectedDate.year &&
-                          date.month == widget.selectedDate.month &&
-                          date.day == widget.selectedDate.day;
+                          date.year == selectedDate.year &&
+                          date.month == selectedDate.month &&
+                          date.day == selectedDate.day;
 
                       return ScheduleCalendarCell(
                         day: date.day,
@@ -151,9 +235,9 @@ class _ScheduleMonthViewState extends State<ScheduleMonthView> {
                         indicators: indicators,
                         isSelected: isSelected,
                         onTap: () {
-                          // setState(() {
-                          //   selectedDate = date;
-                          // });
+                          setState(() {
+                            selectedDate = date;
+                          });
 
                           widget.onDateSelected(date);
 

@@ -80,7 +80,7 @@ class HomePetsWaveCard extends StatelessWidget {
         children: [
           Padding(
             padding: EdgeInsets.only(left: AppSpacing.s3.w),
-            child: AppText.h1('My pets darshan', fontSize: AppFontSize.fs16),
+            child: AppText.h1('My pets', fontSize: AppFontSize.fs16),
           ),
           SizedBox(height: AppSpacing.s18.h),
           if (pets.isNotEmpty)
