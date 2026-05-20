@@ -1,8 +1,10 @@
 reviews:
   request_changes: false
-  auto_review: true
+  auto_review:
+    enabled: true
+    drafts: false
   auto_approve_small_prs: false
-  review_status: auto
+  review_status: true
   auto_label: true
 
 language: en
