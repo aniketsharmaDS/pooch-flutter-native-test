@@ -1,0 +1,55 @@
+reviews:
+  request_changes: false
+  auto_review: true
+  auto_approve_small_prs: false
+  review_status: auto
+  auto_label: true
+
+language: en
+
+ignore_files:
+  # Build and dependency files
+  - build/
+  - .dart_tool/
+  - pubspec.lock
+  - .flutter-plugins-dependencies
+
+  # Generated files
+  - .metadata
+  - .DS_Store
+
+  # Platform-specific directories
+  - android/
+  - ios/
+  - macos/
+  - web/
+
+  # Assets and media
+  - assets/
+  - assets/fonts/
+  - assets/icons/
+  - assets/images/
+  - assets/lottie/
+  - assets/translations/
+  - assets/videos/
+
+  # Test files
+  - test/
+  - "**/*_test.dart"
+
+  # Documentation and config
+  - docs/
+  - "*.md"
+  - .env.example
+  - .fvmrc
+  - devtools_options.yaml
+  - analysis_options.yaml
+  - ".github/workflows/"
+
+  # IDE and system files
+  - ".vscode/"
+  - ".idea/"
+  - "*.iml"
+  - ".gradle/"
+
+max_files_to_review: 150
