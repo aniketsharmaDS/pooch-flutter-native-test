@@ -1,0 +1,169 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:poochcare/core/theme/app_colors.dart';
+import 'package:poochcare/core/widgets/images/app_icon.dart';
+import 'package:poochcare/core/widgets/texts/app_text.dart';
+
+class ChipTabItem {
+  final String title;
+  final String? icon;
+
+  const ChipTabItem({required this.title, this.icon});
+}
+
+class AppTopChipTabBar extends StatefulWidget {
+  const AppTopChipTabBar({
+    super.key,
+    required this.tabs,
+    required this.selectedIndex,
+    this.initialIndex = 0,
+    this.onTabChanged,
+  });
+
+  final List<ChipTabItem> tabs;
+  final int initialIndex;
+  final int selectedIndex;
+  final ValueChanged<int>? onTabChanged;
+
+  @override
+  State<AppTopChipTabBar> createState() => _AppTopChipTabBarState();
+}
+
+class _AppTopChipTabBarState extends State<AppTopChipTabBar> {
+  late int _selectedIndex;
+
+  final ScrollController _scrollController = ScrollController(); // ✅ added
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedIndex = widget.initialIndex;
+
+    // ✅ scroll to initial tab
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _scrollToIndex(_selectedIndex);
+    });
+  }
+
+  void _onTap(int index) {
+    setState(() => _selectedIndex = index);
+    widget.onTabChanged?.call(index);
+
+    _scrollToIndex(index); // ✅ scroll on tap
+  }
+
+  @override
+  void didUpdateWidget(covariant AppTopChipTabBar oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (oldWidget.selectedIndex != widget.selectedIndex) {
+      _selectedIndex = widget.selectedIndex;
+
+      // ✅ scroll on external change
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _scrollToIndex(_selectedIndex);
+      });
+    }
+  }
+
+  void _scrollToIndex(int index) {
+    if (!_scrollController.hasClients) return;
+
+    final double itemWidth = 110.w; // approx width
+    final double screenWidth = MediaQuery.of(context).size.width;
+
+    final double targetOffset =
+        (index * itemWidth) - (screenWidth / 2) + (itemWidth / 2);
+
+    _scrollController.animateTo(
+      targetOffset.clamp(0, _scrollController.position.maxScrollExtent),
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        _ChipTabBar(
+          tabs: widget.tabs,
+          selectedIndex: _selectedIndex,
+          onTap: _onTap,
+          controller: _scrollController, // ✅ pass controller
+        ),
+      ],
+    );
+  }
+}
+
+class _ChipTabBar extends StatelessWidget {
+  const _ChipTabBar({
+    required this.tabs,
+    required this.selectedIndex,
+    required this.onTap,
+    required this.controller,
+  });
+
+  final List<ChipTabItem> tabs;
+  final int selectedIndex;
+  final void Function(int) onTap;
+  final ScrollController controller; // ✅ added
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 56.h,
+      color: AppColors.transparent,
+      child: ListView.separated(
+        controller: controller, // ✅ attach here
+        scrollDirection: Axis.horizontal,
+        padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 10.h),
+        itemCount: tabs.length,
+        separatorBuilder: (BuildContext context, int index) =>
+            SizedBox(width: 6.h),
+        itemBuilder: (context, index) {
+          final bool isSelected = index == selectedIndex;
+          return GestureDetector(
+            onTap: () => onTap(index),
+            child: ConstrainedBox(
+              constraints: BoxConstraints(minWidth: 100.w),
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 250),
+                padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 1.h),
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: isSelected
+                      ? AppColors.primary
+                      : const Color(0xFFDDC2B6).withValues(alpha: 0.29),
+                  borderRadius: BorderRadius.circular(30),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    if (tabs[index].icon != null) ...[
+                      AppIcon(
+                        tabs[index].icon!,
+                        size: 18.sp,
+                        color: const Color(0xFF320E02),
+                      ),
+                      SizedBox(width: 5.w),
+                    ],
+                    AppText.h3(
+                      tabs[index].title,
+                      color: isSelected
+                          ? AppColors.textPrimary
+                          : const Color(0xFF5A1903),
+                      fontSize: 12.sp,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+}

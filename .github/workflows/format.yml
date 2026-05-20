@@ -1,0 +1,38 @@
+name: Flutter Quality Check
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - master
+      - development
+      - alpha
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.41.0'
+          cache: true
+
+      - name: Create .env file
+        run: |
+          echo "API_URL=https://dummy.com" > .env
+          echo "TOKEN=dummy" >> .env
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Verify formatting
+        run: dart format --output=none --set-exit-if-changed .
+
+      - name: Analyze project source
+        run: flutter analyze --fatal-infos

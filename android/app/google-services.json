@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "494608766067",
+    "project_id": "pooch-8e5eb",
+    "storage_bucket": "pooch-8e5eb.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:494608766067:android:08307df4c4ac156d82c606",
+        "android_client_info": {
+          "package_name": "com.care.pooch"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "494608766067-7cc5t3fu1hudjanr262l6kn8onbo7lvu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.care.pooch",
+            "certificate_hash": "a1bc3491f7d1fb2dd2dd6645f3ecfcf003e8f68e"
+          }
+        },
+        {
+          "client_id": "494608766067-kgsqjhm3piomjdh6fnvq5pe7ulpngbs4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.care.pooch",
+            "certificate_hash": "a899ee781ddcacf0a9d5110e0c37a761c7cd5540"
+          }
+        },
+        {
+          "client_id": "494608766067-k003t7rie1dbppvbepff9ukgjnadpkc2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBnwJgY4T1CedIVSaRmrjcsXBdSQDAsxvs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "494608766067-k003t7rie1dbppvbepff9ukgjnadpkc2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,43 @@
+include: package:flutter_lints/flutter.yaml
+
+analyzer:
+  exclude:
+    - build/**
+    - .dart_tool/**
+    - "**/*.mapper.dart"
+  language:
+    strict-casts: true
+    strict-inference: true
+
+  errors:
+    prefer_single_quotes: error
+    file_names: error
+    non_constant_identifier_names: error
+    camel_case_types: error
+
+linter:
+  rules:
+    # Code Style
+    prefer_single_quotes: true
+    always_use_package_imports: true
+    directives_ordering: true
+    sort_child_properties_last: true
+
+    # Safety
+    avoid_print: true
+    avoid_empty_else: true
+    cancel_subscriptions: true
+    close_sinks: true
+
+    # Maintainability
+    always_declare_return_types: true
+    require_trailing_commas: true
+
+    # Flutter
+    use_key_in_widget_constructors: true
+    prefer_const_constructors: true
+    prefer_const_literals_to_create_immutables: true
+
+    # Performance
+    avoid_unnecessary_containers: true
+    avoid_redundant_argument_values: true

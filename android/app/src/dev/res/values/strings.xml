@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">Pooch Dev</string>
+    <string name="facebook_app_id">1281440807511164</string>
+    <string name="facebook_client_token">64ce2f73ef12d00dd42d91bff0c4f6e1</string>
+    <string name="fb_login_protocol_scheme">fb1281440807511164</string>
+</resources>

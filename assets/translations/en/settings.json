@@ -1,0 +1,8 @@
+{
+  "settings": {
+    "changeLanguage": "Change Language",
+    "changeLanguageConfirmation": "Are you sure you want to change the language?",
+    "english": "English",
+    "arabic": "Arabic"
+  }
+}

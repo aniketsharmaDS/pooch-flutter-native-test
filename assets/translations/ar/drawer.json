@@ -1,0 +1,31 @@
+{
+  "drawer": {
+    "menu": "القائمة",
+    "dashboard": "لوحة التحكم",
+    "accountSettings": "إعدادات الحساب",
+    "manageMyAccounts": "إدارة حساباتي",
+    "myVirtualAccessories": "إكسسواراتي الافتراضية",
+    "myOrders": "طلباتي",
+    "myWishList": "قائمة رغباتي",
+    "myCouponsAndDiscounts": "قسائمي وخصوماتي",
+    "myInvites": "دعواتي",
+    "mySubscriptions": "اشتراكاتي",
+    "myRecentReportsAndHistory": "تقاريري الأخيرة والسجل",
+    "mySubscribedClinics": "العيادات المشتركة بها",
+    "myNotificationSettings": "إعدادات الإشعارات",
+    "myPaymentMethods": "طرق الدفع",
+    "deleteMyAccount": "حذف حسابي",
+    "changeLanguage": "تغيير اللغة",
+    "helpAndSupport": "المساعدة والدعم",
+    "faqs": "الأسئلة الشائعة",
+    "contactAndAssistance": "الاتصال والمساعدة",
+    "reports": "التقارير",
+    "feedback": "الملاحظات",
+    "about": "حول",
+    "privacyPolicy": "سياسة الخصوصية",
+    "termsAndConditions": "الشروط والأحكام",
+    "socialMedia": "وسائل التواصل الاجتماعي",
+    "logOut": "تسجيل الخروج",
+    "areYouSureWantToLogout": "هل أنت متأكد أنك تريد تسجيل الخروج؟"
+  }
+}

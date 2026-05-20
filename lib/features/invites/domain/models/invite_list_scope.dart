@@ -1,0 +1,1 @@
+enum InviteListScope { myInvites, networkInvites }

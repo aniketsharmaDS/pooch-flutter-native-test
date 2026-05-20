@@ -1,0 +1,75 @@
+#!/bin/sh
+# POSIX shell
+
+set -e
+# Exit on error → blocks commit
+
+# -------------------------------
+# FVM SDK paths
+# -------------------------------
+FLUTTER="./.fvm/flutter_sdk/bin/flutter"
+DART="./.fvm/flutter_sdk/bin/dart"
+
+# -------------------------------
+# Resolve actual commands (NO functions → xargs safe)
+# -------------------------------
+if [ -f "$FLUTTER" ]; then
+  FLUTTER_CMD="$FLUTTER"
+else
+  FLUTTER_CMD="flutter"
+fi
+
+if [ -f "$DART" ]; then
+  DART_CMD="$DART"
+else
+  DART_CMD="dart"
+fi
+
+echo "[pre-commit] 🔍 Checking staged Dart files..."
+
+# -------------------------------
+# Get staged Dart files
+# -------------------------------
+STAGED_DART_FILES=$(git diff --cached --name-only --diff-filter=ACMR | grep '\.dart$' || true)
+
+if [ -z "$STAGED_DART_FILES" ]; then
+  echo "[pre-commit] No Dart files staged. Skipping."
+  exit 0
+fi
+
+echo "[pre-commit] 📦 Staged files:"
+echo "$STAGED_DART_FILES"
+
+# -------------------------------
+# FORMAT (FAST + SAFE)
+# -------------------------------
+echo "[pre-commit] 🎨 Formatting..."
+echo "$STAGED_DART_FILES" | xargs "$DART_CMD" format
+
+
+# -------------------------------
+# AUTO FIX (THIS IS THE NEW PART) 
+# (commneted now as this can cause issues if there are fixes that change the code significantly. Can be re-enabled later with proper testing.)
+# -------------------------------
+# echo "[pre-commit] 🧹 Applying auto-fixes..."
+# "$DART_CMD" fix --apply
+
+# -------------------------------
+# RE-STAGE
+# -------------------------------
+echo "[pre-commit] 📌 Re-staging formatted files..."
+echo "$STAGED_DART_FILES" | xargs git add
+
+# -------------------------------
+# ANALYZE
+# -------------------------------
+echo "[pre-commit] 🧠 Running analysis..."
+if ! "$FLUTTER_CMD" analyze; then
+  echo "[pre-commit] ❌ Analysis failed. Commit blocked."
+  exit 1
+fi
+
+# -------------------------------
+# SUCCESS
+# -------------------------------
+echo "[pre-commit] ✅ All checks passed."

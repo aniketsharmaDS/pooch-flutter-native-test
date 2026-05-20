@@ -1,0 +1,11 @@
+{
+  "@@locale": "en",
+  "language": "Language",
+  "english": "English",
+  "arabic": "Arabic",
+  "selectLanguage": "Select Language",
+  "dashboard": "Dashboard",
+  "@dashboard": {
+    "description": "Drawer dashboard title"
+  }
+}

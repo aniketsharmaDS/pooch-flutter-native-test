@@ -1,0 +1,31 @@
+{
+  "drawer": {
+    "menu": "Menu",
+    "dashboard": "Dashboard",
+    "accountSettings": "Account Settings",
+    "manageMyAccounts": "Manage My Accounts",
+    "myVirtualAccessories": "My Virtual Accessories",
+    "myOrders": "My Orders",
+    "myWishList": "My Wishlist",
+    "myCouponsAndDiscounts": "My Coupons & Discounts",
+    "myInvites": "My Invites",
+    "mySubscriptions": "My Subscriptions",
+    "myRecentReportsAndHistory": "My Recent Reports & History",
+    "mySubscribedClinics": "My Subscribed Clinics",
+    "myNotificationSettings": "My Notification Settings",
+    "myPaymentMethods": "My Payment Methods",
+    "deleteMyAccount": "Delete My Account",
+    "changeLanguage": "Change Language",
+    "helpAndSupport": "Help & Support",
+    "faqs": "Faq's",
+    "contactAndAssistance": "Contact & Assistance",
+    "reports": "Reports",
+    "feedback": "Feedback",
+    "about": "About",
+    "privacyPolicy": "Privacy Policy",
+    "termsAndConditions": "Terms & Conditions",
+    "socialMedia": "Social Media",
+    "logOut": "Log Out",
+    "areYouSureWantToLogout": "Are you sure want to logout?"
+  }
+}

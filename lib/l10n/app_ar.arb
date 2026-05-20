@@ -1,0 +1,11 @@
+{
+  "@@locale": "ar",
+  "language": "اللغة",
+  "english": "الإنجليزية",
+  "arabic": "العربية",
+  "selectLanguage": "اختر اللغة",
+  "dashboard": "لوحة التحكم",
+  "@dashboard": {
+    "description": "Drawer dashboard title"
+  }
+}
