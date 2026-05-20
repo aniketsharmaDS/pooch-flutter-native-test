@@ -17,6 +17,10 @@ ignore_files:
   # Generated files
   - .metadata
   - .DS_Store
+  - "**/*.freezed.dart"
+  - "**/*.g.dart"
+  - "**/*.config.dart"
+  - "**/*.part.dart"
 
   # Platform-specific directories
   - android/
@@ -51,5 +55,15 @@ ignore_files:
   - ".idea/"
   - "*.iml"
   - ".gradle/"
+
+  # Generated locale files
+  - "lib/core/localization/generated_*"
+  - "lib/l10n/"
+
+  # Less critical feature directories (reduce review scope)
+  - "lib/features/community/presentation/view/**"
+  - "lib/features/ecommerce/presentation/widgets/buy_pet/**"
+  - "lib/features/store_profile/**"
+  - "lib/features/my_pets/presentation/widgets/**"
 
 max_files_to_review: 150
