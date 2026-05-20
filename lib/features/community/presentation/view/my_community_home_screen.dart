@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:auto_route/auto_route.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:poochcare/core/di/service_locator.dart';
@@ -34,10 +35,11 @@ class MyCommunityHomeScreen extends StatelessWidget
       'Initial Tab Index: MC $initialTabIndex',
     ); // Debug log to check the initial index
     return AppPrimaryScreenContainer(
-      title: 'My Community',
+      title: 'community.title'.tr(),
       // actions: [],
       child: AppDefaultRouteTabs(
-        tabNames: const ['My Posts', 'Under Review', 'Live'],
+        // isScrollable: true,
+        tabNames: const ['My Posts', 'Posts Under Review', 'Live Posts'],
         routes: [
           MyPostTabRoute(initialIndex: initialTabIndex),
           const MyPostReviewTabRoute(),

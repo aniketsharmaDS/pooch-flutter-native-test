@@ -262,6 +262,33 @@ class MissingPetRepository {
     }
   }
 
+  Future<ApiResponse> updatedMissingPetReport({
+    required String reportId,
+    required MissingPetReportPayloadModel payload,
+  }) async {
+    try {
+      final ApiResponse apiResponse = await _api.updatedMissingPetReport(
+        reportId: reportId,
+        payload: payload,
+      );
+
+      log(
+        'Create event API => success=${apiResponse.success}, message=${apiResponse.message}, data=${apiResponse.data}',
+      );
+
+      // ✅ Just return response as-is (NO throwing)
+      return apiResponse;
+    } catch (e) {
+      log('Create event exception: $e');
+
+      // ❌ Convert exception into ApiResponse instead of throwing
+      return ApiResponse(
+        // success: false,
+        message: _extractError(e),
+      );
+    }
+  }
+
   /// Fetch tips with pagination, search, and category filtering
   Future<MissingPetModel?> getMissingReportDetails({
     required String reportId,
@@ -332,6 +359,52 @@ class MissingPetRepository {
     try {
       final ApiResponse apiResponse = await _api.reportMissingPetFound(
         payload: payload,
+      );
+
+      log(
+        'Create event API => success=${apiResponse.success}, message=${apiResponse.message}, data=${apiResponse.data}',
+      );
+
+      // ✅ Just return response as-is (NO throwing)
+      return apiResponse;
+    } catch (e) {
+      log('Create event exception: $e');
+
+      // ❌ Convert exception into ApiResponse instead of throwing
+      return ApiResponse(
+        // success: false,
+        message: _extractError(e),
+      );
+    }
+  }
+
+  Future<ApiResponse> reUnitePooch({required String reportId}) async {
+    try {
+      final ApiResponse apiResponse = await _api.reUnitePooch(
+        reportId: reportId,
+      );
+
+      log(
+        'Create event API => success=${apiResponse.success}, message=${apiResponse.message}, data=${apiResponse.data}',
+      );
+
+      // ✅ Just return response as-is (NO throwing)
+      return apiResponse;
+    } catch (e) {
+      log('Create event exception: $e');
+
+      // ❌ Convert exception into ApiResponse instead of throwing
+      return ApiResponse(
+        // success: false,
+        message: _extractError(e),
+      );
+    }
+  }
+
+  Future<ApiResponse> deleteReportPost({required String reportId}) async {
+    try {
+      final ApiResponse apiResponse = await _api.deleteReportPost(
+        reportId: reportId,
       );
 
       log(

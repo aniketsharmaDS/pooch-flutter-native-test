@@ -104,8 +104,10 @@ class _MyPetsWaveCardState extends State<MyPetsWaveCard> {
         horizontal: AppSpacing.s6.w,
         vertical: AppSpacing.s18.h,
       ).copyWith(bottom: AppSpacing.s12.h),
-      notchHeight: 35,
-      notchWidth: 175,
+      // notchHeight: 35,
+      // notchWidth: 175,
+      notchHeight: AppSpacing.s34.h,
+      notchWidth: AppSpacing.s175.w,
       // variant: AppCardNotchVariant.topRight,
       actionWidget: Row(
         children: [
@@ -116,7 +118,7 @@ class _MyPetsWaveCardState extends State<MyPetsWaveCard> {
               iconSize: AppRadiusSize.r20.rr,
               bgColor: const Color(0xFFFFFEFD),
               onTap: widget.onAddTap,
-              shadowColor: const Color(0x66CB9B62),
+              shadowColor: const Color(0xFFCB9B62).withValues(alpha: 0.4),
             )
           else ...[
             if (pet != null && pet.canDelete)
@@ -131,7 +133,7 @@ class _MyPetsWaveCardState extends State<MyPetsWaveCard> {
                     : () {
                         widget.onDeleteTap?.call(pet);
                       },
-                shadowColor: const Color(0x66CB9B62),
+                shadowColor: const Color(0xFFCB9B62).withValues(alpha: 0.4),
                 isLoading: isSelectedPetDeleting,
               ),
             if (pet != null && pet.canEdit)
@@ -144,7 +146,7 @@ class _MyPetsWaveCardState extends State<MyPetsWaveCard> {
                 onTap: () {
                   widget.onEditTap?.call(pet);
                 },
-                shadowColor: const Color(0x66CB9B62),
+                shadowColor: const Color(0xFFCB9B62).withValues(alpha: 0.4),
               ),
           ],
         ],

@@ -15,11 +15,13 @@ class ScheduleHeader extends StatelessWidget {
     required this.selectedView,
     required this.onViewChanged,
     required this.onYearTap,
+    required this.isLoading,
   });
 
   final DateTime selectedDate;
   final int selectedYear;
   final ScheduleViewType selectedView;
+  final bool isLoading;
 
   final ValueChanged<ScheduleViewType> onViewChanged;
   final VoidCallback onYearTap;
@@ -32,6 +34,22 @@ class ScheduleHeader extends StatelessWidget {
         children: [
           Expanded(
             child: AppText.h1(_headerTitle(), color: const Color(0XFF3F3C36)),
+            // child:  isLoading
+            //     ? Align(
+            //         alignment: Alignment.centerLeft,
+            //         child: Container(
+            //           height: 28,
+            //           width: 120,
+            //           decoration: BoxDecoration(
+            //             color: Colors.grey.shade300,
+            //             borderRadius: BorderRadius.circular(6),
+            //           ),
+            //         ),
+            //       )
+            //     : AppText.h1(
+            //         _headerTitle(),
+            //         color: const Color(0XFF3F3C36),
+            //       ),
           ),
 
           _viewDropdown(),

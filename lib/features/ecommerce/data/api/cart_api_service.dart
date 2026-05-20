@@ -1,6 +1,9 @@
 import 'package:dio/dio.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:poochcare/core/errors/api_exception.dart';
+import 'package:poochcare/core/errors/error_handler.dart';
 import 'package:poochcare/core/errors/error_mapper.dart';
+import 'package:poochcare/core/errors/failure.dart';
 import 'package:poochcare/core/network/api_response.dart';
 import 'package:poochcare/features/ecommerce/data/models/address/address_model.dart';
 import 'package:poochcare/features/ecommerce/data/models/cart/cart_item_model.dart';
@@ -37,16 +40,16 @@ class CartApiService {
   }
 
   /// Get cart item count
-  Future<int> getCartCount() async {
+  Future<Either<Failure, int>> getCartCount() async {
     try {
       final response = await _dio.get<dynamic>(_cartCountPath);
       final payload = _unwrapEnvelope(response.data);
 
-      // Handle both cases: a raw int or a wrapped CartCount object
-      if (payload is int) return payload;
-      return (payload['count'] as int?) ?? 0;
+      return Either.right((payload['count'] as int?) ?? 0);
     } on DioException catch (e) {
-      throw ErrorMapper.mapDioError(e);
+      return Either.left(ErrorHandler.handleDioError(e));
+    } catch (e) {
+      return Either.left(UnknownFailure(e.toString()));
     }
   }
 

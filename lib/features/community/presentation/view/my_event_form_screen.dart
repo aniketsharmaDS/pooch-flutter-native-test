@@ -350,14 +350,14 @@ class _MyEventFormScreenState extends State<MyEventFormScreen> {
                           ),
                           AppSpacing.s20.hBox,
                           AppTextField(
-                            label: 'Add location',
+                            label: 'Add Address',
                             controller: locationController,
                             isMandatory: true,
                             textInputAction: TextInputAction.next,
                           ),
                           AppSpacing.s20.hBox,
                           AppTextField(
-                            label: 'Add Address',
+                            label: 'Add location',
                             controller: addressController,
                             isReadOnly: true,
                             isMandatory: true,

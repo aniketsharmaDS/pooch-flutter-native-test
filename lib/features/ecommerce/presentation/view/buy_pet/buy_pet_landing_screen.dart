@@ -1,17 +1,16 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:poochcare/core/di/service_locator.dart';
+import 'package:poochcare/core/services/location_permission_service.dart';
+import 'package:poochcare/core/theme/app_icons.dart';
 import 'package:poochcare/core/theme/app_spacing.dart';
 import 'package:poochcare/features/ecommerce/presentation/bloc/buy_pet_landing/buy_pet_landing_bloc.dart';
 import 'package:poochcare/features/ecommerce/presentation/bloc/buy_pet_landing/buy_pet_landing_state.dart';
-import 'package:poochcare/features/ecommerce/presentation/widgets/buy_pet/featured_cats_section.dart';
-import 'package:poochcare/features/ecommerce/presentation/widgets/buy_pet/featured_dogs_section.dart';
-import 'package:poochcare/features/ecommerce/presentation/widgets/buy_pet/find_pooches_dialog.dart';
+import 'package:poochcare/features/ecommerce/presentation/view/buy_pet/common_pet_listing_screen.dart';
+import 'package:poochcare/features/ecommerce/presentation/widgets/buy_pet/common_pet_section.dart';
 import 'package:poochcare/features/ecommerce/presentation/widgets/buy_pet/most_popular_section.dart';
-import 'package:poochcare/features/ecommerce/presentation/widgets/buy_pet/recently_viewed_section.dart';
-import 'package:poochcare/features/ecommerce/presentation/widgets/nudges/buy_or_adopt_pooch_nudge.dart';
-import 'package:poochcare/features/ecommerce/presentation/widgets/nudges/help_me_find_pooch_nudge.dart';
-import 'package:poochcare/features/ecommerce/presentation/widgets/nudges/join_pooch_community_nudge.dart';
+import 'package:poochcare/features/ecommerce/presentation/widgets/nudges/app_nudge_card.dart';
 import 'package:poochcare/router/app_router.dart';
 
 @RoutePage()
@@ -24,34 +23,12 @@ class BuyPetLandingScreen extends StatefulWidget {
 
 class _BuyPetLandingScreenState extends State<BuyPetLandingScreen> {
   bool _dialogShown = false;
+  final service = getIt<LocationPermissionService>();
   // late AutoRouteObserver _observer;
 
   Future<void> _showFindPoochesDialog() async {
-    if (!mounted) return;
-
-    await FindPoochesDialog.show(context: context);
-    // Dialog dismisses automatically regardless of which button was clicked
-    // Landing screen remains visible in the background
+    await service.requestLocationPermissionFlow(context);
   }
-
-  // @override
-  // void didPopNext() {
-  //   // called when coming BACK to this screen
-  //   context.read<BuyPetLandingBloc>().add(const FetchRecentlyViewedOnly());
-  // }
-
-  // @override
-  // void didChangeDependencies() {
-  //   super.didChangeDependencies();
-  //   _observer = AutoRouter.of(context).observer;
-  //   _observer.subscribe(this, ModalRoute.of(context)!);
-  // }
-
-  // @override
-  // void dispose() {
-  //   _observer.unsubscribe(this);
-  //   super.dispose();
-  // }
 
   @override
   void initState() {
@@ -94,32 +71,52 @@ class _BuyPetLandingScreenState extends State<BuyPetLandingScreen> {
                           padding: EdgeInsets.symmetric(
                             horizontal: AppSpacing.s16.w,
                           ),
-                          child: BuyOrAdoptPoochNudge(
-                            onBuyOrAdopt: () {
-                              // context.router.push(BuyPetListingRoute(
-                              //     landingBloc: context
-                              //         .read<BuyPetLandingBloc>(),
-                              //   ));
+                          child: AppNudgeCard(
+                            cardTitle: 'Buy or adopt a pooch you love',
+                            cardDescription:
+                                'Find the perfect pup and give them a loving home',
+                            cardButtonTitle: 'See Pets',
+                            cardBackgroundImage:
+                                AppIcons.png.nudges.buyAdoptPoochCardBg,
+                            cardAction: () {
                               context.router.push(const BuyPetListingRoute());
                             },
                           ),
                         ),
-                        AppSpacing.s40.hBox,
-                        RecentlyViewedSection(
-                          products: state.recentlyViewed,
-                          isLoading: state.isLoading,
-                          error: state.recentlyViewedError,
-                          onRetry: () => context.read<BuyPetLandingBloc>().add(
-                            const FetchLandingData(),
+                        // AppSpacing.s40.hBox,
+                        if (state.isLoading ||
+                            state.recentlyViewedError != null ||
+                            state.recentlyViewed.isNotEmpty) ...[
+                          CommonPetSection(
+                            showTopSpacing: true,
+                            title: 'Recently Viewed',
+
+                            listingType: ListingType.recentlyViewed,
+
+                            products: state.recentlyViewed,
+
+                            isLoading: state.isLoading,
+
+                            error: state.recentlyViewedError,
+
+                            onRetry: () => context
+                                .read<BuyPetLandingBloc>()
+                                .add(const FetchLandingData()),
                           ),
-                        ),
+                        ],
                         AppSpacing.s40.hBox,
                         Padding(
                           padding: EdgeInsets.symmetric(
                             horizontal: AppSpacing.s16.w,
                           ),
-                          child: HelpMeFindPoochNudge(
-                            onGetHelp: () {
+                          child: AppNudgeCard(
+                            cardTitle: 'Help me find or discover a Pooch',
+                            cardDescription:
+                                'A pooch is family - let us help you find the right one.',
+                            cardButtonTitle: 'Get Help',
+                            cardBackgroundImage:
+                                AppIcons.png.nudges.helpDiscoverPoochCardBg,
+                            cardAction: () {
                               context.router.push(const GetHelpRoute());
                             },
                           ),
@@ -142,16 +139,31 @@ class _BuyPetLandingScreenState extends State<BuyPetLandingScreen> {
                           padding: EdgeInsets.symmetric(
                             horizontal: AppSpacing.s16.w,
                           ),
-                          child: JoinPoochCommunityNudge(onJoinNow: () {}),
+                          child: AppNudgeCard(
+                            cardTitle: 'Join the Pooch Community',
+                            cardDescription:
+                                'Find advice, share stories, and grow together',
+                            cardButtonTitle: 'Join Now',
+                            cardBackgroundImage:
+                                AppIcons.png.nudges.joinPoochCommunityCardBg,
+                            cardAction: () {},
+                          ),
                         ),
                         if (state.isLoading ||
                             state.featuredDogsError != null ||
                             state.featuredDogs.isNotEmpty) ...[
                           AppSpacing.s40.hBox,
-                          FeaturedDogsSection(
+                          CommonPetSection(
+                            title: 'Featured Dogs',
+
+                            listingType: ListingType.featuredDogs,
+
                             products: state.featuredDogs,
+
                             isLoading: state.isLoading,
+
                             error: state.featuredDogsError,
+
                             onRetry: () => context
                                 .read<BuyPetLandingBloc>()
                                 .add(const FetchLandingData()),
@@ -161,10 +173,17 @@ class _BuyPetLandingScreenState extends State<BuyPetLandingScreen> {
                             state.featuredCatsError != null ||
                             state.featuredCats.isNotEmpty) ...[
                           AppSpacing.s40.hBox,
-                          FeaturedCatsSection(
+                          CommonPetSection(
+                            title: 'Featured Cats',
+
+                            listingType: ListingType.featuredCats,
+
                             products: state.featuredCats,
+
                             isLoading: state.isLoading,
+
                             error: state.featuredCatsError,
+
                             onRetry: () => context
                                 .read<BuyPetLandingBloc>()
                                 .add(const FetchLandingData()),

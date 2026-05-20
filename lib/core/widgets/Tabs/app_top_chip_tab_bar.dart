@@ -32,24 +32,21 @@ class AppTopChipTabBar extends StatefulWidget {
 class _AppTopChipTabBarState extends State<AppTopChipTabBar> {
   late int _selectedIndex;
 
-  final ScrollController _scrollController = ScrollController(); // ✅ added
+  final ScrollController _scrollController = ScrollController();
+
+  final List<GlobalKey> _tabKeys = [];
 
   @override
   void initState() {
     super.initState();
+
     _selectedIndex = widget.initialIndex;
 
-    // ✅ scroll to initial tab
+    _tabKeys.addAll(List.generate(widget.tabs.length, (_) => GlobalKey()));
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _scrollToIndex(_selectedIndex);
     });
-  }
-
-  void _onTap(int index) {
-    setState(() => _selectedIndex = index);
-    widget.onTabChanged?.call(index);
-
-    _scrollToIndex(index); // ✅ scroll on tap
   }
 
   @override
@@ -59,21 +56,40 @@ class _AppTopChipTabBarState extends State<AppTopChipTabBar> {
     if (oldWidget.selectedIndex != widget.selectedIndex) {
       _selectedIndex = widget.selectedIndex;
 
-      // ✅ scroll on external change
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _scrollToIndex(_selectedIndex);
       });
     }
   }
 
+  void _onTap(int index) {
+    setState(() => _selectedIndex = index);
+
+    widget.onTabChanged?.call(index);
+
+    _scrollToIndex(index);
+  }
+
   void _scrollToIndex(int index) {
     if (!_scrollController.hasClients) return;
 
-    final double itemWidth = 110.w; // approx width
+    final keyContext = _tabKeys[index].currentContext;
+
+    if (keyContext == null) return;
+
+    final RenderBox renderBox = keyContext.findRenderObject() as RenderBox;
+
+    final position = renderBox.localToGlobal(Offset.zero);
+
     final double screenWidth = MediaQuery.of(context).size.width;
 
+    final double itemWidth = renderBox.size.width;
+
     final double targetOffset =
-        (index * itemWidth) - (screenWidth / 2) + (itemWidth / 2);
+        _scrollController.offset +
+        position.dx -
+        (screenWidth / 2) +
+        (itemWidth / 2);
 
     _scrollController.animateTo(
       targetOffset.clamp(0, _scrollController.position.maxScrollExtent),
@@ -90,7 +106,8 @@ class _AppTopChipTabBarState extends State<AppTopChipTabBar> {
           tabs: widget.tabs,
           selectedIndex: _selectedIndex,
           onTap: _onTap,
-          controller: _scrollController, // ✅ pass controller
+          controller: _scrollController,
+          tabKeys: _tabKeys,
         ),
       ],
     );
@@ -103,12 +120,14 @@ class _ChipTabBar extends StatelessWidget {
     required this.selectedIndex,
     required this.onTap,
     required this.controller,
+    required this.tabKeys,
   });
 
   final List<ChipTabItem> tabs;
   final int selectedIndex;
   final void Function(int) onTap;
-  final ScrollController controller; // ✅ added
+  final ScrollController controller;
+  final List<GlobalKey> tabKeys;
 
   @override
   Widget build(BuildContext context) {
@@ -116,15 +135,17 @@ class _ChipTabBar extends StatelessWidget {
       height: 56.h,
       color: AppColors.transparent,
       child: ListView.separated(
-        controller: controller, // ✅ attach here
+        controller: controller,
         scrollDirection: Axis.horizontal,
-        padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 10.h),
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
         itemCount: tabs.length,
         separatorBuilder: (BuildContext context, int index) =>
-            SizedBox(width: 6.h),
+            SizedBox(width: 6.w),
         itemBuilder: (context, index) {
           final bool isSelected = index == selectedIndex;
+
           return GestureDetector(
+            key: tabKeys[index],
             onTap: () => onTap(index),
             child: ConstrainedBox(
               constraints: BoxConstraints(minWidth: 100.w),
@@ -146,15 +167,13 @@ class _ChipTabBar extends StatelessWidget {
                       AppIcon(
                         tabs[index].icon!,
                         size: 18.sp,
-                        color: const Color(0xFF320E02),
+                        color: isSelected ? AppColors.p5_900 : AppColors.p4,
                       ),
                       SizedBox(width: 5.w),
                     ],
                     AppText.h3(
                       tabs[index].title,
-                      color: isSelected
-                          ? AppColors.textPrimary
-                          : const Color(0xFF5A1903),
+                      color: isSelected ? AppColors.p5_900 : AppColors.p4,
                       fontSize: 12.sp,
                     ),
                   ],

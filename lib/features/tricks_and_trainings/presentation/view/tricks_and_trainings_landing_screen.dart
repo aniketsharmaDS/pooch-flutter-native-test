@@ -4,8 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:poochcare/core/di/service_locator.dart';
 import 'package:poochcare/core/theme/app_colors.dart';
 import 'package:poochcare/core/theme/app_spacing.dart';
-import 'package:poochcare/core/widgets/appbar/pooch_screen_app_bar.dart';
 import 'package:poochcare/core/widgets/forms/medical_form/pet_selection_form_field.dart';
+import 'package:poochcare/core/widgets/screen/app_primary_screen_container.dart';
 import 'package:poochcare/core/widgets/texts/app_search_field.dart';
 import 'package:poochcare/core/widgets/texts/app_text.dart';
 import 'package:poochcare/features/tricks_and_trainings/presentation/bloc/tricks_and_trainings_bloc.dart';
@@ -36,13 +36,11 @@ class _TricksAndTrainingsLandingScreenState
           getIt<TricksAndTrainingsBloc>()..add(LoadTricksAndTrainings()),
       child: Builder(
         builder: (context) {
-          return Scaffold(
-            backgroundColor: AppColors.transparent,
-            body: SafeArea(
+          return AppPrimaryScreenContainer(
+            title: 'Tricks & Trainings',
+            child: SafeArea(
               child: Column(
                 children: [
-                  const PoochScreenAppBar(title: 'Tricks and Trainings'),
-                  const SizedBox(height: 16),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
                     child: AppSearchField(

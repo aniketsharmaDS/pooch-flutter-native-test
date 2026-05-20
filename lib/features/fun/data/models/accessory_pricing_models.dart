@@ -10,6 +10,7 @@ class AccessorySummaryModel {
     required this.currency,
     required this.isCustomPrice,
     required this.isPremium,
+    required this.accessoryCategory,
   });
 
   final String id;
@@ -20,9 +21,11 @@ class AccessorySummaryModel {
   final String currency;
   final bool isCustomPrice;
   final bool isPremium;
+  final String accessoryCategory;
 
   factory AccessorySummaryModel.fromMap(Map<String, dynamic> map) {
     return AccessorySummaryModel(
+      accessoryCategory: ParserUtils.readString(map['accessoryCategory']),
       id: ParserUtils.readString(map['id']),
       name: ParserUtils.readString(map['name']),
       thumbnail: ParserUtils.readNullableString(map['thumbnail']),

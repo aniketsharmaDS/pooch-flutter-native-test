@@ -24,6 +24,28 @@ class IntroTransitionModel {
     required this.bgGradientStart,
     required this.bgGradientEnd,
   });
+
+  IntroTransitionModel copyWith({
+    String? title,
+    String? subtitle,
+    String? imagePath,
+    List<FloatingCardData>? cards,
+    bool? showSkip,
+    bool? isLast,
+    Color? bgGradientStart,
+    Color? bgGradientEnd,
+  }) {
+    return IntroTransitionModel(
+      title: title ?? this.title,
+      subtitle: subtitle ?? this.subtitle,
+      imagePath: imagePath ?? this.imagePath,
+      cards: cards ?? this.cards,
+      showSkip: showSkip ?? this.showSkip,
+      isLast: isLast ?? this.isLast,
+      bgGradientStart: bgGradientStart ?? this.bgGradientStart,
+      bgGradientEnd: bgGradientEnd ?? this.bgGradientEnd,
+    );
+  }
 }
 
 class FloatingCardData {

@@ -102,7 +102,7 @@ class _PetMedicalHistoryScreenState extends State<PetMedicalHistoryScreen> {
                             'Save medical reports, prescriptions and vaccination certificates.',
                         onUploadTap: () async {
                           await context.router.push<bool>(
-                            const AddPetMedicalRecordsTabRoute(),
+                            AddPetMedicalRecordsTabRoute(),
                           );
                         },
                         onFilesChanged: (files) {
@@ -118,9 +118,16 @@ class _PetMedicalHistoryScreenState extends State<PetMedicalHistoryScreen> {
                       child: AppWaveCard(
                         notchHeight: 25,
                         notchWidth: 200,
-                        actionWidget: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [_buildPetMenuTrigger(state)],
+                        actionWidget: ValueListenableBuilder<String?>(
+                          valueListenable: _selectedPetIdNotifier,
+                          builder: (context, selectedPetId, _) {
+                            return Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                _buildPetMenuTrigger(state, selectedPetId),
+                              ],
+                            );
+                          },
                         ),
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
@@ -308,8 +315,9 @@ class _PetMedicalHistoryScreenState extends State<PetMedicalHistoryScreen> {
     }
   }
 
-  Widget _buildPetMenuTrigger(UserProfileState state) {
+  Widget _buildPetMenuTrigger(UserProfileState state, String? selectedPetId) {
     return AppPopupMenu(
+      showBadge: selectedPetId != null ? true : false,
       headerTitle: 'Select Pet',
       showCloseIcon: true,
       items: _buildPetMenuItems(state),

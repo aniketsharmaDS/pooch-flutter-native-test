@@ -97,7 +97,7 @@ class BuyOrAdoptPoochNudge extends StatelessWidget {
             children: [
               SizedBox(height: 10.h),
               AppText.h1(
-                'Buy or adopt a \npooch you love',
+                'Buy or adopt a pooch you love',
                 maxLines: 2,
                 style: TextStyle(
                   fontSize: 16.sp,
@@ -107,7 +107,7 @@ class BuyOrAdoptPoochNudge extends StatelessWidget {
               ),
               SizedBox(height: 8.h),
               AppText.bodyS(
-                'Find the perfect pup and \ngive them a loving home',
+                'Find the perfect pup and give them a loving home',
                 maxLines: 3,
                 style: const TextStyle(height: 1.2),
               ),

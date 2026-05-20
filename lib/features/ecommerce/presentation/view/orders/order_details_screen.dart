@@ -103,6 +103,9 @@ class OrderDetailsScreen extends StatelessWidget {
 
               final isDelivered =
                   requestedItem.rawStatus.toLowerCase() == 'delivered';
+
+              final isAccessory =
+                  requestedItem.orderType == OrderType.accessory;
               return Column(
                 children: [
                   const PoochScreenAppBar(title: 'Order Details'),
@@ -170,14 +173,19 @@ class OrderDetailsScreen extends StatelessWidget {
                     ),
                   ),
 
-                  // DELIVERED → ONLY NEED HELP
-                  // 🔥 DELIVERED → ONLY NEED HELP
-                  if (isDelivered)
+                  // ACCESSORY → ONLY NEED HELP
+                  if (isAccessory)
                     OrderBottomActions(
                       order: requestedItem,
                       needHelpPosition: NeedHelpPosition.top,
                     )
-                  // 🔥 CANCELLATION FLOW (request_raised / reviewed / approved)
+                  // DELIVERED → ONLY NEED HELP
+                  else if (isDelivered)
+                    OrderBottomActions(
+                      order: requestedItem,
+                      needHelpPosition: NeedHelpPosition.top,
+                    )
+                  //  CANCELLATION FLOW (request_raised / reviewed / approved)
                   else if (isCancellationActive)
                     OrderBottomActions(
                       order: requestedItem,

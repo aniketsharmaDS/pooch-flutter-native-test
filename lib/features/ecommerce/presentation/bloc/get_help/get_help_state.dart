@@ -18,6 +18,8 @@ class GetHelpState {
   final bool isLoadingRecommendations;
   final bool hasRequestedRecommendations;
 
+  final bool hasOpenedRecommendations;
+
   final bool isLoading;
   final bool isSubmitting;
   final String? error;
@@ -37,6 +39,7 @@ class GetHelpState {
     this.recommendations = const [],
     this.isLoadingRecommendations = false,
     this.hasRequestedRecommendations = false,
+    this.hasOpenedRecommendations = false,
     this.isTyping = false,
   });
 
@@ -51,6 +54,7 @@ class GetHelpState {
     List<ProductModel>? recommendations,
     bool? isLoadingRecommendations,
     bool? hasRequestedRecommendations,
+    bool? hasOpenedRecommendations,
     bool? isLoading,
     bool? isSubmitting,
     String? error,
@@ -69,6 +73,8 @@ class GetHelpState {
           isLoadingRecommendations ?? this.isLoadingRecommendations,
       hasRequestedRecommendations:
           hasRequestedRecommendations ?? this.hasRequestedRecommendations,
+      hasOpenedRecommendations:
+          hasOpenedRecommendations ?? this.hasOpenedRecommendations,
       isLoading: isLoading ?? this.isLoading,
       isSubmitting: isSubmitting ?? this.isSubmitting,
       error: error,

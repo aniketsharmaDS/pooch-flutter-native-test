@@ -89,7 +89,7 @@ class _CommunityPetFoundHlistState extends State<CommunityPetFoundHlist> {
     }
 
     return SizedBox(
-      height: AppSpacing.s269.h,
+      height: AppSize.cs300.csh,
       child: ListView.separated(
         padding: EdgeInsets.symmetric(horizontal: AppSpacing.s16.w),
         scrollDirection: Axis.horizontal,
@@ -100,9 +100,12 @@ class _CommunityPetFoundHlistState extends State<CommunityPetFoundHlist> {
           log(
             'Building CFPHL card for item: ${item.id}, items length: ${_items.length}',
           );
-          return FoundPoochHlistItemCard(
-            item: item,
-            onCardTap: () => widget.onTap?.call(item.id),
+          return AspectRatio(
+            aspectRatio: 180 / 300,
+            child: FoundPoochHlistItemCard(
+              item: item,
+              onCardTap: () => widget.onTap?.call(item.id),
+            ),
           );
         },
       ),

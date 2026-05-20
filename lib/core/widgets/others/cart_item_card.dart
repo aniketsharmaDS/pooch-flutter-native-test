@@ -191,12 +191,11 @@ class CartItemCard extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           Flexible(
-                            child: AppText.bodyL(
+                            child: AppText.bodyM(
                               item.deliveryText,
                               maxLines: 1,
                               style: const TextStyle(
                                 fontSize: 8,
-                                fontFamily: 'Gilroy500',
                                 color: Color(0xFF5A1903),
                               ),
                             ),

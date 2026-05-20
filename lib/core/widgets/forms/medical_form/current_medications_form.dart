@@ -286,8 +286,6 @@ class _CurrentMedicationsFormState extends State<CurrentMedicationsForm>
             child: SingleChildScrollView(
               controller: _scrollController,
               padding: EdgeInsets.only(
-                left: AppSpacing.s16.w,
-                right: AppSpacing.s16.w,
                 top: AppSpacing.s16.h,
                 bottom: AppSpacing.s100.h,
               ),
@@ -296,75 +294,120 @@ class _CurrentMedicationsFormState extends State<CurrentMedicationsForm>
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    PetSelectionFormField(
-                      selectedPetNotifier: widget.selectedPetNotifier,
-                    ),
-                    AppSpacing.s25.hBox,
-                    AppTextField(
-                      label: 'Clinic Name',
-                      controller: _clinicNameController,
-                      isMandatory: true,
-                    ),
-                    AppSpacing.s25.hBox,
-                    AppTextField(
-                      label: 'Select Date',
-                      controller: _startDateController,
-                      isReadOnly: true,
-                      isMandatory: true,
-                      onPressed: _pickStartDate,
-                      suffixWidget: AppIcon(
-                        AppIcons.svg.generic.calendar,
-                        size: AppIconSize.is16,
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: AppSpacing.s16.w,
+                      ),
+                      child: PetSelectionFormField(
+                        selectedPetNotifier: widget.selectedPetNotifier,
                       ),
                     ),
                     AppSpacing.s25.hBox,
-                    AppTextField(
-                      label: 'End Date',
-                      controller: _endDateController,
-                      isReadOnly: true,
-                      isMandatory: true,
-                      enabled: _startDate != null,
-                      onPressed: _startDate != null ? _pickEndDate : null,
-                      suffixWidget: AppIcon(
-                        AppIcons.svg.generic.calendar,
-                        size: AppIconSize.is16,
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: AppSpacing.s16.w,
+                      ),
+                      child: AppTextField(
+                        label: 'Clinic Name',
+                        controller: _clinicNameController,
+                        isMandatory: true,
                       ),
                     ),
                     AppSpacing.s25.hBox,
-                    MedicationRepeaterContainer(
-                      onChanged: (medications) {
-                        setState(() {
-                          _medications = medications;
-                        });
-                      },
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: AppSpacing.s16.w,
+                      ),
+                      child: AppTextField(
+                        label: 'Select Date',
+                        controller: _startDateController,
+                        isReadOnly: true,
+                        isMandatory: true,
+                        onPressed: _pickStartDate,
+                        suffixWidget: AppIcon(
+                          AppIcons.svg.generic.calendar,
+                          size: AppIconSize.is16,
+                        ),
+                      ),
                     ),
                     AppSpacing.s25.hBox,
-                    AppTextField(
-                      label: 'Condition / Reason',
-                      controller: _conditionReasonController,
-                      isMandatory: true,
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: AppSpacing.s16.w,
+                      ),
+                      child: AppTextField(
+                        label: 'End Date',
+                        controller: _endDateController,
+                        isReadOnly: true,
+                        isMandatory: true,
+                        enabled: _startDate != null,
+                        onPressed: _startDate != null ? _pickEndDate : null,
+                        suffixWidget: AppIcon(
+                          AppIcons.svg.generic.calendar,
+                          size: AppIconSize.is16,
+                        ),
+                      ),
                     ),
                     AppSpacing.s25.hBox,
-                    AppTextField(
-                      label: 'Notes',
-                      controller: _notesController,
-                      isMandatory: true,
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: AppSpacing.s10.w,
+                      ),
+                      child: MedicationRepeaterContainer(
+                        onChanged: (medications) {
+                          setState(() {
+                            _medications = medications;
+                          });
+                        },
+                      ),
                     ),
                     AppSpacing.s25.hBox,
-                    AppTextField(
-                      label: 'Paste the document link here...',
-                      controller: _linkController,
-                      keyboardType: TextInputType.url,
-                      validator: _validateDocumentUrl,
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: AppSpacing.s16.w,
+                      ),
+                      child: AppTextField(
+                        label: 'Condition / Reason',
+                        controller: _conditionReasonController,
+                        isMandatory: true,
+                      ),
                     ),
                     AppSpacing.s25.hBox,
-                    UploadDocumentWidget(
-                      showHeader: true,
-                      buttonText: 'Upload',
-                      description:
-                          'Upload medical reports, prescriptions and vaccination certificates.',
-                      maxSizeLabel: 'Max 5MB',
-                      onFilesChanged: _onFilesChanged,
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: AppSpacing.s16.w,
+                      ),
+                      child: AppTextField(
+                        label: 'Notes',
+                        controller: _notesController,
+                        isMandatory: true,
+                      ),
+                    ),
+                    AppSpacing.s25.hBox,
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: AppSpacing.s16.w,
+                      ),
+                      child: AppTextField(
+                        label: 'Paste the document link here...',
+                        controller: _linkController,
+                        keyboardType: TextInputType.url,
+                        validator: _validateDocumentUrl,
+                      ),
+                    ),
+                    AppSpacing.s25.hBox,
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: AppSpacing.s16.w,
+                      ),
+                      child: UploadDocumentWidget(
+                        showHeader: true,
+                        buttonText: 'Upload',
+                        description:
+                            'Upload medical reports, prescriptions and vaccination certificates.',
+                        maxSizeLabel: 'Max 5MB',
+                        onFilesChanged: _onFilesChanged,
+                      ),
                     ),
                   ],
                 ),

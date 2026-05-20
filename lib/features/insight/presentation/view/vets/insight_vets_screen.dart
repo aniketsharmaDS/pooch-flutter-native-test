@@ -9,6 +9,7 @@ import 'package:poochcare/core/utils/document_file_type_utils.dart';
 import 'package:poochcare/core/widgets/action_buttons/action_card_grid.dart';
 import 'package:poochcare/core/widgets/cards/app_medical_explorer_card.dart';
 import 'package:poochcare/core/widgets/cards/app_wave_card.dart';
+import 'package:poochcare/core/widgets/dialogs/app_select_pet_dialog.dart';
 import 'package:poochcare/core/widgets/enums/notch_variant.dart';
 import 'package:poochcare/core/widgets/headers/primary_widget_header.dart';
 import 'package:poochcare/core/widgets/images/app_icon.dart';
@@ -16,11 +17,11 @@ import 'package:poochcare/core/widgets/list_grid/pet_symptom_list.dart';
 import 'package:poochcare/core/widgets/list_items/clinic_grid_item_card.dart';
 import 'package:poochcare/core/widgets/list_items/clinic_list_item_card.dart';
 import 'package:poochcare/core/widgets/list_items/medical_history_list_item_card.dart';
-import 'package:poochcare/core/widgets/nudges/find_me_vet_pooch_nudge.dart';
 import 'package:poochcare/core/widgets/others/upcoming_appointments_view.dart';
 import 'package:poochcare/core/widgets/texts/app_text.dart';
 import 'package:poochcare/features/appointments/presentation/bloc/appointments_bloc/appointment_bloc.dart';
 import 'package:poochcare/features/appointments/presentation/bloc/appointments_bloc/appointment_event.dart';
+import 'package:poochcare/features/ecommerce/presentation/widgets/nudges/app_nudge_card.dart';
 import 'package:poochcare/features/insight/data/cubit/appointment_request_cubit.dart';
 import 'package:poochcare/features/insight/presentation/bloc/clinic_bloc/clinic_bloc.dart';
 import 'package:poochcare/features/insight/presentation/bloc/clinic_bloc/clinic_event.dart';
@@ -33,6 +34,8 @@ import 'package:poochcare/features/medical_history/domain/models/medical_history
 import 'package:poochcare/features/medical_history/presentation/bloc/medical_history_bloc.dart';
 import 'package:poochcare/features/medical_history/presentation/bloc/medical_history_event.dart';
 import 'package:poochcare/features/medical_history/presentation/bloc/medical_history_state.dart';
+import 'package:poochcare/features/user_profile/domain/models/user_pet.dart';
+import 'package:poochcare/features/user_profile/presentation/bloc/user_profile_bloc.dart';
 import 'package:poochcare/router/app_router.dart';
 
 @RoutePage()
@@ -82,23 +85,41 @@ class _InsightVetsScreenState extends State<InsightVetsScreen> {
                   title: 'Consultations',
                   iconPath: AppIcons.svg.actions.consultation,
                   onTap: () {
-                    // context.router.push(
-                    //   ClinicSlotSelectionRoute(
-                    //     clinicId: '5eb4eb07-2008-453c-9f6f-88991dc3dec0',
-                    //   ),
-                    // );
+                    //  To go to medical history with consultation tab active
+                    // context.router.push(const PetMedicalHistoryRoute());
+                    //  To go to  listing of clinics
+                    // context.router.push( ClinicsListingRoute());
+                    //  To go to  Add Consultation records
+                    context.router.push<bool>(
+                      AddPetMedicalRecordsTabRoute(initialTabIndex: 5),
+                    );
                   },
                 ),
                 ActionCardItem(
                   title: 'Records',
                   iconPath: AppIcons.svg.actions.record,
-                  onTap: () {},
+                  onTap: () {
+                    //  To go to medical history with consultation tab active
+                    // context.router.push(const PetMedicalHistoryRoute());
+                    // context.router.push<bool>(const PetMedicalHistoryRoute());
+                    //  To go to  Add Medical records
+                    context.router.push<bool>(
+                      AddPetMedicalRecordsTabRoute(initialTabIndex: 4),
+                    );
+                  },
                 ),
                 ActionCardItem(
                   title: 'Vaccinations',
                   iconPath: AppIcons.svg.actions.vaccination,
                   onTap: () {
-                    context.router.push(const PetMedicalHistoryRoute());
+                    //  To go to medical history with Vaccination tab active
+                    // context.router.push(const PetMedicalHistoryRoute());
+                    //  To go to  Add Vacination records
+                    // ignore: avoid_redundant_argument_values
+                    context.router.push<bool>(
+                      // ignore: avoid_redundant_argument_values
+                      AddPetMedicalRecordsTabRoute(initialTabIndex: 0),
+                    );
                   },
                 ),
               ],
@@ -111,8 +132,14 @@ class _InsightVetsScreenState extends State<InsightVetsScreen> {
                 AppSpacing.s17.w,
                 AppSpacing.s10.h,
               ),
-              child: FindMeVetPoochNudge(
-                onGetHelp: () {
+              child: AppNudgeCard(
+                cardTitle: 'Your Vet Support, Anytime You Need It',
+                cardDescription: 'Quick, trusted care for your pooch.',
+                cardButtonTitle: 'Find vet clinics',
+                cardBackgroundImage: AppIcons.png.nudges.vetSupportPoochCardBg,
+                cardTextInverse: true,
+                cardVariantVet: true,
+                cardAction: () {
                   context.router.push(const FindVetClinicsRoute());
                 },
               ),
@@ -127,9 +154,6 @@ class _InsightVetsScreenState extends State<InsightVetsScreen> {
               },
             ),
             subscribedClinics(),
-            AppSpacing.s15.hBox,
-
-            PageviewDotIndicator(selectedIndex: _selectedSubscribedClinics),
 
             AppSpacing.s40.hBox,
 
@@ -156,7 +180,9 @@ class _InsightVetsScreenState extends State<InsightVetsScreen> {
             PrimaryWidgetHeader(
               title: 'Recent Reports & History',
               buttonTitle: 'View All',
-              onButtonTap: () {},
+              onButtonTap: () {
+                context.router.push(const PetMedicalHistoryRoute());
+              },
             ),
             BlocBuilder<MedicalHistoryBloc, MedicalHistoryState>(
               builder: (context, state) {
@@ -194,7 +220,25 @@ class _InsightVetsScreenState extends State<InsightVetsScreen> {
                             child: MedicalHistoryListItemCard(
                               viewType: ViewType.horizontal,
                               item: items[index],
-                              onItemClick: () {},
+                              onItemClick: () {
+                                // To modify the modal
+                                // appRouter.push(
+                                //   PetMedicalDetailsRoute(
+                                //     recordId: items[index].data.recordId ?? '',
+                                //     appointmentId: items[index].data.appointmentId ?? '',
+                                //     recordType: type == ItemType.consultation
+                                //         ? MedicalHistoryRecordTypeFilter.consultation
+                                //         : type == ItemType.vaccination
+                                //         ? MedicalHistoryRecordTypeFilter.vaccination
+                                //         : MedicalHistoryRecordTypeFilter.labReport,
+                                //   ),
+                                // );
+                                // context.router.push(
+                                //   MedicalHistoryDetailsRoute(
+                                //     recordId: items[index].data.recordId,
+                                //   ),
+                                // );
+                              },
                             ),
                           ),
                         ),
@@ -220,7 +264,13 @@ class _InsightVetsScreenState extends State<InsightVetsScreen> {
                               title: 'Lab Test',
                               buttonText: 'Explore Now',
                               imagePath: AppIcons.png.explore.labTest,
-                              onTap: () {},
+                              onTap: () {
+                                context.router.push(
+                                  AddPetMedicalRecordsTabRoute(
+                                    initialTabIndex: 2,
+                                  ),
+                                );
+                              },
                             ),
                           ),
                           const SizedBox(width: 12),
@@ -229,7 +279,11 @@ class _InsightVetsScreenState extends State<InsightVetsScreen> {
                               title: 'Vaccinations',
                               buttonText: 'Explore Now',
                               imagePath: AppIcons.png.explore.vaccination,
-                              onTap: () {},
+                              onTap: () {
+                                context.router.push(
+                                  AddPetMedicalRecordsTabRoute(),
+                                );
+                              },
                             ),
                           ),
                         ],
@@ -297,6 +351,11 @@ class _InsightVetsScreenState extends State<InsightVetsScreen> {
                                     ClinicDetailsRoute(clinicId: clinic.id),
                                   );
                                 },
+                                onSubscribe: () {
+                                  selectPetAndsubscribeClinic(
+                                    clinicId: clinic.id,
+                                  );
+                                },
                               );
                             },
                           ),
@@ -343,6 +402,56 @@ class _InsightVetsScreenState extends State<InsightVetsScreen> {
         ),
       ),
     );
+  }
+
+  void selectPetAndsubscribeClinic({required String clinicId}) async {
+    final List<UserPet> pets = context.read<UserProfileBloc>().state.pets;
+    String? petId = '';
+    final appointmentCubit = getIt<AppointmentCubit>();
+    if (appointmentCubit.state.petId != null) {
+      petId = appointmentCubit.state.petId;
+    }
+
+    final List<Pet> petsList = pets.map((userPet) {
+      return Pet(
+        id: userPet.id,
+        name: userPet.name,
+        imageUrl: userPet.profilePicture ?? '',
+        isSelected: petId == userPet.id,
+      );
+    }).toList();
+
+    final result = await AppSelectPetDialog.show(
+      context: context, // ✅ safe, captured before await
+      pets: petsList,
+      initiallySelectedPet: petsList.any((pet) => pet.isSelected)
+          ? petsList.firstWhere((pet) => pet.isSelected)
+          : null,
+    );
+
+    if (!mounted) return;
+
+    if (result != null) {
+      setState(() {});
+      if (!context.mounted) return;
+      final appointmentCubit = getIt<AppointmentCubit>();
+
+      /// Start fresh booking flow
+      appointmentCubit.reset();
+
+      /// Save clinic
+      appointmentCubit.updateClinic(clinicId: clinicId);
+
+      /// Save pet
+      appointmentCubit.updatePet(
+        petId: result.selectedPet.id,
+        petName: result.selectedPet.name,
+        petImage: result.selectedPet.imageUrl,
+        petNotes: result.note,
+      );
+
+      context.router.push(ClinicPlanSelectionRoute(clinicId: clinicId));
+    }
   }
 
   void _requestMedicalHistory({required bool isForceRefresh}) {
@@ -503,58 +612,70 @@ class _InsightVetsScreenState extends State<InsightVetsScreen> {
               const FetchAllAppointments(1, true),
             );
           },
-          child: SizedBox(
-            height: 100,
-            width: MediaQuery.sizeOf(context).width,
-            child: PageView.builder(
-              onPageChanged: (value) {
-                setState(() {
-                  _selectedSubscribedClinics = value;
-                });
-              },
-              itemCount: clinicsData.length > 5 ? 5 : clinicsData.length,
-              itemBuilder: (context, index) {
-                final clinic = clinicsData[index];
-                return SizedBox(
-                  width: MediaQuery.sizeOf(context).width * 0.92,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: AppSpacing.s16,
-                    ),
-                    child: ClinicListItemCard(
-                      clinic: clinic,
-                      onBookNow: () {
-                        final appointmentCubit = getIt<AppointmentCubit>();
+          child: Column(
+            children: [
+              SizedBox(
+                height: 90.h,
+                width: MediaQuery.sizeOf(context).width,
+                child: PageView.builder(
+                  onPageChanged: (value) {
+                    setState(() {
+                      _selectedSubscribedClinics = value;
+                    });
+                  },
+                  itemCount: clinicsData.length > 5 ? 5 : clinicsData.length,
+                  itemBuilder: (context, index) {
+                    final clinic = clinicsData[index];
+                    return SizedBox(
+                      width: MediaQuery.sizeOf(context).width * 0.92,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: AppSpacing.s16,
+                        ),
+                        child: ClinicListItemCard(
+                          clinic: clinic,
+                          onBookNow: () {
+                            final appointmentCubit = getIt<AppointmentCubit>();
 
-                        /// Start fresh booking flow
-                        appointmentCubit.reset();
+                            /// Start fresh booking flow
+                            appointmentCubit.reset();
 
-                        /// Save clinic
-                        appointmentCubit.updateClinic(
-                          clinicId: clinic.clinicId,
-                        );
+                            /// Save clinic
+                            appointmentCubit.updateClinic(
+                              clinicId: clinic.clinicId,
+                            );
 
-                        /// Save pet
-                        appointmentCubit.updatePet(
-                          petId: clinic.petId,
-                          petName: '',
-                          petImage: '',
-                          petNotes: '',
-                        );
-                        context.router.push(
-                          ClinicSlotSelectionRoute(clinicId: clinic.clinicId),
-                        );
-                      },
-                      onTap: () {
-                        context.router.push(
-                          ClinicDetailsRoute(clinicId: clinic.clinicId),
-                        );
-                      },
-                    ),
-                  ),
-                );
-              },
-            ),
+                            /// Save pet
+                            appointmentCubit.updatePet(
+                              petId: clinic.petId,
+                              petName: '',
+                              petImage: '',
+                              petNotes: '',
+                            );
+                            context.router.push(
+                              ClinicSlotSelectionRoute(
+                                clinicId: clinic.clinicId,
+                              ),
+                            );
+                          },
+                          onTap: () {
+                            context.router.push(
+                              ClinicDetailsRoute(clinicId: clinic.clinicId),
+                            );
+                          },
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+              AppSpacing.s15.hBox,
+
+              PageviewDotIndicator(
+                selectedIndex: _selectedSubscribedClinics,
+                totalCount: clinicsData.length > 5 ? 5 : clinicsData.length,
+              ),
+            ],
           ),
         );
       },
@@ -568,7 +689,7 @@ class PageviewDotIndicator extends StatelessWidget {
   const PageviewDotIndicator({
     super.key,
     required this.selectedIndex,
-    this.totalCount = 5,
+    required this.totalCount,
   });
 
   @override

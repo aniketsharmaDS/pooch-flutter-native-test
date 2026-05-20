@@ -13,6 +13,7 @@ class GetHelpBloc extends Bloc<GetHelpEvent, GetHelpState> {
     on<SubmitStage>(_onSubmitStage);
     on<LoadStage>(_onLoadStage);
     on<FetchRecommendations>(_onFetchRecommendations);
+    on<OpenRecommendations>(_onOpenRecommendations);
   }
 
   Future<void> _onStart(StartGetHelp event, Emitter<GetHelpState> emit) async {
@@ -210,30 +211,86 @@ class GetHelpBloc extends Bloc<GetHelpEvent, GetHelpState> {
       if (response.status == 'continue') {
         add(LoadStage(response.nextStage!, response.petContext));
       } else {
-        final newMessages = List<GetHelpMessageModel>.from(state.messages)
-          ..add(
-            GetHelpMessageModel(
-              id: 'result_msg',
-              text:
-                  'Good news! Based on our conversation, we have curated the pets we think would be best suited to you and your home.',
-              isUser: false,
-            ),
-          )
-          ..add(
-            GetHelpMessageModel(
-              id: 'cta',
-              text: '',
-              isUser: false,
-              isCTA: true, // 👈 NEW FLAG
-            ),
-          );
+        // final newMessages = List<GetHelpMessageModel>.from(state.messages)
+        //   ..add(
+        //     GetHelpMessageModel(
+        //       id: 'result_msg',
+        //       text:
+        //           'Good news! Based on our conversation, we have curated the pets we think would be best suited to you and your home.',
+        //       isUser: false,
+        //     ),
+        //   )
+        //   ..add(
+        //     GetHelpMessageModel(
+        //       id: 'cta',
+        //       text: '',
+        //       isUser: false,
+        //       isCTA: true, // 👈 NEW FLAG
+        //     ),
+        //   );
 
-        emit(state.copyWith(messages: newMessages, isSubmitting: false));
+        // emit(state.copyWith(messages: newMessages, isSubmitting: false));
+
+        add(FetchRecommendations());
       }
     } catch (e) {
       emit(state.copyWith(isSubmitting: false, error: e.toString()));
     }
   }
+
+  // Future<void> _onFetchRecommendations(
+  //   FetchRecommendations event,
+  //   Emitter<GetHelpState> emit,
+  // ) async {
+  //   emit(
+  //     state.copyWith(
+  //       isLoadingRecommendations: true,
+  //       hasRequestedRecommendations: true,
+  //     ),
+  //   );
+
+  //   try {
+  //     final response = await _repo.getRecommendations(
+  //       sessionId: state.sessionId!,
+  //     );
+
+  //     final products = response.products;
+
+  //     final newMessages = List<GetHelpMessageModel>.from(state.messages);
+
+  //     if (products.isNotEmpty) {
+  //       newMessages.add(
+  //         GetHelpMessageModel(
+  //           id: 'hooray',
+  //           text: '',
+  //           isUser: false,
+  //           isHooray: true,
+  //         ),
+  //       );
+  //     } else {
+  //       newMessages.add(
+  //         GetHelpMessageModel(
+  //           id: 'empty',
+  //           text: 'Oops! We couldn’t find any pets based on your preferences.',
+  //           isUser: false,
+  //           isEmpty: true,
+  //         ),
+  //       );
+  //     }
+
+  //     emit(
+  //       state.copyWith(
+  //         isLoadingRecommendations: false,
+  //         recommendations: products,
+  //         messages: newMessages,
+  //       ),
+  //     );
+  //   } catch (e) {
+  //     emit(
+  //       state.copyWith(isLoadingRecommendations: false, error: e.toString()),
+  //     );
+  //   }
+  // }
 
   Future<void> _onFetchRecommendations(
     FetchRecommendations event,
@@ -255,16 +312,8 @@ class GetHelpBloc extends Bloc<GetHelpEvent, GetHelpState> {
 
       final newMessages = List<GetHelpMessageModel>.from(state.messages);
 
-      if (products.isNotEmpty) {
-        newMessages.add(
-          GetHelpMessageModel(
-            id: 'hooray',
-            text: '',
-            isUser: false,
-            isHooray: true,
-          ),
-        );
-      } else {
+      // ✅ NO PRODUCTS
+      if (products.isEmpty) {
         newMessages.add(
           GetHelpMessageModel(
             id: 'empty',
@@ -273,7 +322,31 @@ class GetHelpBloc extends Bloc<GetHelpEvent, GetHelpState> {
             isEmpty: true,
           ),
         );
+
+        emit(
+          state.copyWith(
+            isLoadingRecommendations: false,
+            recommendations: [],
+            messages: newMessages,
+          ),
+        );
+
+        return;
       }
+
+      // ✅ PRODUCTS FOUND
+      newMessages
+        ..add(
+          GetHelpMessageModel(
+            id: 'result_msg',
+            text:
+                'Good news! Based on our conversation, we have curated the pets we think would be best suited to you and your home.',
+            isUser: false,
+          ),
+        )
+        ..add(
+          GetHelpMessageModel(id: 'cta', text: '', isUser: false, isCTA: true),
+        );
 
       emit(
         state.copyWith(
@@ -287,5 +360,25 @@ class GetHelpBloc extends Bloc<GetHelpEvent, GetHelpState> {
         state.copyWith(isLoadingRecommendations: false, error: e.toString()),
       );
     }
+  }
+
+  void _onOpenRecommendations(
+    OpenRecommendations event,
+    Emitter<GetHelpState> emit,
+  ) {
+    final updatedMessages = List<GetHelpMessageModel>.from(state.messages)
+      ..removeWhere((m) => m.isCTA)
+      ..add(
+        GetHelpMessageModel(
+          id: 'hooray',
+          text: '',
+          isUser: false,
+          isHooray: true,
+        ),
+      );
+
+    emit(
+      state.copyWith(messages: updatedMessages, hasOpenedRecommendations: true),
+    );
   }
 }

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:poochcare/core/theme/app_colors.dart';
+import 'package:poochcare/core/theme/app_font_size.dart';
 import 'package:poochcare/core/theme/app_icons.dart';
 import 'package:poochcare/core/theme/app_spacing.dart';
 import 'package:poochcare/core/theme/app_typography.dart';
@@ -466,7 +467,7 @@ class _AppPhoneEmailInputFieldState extends State<AppPhoneEmailInputField> {
     final optionalTextColor = const Color(0xFF8F817C);
 
     final floatingLabelTopPadding = widget.height >= 80 ? 12.0 : 10.0;
-    final floatingInputTopPadding = widget.height >= 80 ? 44.0 : 34.0;
+    final floatingInputTopPadding = widget.height >= 80 ? 44.0 : 28.0;
 
     final labelRestingFontSize = 16.0;
     final labelFloatingFontSize = 10.0;
@@ -566,22 +567,19 @@ class _AppPhoneEmailInputFieldState extends State<AppPhoneEmailInputField> {
                         isDense: true,
                         // hintText: null,
                         prefixText: _isPhone ? '+$_dialCode ' : null,
-                        prefixStyle: const TextStyle(
-                          color: Color(0xFF5D3A2E),
-                          fontSize: 14,
-                          fontFamily: 'Gilroy600',
-                          height: 1.15,
+                        prefixStyle: AppTypography.bodyS.copyWith(
+                          height: 1.2,
+                          fontSize: AppFontSize.fs14,
+                          color: const Color(0xFF5D3A2E),
                         ),
-                        hintStyle: const TextStyle(
-                          color: Color(0xFFB5A9A4),
+                        hintStyle: AppTypography.bodyM.copyWith(
+                          color: const Color(0xFFB5A9A4),
                           fontSize: 14,
-                          fontFamily: 'Gilroy400',
                         ),
                         contentPadding: EdgeInsets.only(
                           left: baseLeftPadding - 4,
                           right: 20,
                           top: floatingInputTopPadding,
-                          bottom: 18,
                         ),
                       ),
                     ),

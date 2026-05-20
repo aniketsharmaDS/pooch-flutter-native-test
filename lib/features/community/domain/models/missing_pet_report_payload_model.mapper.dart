@@ -52,6 +52,18 @@ class MissingPetReportPayloadModelMapper
     key: r'last_known_location',
     opt: true,
   );
+  static double? _$latitude(MissingPetReportPayloadModel v) => v.latitude;
+  static const Field<MissingPetReportPayloadModel, double> _f$latitude = Field(
+    'latitude',
+    _$latitude,
+    opt: true,
+  );
+  static double? _$longitude(MissingPetReportPayloadModel v) => v.longitude;
+  static const Field<MissingPetReportPayloadModel, double> _f$longitude = Field(
+    'longitude',
+    _$longitude,
+    opt: true,
+  );
   static String? _$description(MissingPetReportPayloadModel v) => v.description;
   static const Field<MissingPetReportPayloadModel, String> _f$description =
       Field('description', _$description, opt: true);
@@ -73,6 +85,8 @@ class MissingPetReportPayloadModelMapper
     #missingTime: _f$missingTime,
     #color: _f$color,
     #lastKnownLocation: _f$lastKnownLocation,
+    #latitude: _f$latitude,
+    #longitude: _f$longitude,
     #description: _f$description,
     #rewardAmount: _f$rewardAmount,
     #images: _f$images,
@@ -87,6 +101,8 @@ class MissingPetReportPayloadModelMapper
       missingTime: data.dec(_f$missingTime),
       color: data.dec(_f$color),
       lastKnownLocation: data.dec(_f$lastKnownLocation),
+      latitude: data.dec(_f$latitude),
+      longitude: data.dec(_f$longitude),
       description: data.dec(_f$description),
       rewardAmount: data.dec(_f$rewardAmount),
       images: data.dec(_f$images),
@@ -173,6 +189,8 @@ abstract class MissingPetReportPayloadModelCopyWith<
     String? missingTime,
     String? color,
     String? lastKnownLocation,
+    double? latitude,
+    double? longitude,
     String? description,
     int? rewardAmount,
     List<dynamic>? images,
@@ -215,6 +233,8 @@ class _MissingPetReportPayloadModelCopyWithImpl<$R, $Out>
     Object? missingTime = $none,
     Object? color = $none,
     Object? lastKnownLocation = $none,
+    Object? latitude = $none,
+    Object? longitude = $none,
     Object? description = $none,
     Object? rewardAmount = $none,
     Object? images = $none,
@@ -225,6 +245,8 @@ class _MissingPetReportPayloadModelCopyWithImpl<$R, $Out>
       if (missingTime != $none) #missingTime: missingTime,
       if (color != $none) #color: color,
       if (lastKnownLocation != $none) #lastKnownLocation: lastKnownLocation,
+      if (latitude != $none) #latitude: latitude,
+      if (longitude != $none) #longitude: longitude,
       if (description != $none) #description: description,
       if (rewardAmount != $none) #rewardAmount: rewardAmount,
       if (images != $none) #images: images,
@@ -241,6 +263,8 @@ class _MissingPetReportPayloadModelCopyWithImpl<$R, $Out>
           #lastKnownLocation,
           or: $value.lastKnownLocation,
         ),
+        latitude: data.get(#latitude, or: $value.latitude),
+        longitude: data.get(#longitude, or: $value.longitude),
         description: data.get(#description, or: $value.description),
         rewardAmount: data.get(#rewardAmount, or: $value.rewardAmount),
         images: data.get(#images, or: $value.images),

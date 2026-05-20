@@ -23,6 +23,7 @@ import 'package:poochcare/features/community/presentation/bloc/categories/catego
 import 'package:poochcare/features/community/presentation/bloc/categories/categories_event.dart';
 import 'package:poochcare/features/community/presentation/bloc/categories/categories_state.dart';
 import 'package:poochcare/features/community/presentation/bloc/tips/tips_guide_bloc.dart';
+import 'package:poochcare/features/community/presentation/view/my_tip_guide_form_screen.dart';
 import 'package:poochcare/features/community/presentation/widgets/category_selector.dart';
 import 'package:poochcare/router/app_router.dart';
 
@@ -152,8 +153,8 @@ class _AllCommunityTipsGuideListScreenState
                 showShadow: false,
                 icon: AppIcons.svg.generic.plusSign,
                 onTap: () => {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Add a new Tip')),
+                  context.pushRoute(
+                    MyTipGuideFormRoute(type: MyTipFormType.create),
                   ),
                 },
               ),

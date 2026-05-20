@@ -13,9 +13,8 @@ class AuthPetShapeHeaderView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: MediaQuery.sizeOf(context).height * 0.5,
-      width: 355.w,
+    return AspectRatio(
+      aspectRatio: 1,
       child: Stack(
         clipBehavior: Clip.none,
         children: [
@@ -32,17 +31,18 @@ class AuthPetShapeHeaderView extends StatelessWidget {
               bottomNotchHeight: AppSpacing.s10.h,
               bottomNotchWidth: AppSpacing.s80.w,
               // borderRadius: AppRadiusSize.r20,
-              child: Container(
-                height: MediaQuery.sizeOf(context).height * 0.5,
-                width: 355.w,
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      Color(0xFFFFE7B4), // #FFE7B4
-                      Color(0xFFF5F1E5), // #F5F1E5
-                    ],
+              child: AspectRatio(
+                aspectRatio: 1,
+                child: Container(
+                  decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [
+                        Color(0xFFFFE7B4), // #FFE7B4
+                        Color(0xFFF5F1E5), // #F5F1E5
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -71,7 +71,10 @@ class AuthPetShapeHeaderView extends StatelessWidget {
                     height: AppSpacing.s40.h,
                   ),
                   SizedBox(height: AppSpacing.s2.h),
-                  Image.asset(AppIcons.png.register.registerDogCat),
+                  AspectRatio(
+                    aspectRatio: 1.5,
+                    child: Image.asset(AppIcons.png.register.registerDogCat),
+                  ),
                 ],
               ),
             ),

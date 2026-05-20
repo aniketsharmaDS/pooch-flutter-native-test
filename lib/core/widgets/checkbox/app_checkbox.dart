@@ -40,9 +40,10 @@ class AppCheckbox extends StatelessWidget {
       width: size,
       child: Checkbox.adaptive(
         side: WidgetStateBorderSide.resolveWith((states) {
-          final isChecked = states.contains(WidgetState.selected);
+          // final isChecked = states.contains(WidgetState.selected);
           return BorderSide(
-            width: isChecked ? AppSize.cs1.csh : AppSize.cs0p6.csh,
+            width: AppSize.cs0p6.csh,
+            // width: isChecked ? AppSize.cs1.csh : AppSize.cs0p6.csh,
             color: effectiveBorderColor,
           );
         }),

@@ -282,24 +282,52 @@ class _PetDetailsWidgetState extends State<PetDetailsWidget> {
   }
 
   Widget _buildInfoRow() {
-    final List<Widget> children = [];
+    final items = widget.petDetailsData.infoItems;
 
-    for (int i = 0; i < widget.petDetailsData.infoItems.length; i++) {
-      if (i > 0) {
-        children.add(
-          Container(
-            width: 1.w,
-            height: 12.h,
-            margin: EdgeInsets.symmetric(horizontal: 10.w),
-            color: const Color(0xFFE5E5E5),
-          ),
-        );
-      }
-
-      children.add(_PetInfoItemView(item: widget.petDetailsData.infoItems[i]));
+    if (items.isEmpty) {
+      return const SizedBox.shrink();
     }
 
-    return Row(mainAxisAlignment: MainAxisAlignment.center, children: children);
+    final List<int> flexValues = switch (items.length) {
+      1 => [1],
+      2 => [4, 4],
+      3 => [4, 4, 3],
+      _ => [4, 4, 3, 2],
+    };
+
+    return Row(
+      children: List.generate(items.length, (index) {
+        return _buildFlexibleItem(
+          item: items[index],
+          flex: flexValues[index],
+          showDivider: index != items.length - 1,
+        );
+      }),
+    );
+  }
+
+  Widget _buildFlexibleItem({
+    required PetInfoItem item,
+    required int flex,
+    required bool showDivider,
+  }) {
+    return Expanded(
+      flex: flex,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Expanded(child: _PetInfoItemView(item: item)),
+
+          if (showDivider)
+            Container(
+              width: 1.w,
+              height: 12.h,
+              margin: EdgeInsets.symmetric(horizontal: 8.w),
+              color: const Color(0xFFE5E5E5),
+            ),
+        ],
+      ),
+    );
   }
 }
 
@@ -325,19 +353,20 @@ class _PetInfoItemView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisSize: MainAxisSize.min,
       children: [
         if (item.iconPath != null)
           AppIcon(item.iconPath!, size: 13.w, color: item.iconColor)
         else
           Icon(item.iconData, size: 13.w, color: item.iconColor),
+
         SizedBox(width: 4.w),
-        ConstrainedBox(
-          constraints: BoxConstraints(maxWidth: 60.w),
+
+        Expanded(
           child: AppText.support(
             item.label,
             color: item.iconColor ?? const Color(0xFF6B6B6B),
             maxLines: 1,
+            // overflow: TextOverflow.ellipsis,
           ),
         ),
       ],

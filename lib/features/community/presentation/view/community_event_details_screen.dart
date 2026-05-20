@@ -136,109 +136,94 @@ class _CommunityEventDetailsScreenState
                 ),
         ),
 
-        bottomNavigationBar: _isOwnPost
-            ? BlocBuilder<EventsBloc, PaginationState<EventInfoItemModel>>(
-                builder: (context, state) {
-                  final item = state.selectedItem;
-                  log('Bottom bar builder - item: $item');
-                  if (item == null || item.status == 'APPROVED') {
-                    return const SizedBox.shrink();
-                  }
-                  return SafeArea(
-                    child: Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: AppSpacing.s16.w,
-                        vertical: AppSpacing.s16.h,
-                      ),
-                      child: Row(
-                        children: [
-                          /// Button 1
-                          Expanded(
-                            child: AppButton(
-                              isLoading: isApiExecuting,
-                              variant: AppButtonVariant.outlined,
-                              label: 'Delete Post',
-                              onPressed: () {
-                                AppDialog.show(
-                                  icon: Lottie.asset(
-                                    AppIcons.lottie.delete,
-                                    repeat: false,
-                                  ),
-                                  context: context,
-                                  title: 'Delete Post?',
-                                  content:
-                                      'This action cannot be undone. Are you sure you want to delete this post?',
-                                  primaryLabel: 'Cancel',
-                                  secondaryLabel: 'Delete',
-                                  onPrimary: () async {
-                                    return true;
-                                  },
-                                  onSecondary: () async {
-                                    deleteEvent(widget.eventId);
-                                    return true;
-                                  },
-                                );
-                              },
-                              size: AppButtonSize.medium,
-                            ),
-                          ),
+        bottomNavigationBar:
+            BlocBuilder<EventsBloc, PaginationState<EventInfoItemModel>>(
+              builder: (context, state) {
+                final item = state.selectedItem;
 
-                          SizedBox(width: AppSpacing.s10.w),
+                if (item == null || state.isDetailLoading) {
+                  return const SizedBox.shrink();
+                }
 
-                          /// Button 2
-                          Expanded(
-                            child: AppButton(
-                              isLoading: isApiExecuting,
-                              label: 'Edit Post',
-                              onPressed: () {
-                                context.pushRoute(
-                                  MyEventFormRoute(
-                                    type: MyEventFormType.edit,
-                                    eventId: widget.eventId,
-                                  ),
-                                );
-                              },
-                              size: AppButtonSize.medium,
-                            ),
-                          ),
-                        ],
-                      ),
+                final isOwner = item.isAuthor; // 👈 single source of truth
+
+                if (isOwner && item.status == 'APPROVED') {
+                  return const SizedBox.shrink();
+                }
+
+                log('Bottom bar builder - item: $item');
+
+                /// COMMON RULES (apply to both)
+                if (!isOwner &&
+                    !canJoinEvent(
+                      eventEndDate: item.eventEndDate,
+                      eventTime: item.eventTime,
+                    )) {
+                  return const SizedBox.shrink();
+                }
+
+                final isRsvpLoading = state.isProcessing(
+                  item.id,
+                  EventActions.rsvp,
+                );
+
+                return SafeArea(
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: AppSpacing.s16.w,
+                      vertical: AppSpacing.s16.h,
                     ),
-                  );
-                },
-              )
-            : SafeArea(
-                child:
-                    BlocBuilder<
-                      EventsBloc,
-                      PaginationState<EventInfoItemModel>
-                    >(
-                      builder: (context, state) {
-                        final item = state.selectedItem;
-                        log('Bottom bar builder - item: $item');
-                        final isDetailLoading = state.isDetailLoading;
-                        final isRsvpLoading = state.isProcessing(
-                          item?.id,
-                          EventActions.rsvp,
-                        );
-                        if (item == null || isDetailLoading) {
-                          return const SizedBox.shrink();
-                        }
-                        if (!canJoinEvent(
-                          eventEndDate: item.eventEndDate,
-                          eventTime: item.eventTime,
-                        )) {
-                          return const SizedBox.shrink();
-                        }
-                        return Container(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: AppSpacing.s16.w,
-                            vertical: AppSpacing.s16.h,
-                          ),
-                          child: Column(
+                    child: isOwner
+                        ? Row(
+                            children: [
+                              Expanded(
+                                child: AppButton(
+                                  isLoading: isApiExecuting,
+                                  variant: AppButtonVariant.outlined,
+                                  label: 'Delete Post',
+                                  onPressed: () {
+                                    AppDialog.show(
+                                      icon: Lottie.asset(
+                                        AppIcons.lottie.delete,
+                                        repeat: false,
+                                      ),
+                                      context: context,
+                                      title: 'Delete Post?',
+                                      content:
+                                          'This action cannot be undone. Are you sure you want to delete this post?',
+                                      primaryLabel: 'Cancel',
+                                      secondaryLabel: 'Delete',
+                                      onSecondary: () async {
+                                        deleteEvent(widget.eventId);
+                                        return true;
+                                      },
+                                      onPrimary: () async => true,
+                                    );
+                                  },
+                                  size: AppButtonSize.medium,
+                                ),
+                              ),
+                              SizedBox(width: AppSpacing.s10.w),
+                              Expanded(
+                                child: AppButton(
+                                  isLoading: isApiExecuting,
+                                  label: 'Edit Post',
+                                  onPressed: () {
+                                    context.pushRoute(
+                                      MyEventFormRoute(
+                                        type: MyEventFormType.edit,
+                                        eventId: widget.eventId,
+                                      ),
+                                    );
+                                  },
+                                  size: AppButtonSize.medium,
+                                ),
+                              ),
+                            ],
+                          )
+                        : Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              /// Button 1
                               if (!isUserAttendingEvent(
                                 item.userRsvpStatus,
                               )) ...[
@@ -254,8 +239,6 @@ class _CommunityEventDetailsScreenState
                                 ),
                                 SizedBox(height: AppSpacing.s10.h),
                               ],
-
-                              /// Button 2
                               AppButton(
                                 label: 'Chat with Organizer',
                                 backgroundColor: AppColors.primary,
@@ -273,10 +256,155 @@ class _CommunityEventDetailsScreenState
                               ),
                             ],
                           ),
-                        );
-                      },
-                    ),
-              ),
+                  ),
+                );
+              },
+            ),
+
+        // bottomNavigationBar: _isOwnPost
+        //     ? BlocBuilder<EventsBloc, PaginationState<EventInfoItemModel>>(
+        //         builder: (context, state) {
+        //           final item = state.selectedItem;
+        //           log('Bottom bar builder - item: $item');
+        //           if (item == null || item.status == 'APPROVED') {
+        //             return const SizedBox.shrink();
+        //           }
+        //           return SafeArea(
+        //             child: Container(
+        //               padding: EdgeInsets.symmetric(
+        //                 horizontal: AppSpacing.s16.w,
+        //                 vertical: AppSpacing.s16.h,
+        //               ),
+        //               child: Row(
+        //                 children: [
+        //                   /// Button 1
+        //                   Expanded(
+        //                     child: AppButton(
+        //                       isLoading: isApiExecuting,
+        //                       variant: AppButtonVariant.outlined,
+        //                       label: 'Delete Post',
+        //                       onPressed: () {
+        //                         AppDialog.show(
+        //                           icon: Lottie.asset(
+        //                             AppIcons.lottie.delete,
+        //                             repeat: false,
+        //                           ),
+        //                           context: context,
+        //                           title: 'Delete Post?',
+        //                           content:
+        //                               'This action cannot be undone. Are you sure you want to delete this post?',
+        //                           primaryLabel: 'Cancel',
+        //                           secondaryLabel: 'Delete',
+        //                           onPrimary: () async {
+        //                             return true;
+        //                           },
+        //                           onSecondary: () async {
+        //                             deleteEvent(widget.eventId);
+        //                             return true;
+        //                           },
+        //                         );
+        //                       },
+        //                       size: AppButtonSize.medium,
+        //                     ),
+        //                   ),
+
+        //                   SizedBox(width: AppSpacing.s10.w),
+
+        //                   /// Button 2
+        //                   Expanded(
+        //                     child: AppButton(
+        //                       isLoading: isApiExecuting,
+        //                       label: 'Edit Post',
+        //                       onPressed: () {
+        //                         context.pushRoute(
+        //                           MyEventFormRoute(
+        //                             type: MyEventFormType.edit,
+        //                             eventId: widget.eventId,
+        //                           ),
+        //                         );
+        //                       },
+        //                       size: AppButtonSize.medium,
+        //                     ),
+        //                   ),
+        //                 ],
+        //               ),
+        //             ),
+        //           );
+        //         },
+        //       )
+        //     : SafeArea(
+        //         child:
+        //             BlocBuilder<
+        //               EventsBloc,
+        //               PaginationState<EventInfoItemModel>
+        //             >(
+        //               builder: (context, state) {
+        //                 final item = state.selectedItem;
+        //                 log('Bottom bar builder - item: $item');
+        //                 final isDetailLoading = state.isDetailLoading;
+        //                 final isRsvpLoading = state.isProcessing(
+        //                   item?.id,
+        //                   EventActions.rsvp,
+        //                 );
+        //                 if (item == null || isDetailLoading) {
+        //                   return const SizedBox.shrink();
+        //                 }
+        //                 if (!canJoinEvent(
+        //                   eventEndDate: item.eventEndDate,
+        //                   eventTime: item.eventTime,
+        //                 )) {
+        //                   return const SizedBox.shrink();
+        //                 }
+        //                 if (item.isAuthor) {
+        //             return const SizedBox.shrink();
+        //           }
+        //                 return Container(
+        //                   padding: EdgeInsets.symmetric(
+        //                     horizontal: AppSpacing.s16.w,
+        //                     vertical: AppSpacing.s16.h,
+        //                   ),
+        //                   child: Column(
+        //                     mainAxisSize: MainAxisSize.min,
+        //                     children: [
+        //                       /// Button 1
+        //                       if (!isUserAttendingEvent(
+        //                         item.userRsvpStatus,
+        //                       )) ...[
+        //                         AppButton(
+        //                           isLoading: isRsvpLoading,
+        //                           label: 'Confirm Attendance',
+        //                           size: AppButtonSize.medium,
+        //                           onPressed: () {
+        //                             context.read<EventsBloc>().confirmAttendee(
+        //                               eventId: item.id,
+        //                             );
+        //                           },
+        //                         ),
+        //                         SizedBox(height: AppSpacing.s10.h),
+        //                       ],
+
+        //                       /// Button 2
+        //                       AppButton(
+        //                         label: 'Chat with Organizer',
+        //                         backgroundColor: AppColors.primary,
+        //                         foregroundColor: AppColors.textPrimary,
+        //                         size: AppButtonSize.medium,
+        //                         onPressed: () {
+        //                           context.router.push(
+        //                             PoochParentChatRoute(
+        //                               userName:
+        //                                   item.organizer?.name ?? 'Organizer',
+        //                               source: 'community_event_details_screen',
+        //                             ),
+        //                           );
+        //                         },
+        //                       ),
+        //                     ],
+        //                   ),
+        //                 );
+        //               },
+        //             ),
+        //       ),
       ),
     );
   }

@@ -213,6 +213,10 @@ class _ClinicPlanSelectionScreenState extends State<ClinicPlanSelectionScreen> {
                     return Padding(
                       padding: EdgeInsets.only(bottom: 12.h),
                       child: ClinicSubscriptionPlanCard(
+                        isSelectable:
+                            !(isFree &&
+                                (plan.isSubscribed ||
+                                    plan.isAlreadyBought)), // Free plan can be subscribed only once
                         subscriptionPlan: SubscriptionPlan(
                           // title: plan.planName.toUpperCase(),
                           title: title,

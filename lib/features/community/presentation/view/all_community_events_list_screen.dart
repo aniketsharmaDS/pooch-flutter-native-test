@@ -17,6 +17,7 @@ import 'package:poochcare/core/widgets/texts/app_search_field.dart';
 import 'package:poochcare/features/community/data/models/event_info_item_model.dart';
 import 'package:poochcare/features/community/data/models/tips_category_model.dart';
 import 'package:poochcare/features/community/presentation/bloc/events/events_bloc.dart';
+import 'package:poochcare/features/community/presentation/view/my_event_form_screen.dart';
 import 'package:poochcare/features/community/presentation/widgets/category_selector.dart';
 import 'package:poochcare/router/app_router.dart';
 
@@ -141,8 +142,8 @@ class _AllCommunityEventsListScreenState
                 showShadow: false,
                 icon: AppIcons.svg.generic.plusSign,
                 onTap: () => {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Add a new Event')),
+                  context.pushRoute(
+                    MyEventFormRoute(type: MyEventFormType.create),
                   ),
                 },
               ),

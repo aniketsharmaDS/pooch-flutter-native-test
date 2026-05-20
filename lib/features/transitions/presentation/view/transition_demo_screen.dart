@@ -34,10 +34,10 @@ class TransitionDemoScreen extends StatelessWidget {
         icon: Icons.local_shipping,
         destination: DelieveryCompleteTransitionRoute(),
       ),
-      const _TransitionDemoItem(
+      _TransitionDemoItem(
         title: 'Appointment',
         icon: Icons.calendar_today,
-        destination: AppointmentTransitionRoute(),
+        destination: AppointmentTransitionRoute(planStatus: 'BOOK_SLOT'),
       ),
     ];
 

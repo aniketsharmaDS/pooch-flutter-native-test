@@ -53,6 +53,31 @@ class MyLivePostsBloc extends PaginationBloc<MySubmittedPostsModel> {
         log('📡 Bus:- MyLivePostsBloc Nothing to update');
         return;
       }
+
+      if (event.source == 'TipsCommentBloc') {
+        final String countStatus = event.data['countStatus'] as String;
+
+        if (countStatus == 'INCRIMENT' || countStatus == 'DECRIMENT') {
+          final String tipsId = event.data['id'] as String;
+
+          updateItemEverywhere(
+            test: (item) => item.id == tipsId,
+            update: (item) {
+              final int updatedCommentsCount = countStatus == 'INCRIMENT'
+                  ? item.commentsCount + 1
+                  : (item.commentsCount - 1).clamp(0, 1000000);
+
+              return item.copyWith(commentsCount: updatedCommentsCount);
+            },
+          );
+        }
+
+        log('📡 Bus:- MyLivePostsBloc received Status $countStatus');
+        log('📡 Bus:- MyLivePostsBloc received Id ${event.data['id']}');
+
+        return;
+      }
+
       if (event.data is! MySubmittedPostsModel) return;
       final updatedItem = event.data as MySubmittedPostsModel;
       log(

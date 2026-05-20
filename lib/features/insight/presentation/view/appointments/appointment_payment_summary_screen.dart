@@ -210,7 +210,9 @@ class _AppointmentPaymentSummaryScreenState
                                   : () {
                                       if (widget.planStatus == 'BOOK_SLOT') {
                                         context.router.push(
-                                          const AppointmentTransitionRoute(),
+                                          AppointmentTransitionRoute(
+                                            planStatus: widget.planStatus,
+                                          ),
                                         );
                                       } else {
                                         _confirmAndPay(context);
@@ -236,7 +238,9 @@ class _AppointmentPaymentSummaryScreenState
                   ResetPurchaseStatus(),
                 );
 
-                context.router.push(const AppointmentTransitionRoute());
+                context.router.push(
+                  AppointmentTransitionRoute(planStatus: widget.planStatus),
+                );
               }
 
               if (state.purchaseStatus == SubscriptionPurchaseStatus.failure) {

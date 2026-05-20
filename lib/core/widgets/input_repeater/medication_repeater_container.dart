@@ -1,9 +1,10 @@
 // ignore_for_file: inference_failure_on_function_return_type
 
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:poochcare/core/theme/app_colors.dart';
 import 'package:poochcare/core/theme/app_icons.dart';
+import 'package:poochcare/core/theme/app_size.dart';
+import 'package:poochcare/core/theme/app_spacing.dart';
 import 'package:poochcare/core/widgets/buttons/app_circle_button.dart';
 import 'package:poochcare/core/widgets/texts/app_text_field.dart';
 
@@ -164,15 +165,24 @@ class _MedicationRepeaterContainerState
 
         return Padding(
           key: entry.key,
-          padding: EdgeInsets.only(bottom: 12.h),
-          child: _MedicationRow(
-            entry: entry,
-            forms: forms,
-            timings: timings,
-            isLast: isLast,
-            onAdd: _addNewRow,
-            onRemove: () => _removeRow(index),
-            onChanged: _notifyChanges,
+          padding: EdgeInsets.symmetric(
+            horizontal: AppSpacing.s6.w,
+          ).copyWith(bottom: AppSpacing.s12.h),
+          child: Container(
+            padding: EdgeInsets.all(AppSpacing.s5.h),
+            decoration: BoxDecoration(
+              color: AppColors.white_50,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: _MedicationRow(
+              entry: entry,
+              forms: forms,
+              timings: timings,
+              isLast: isLast,
+              onAdd: _addNewRow,
+              onRemove: () => _removeRow(index),
+              onChanged: _notifyChanges,
+            ),
           ),
         );
       }),
@@ -215,9 +225,9 @@ class _MedicationRow extends StatelessWidget {
                 controller: entry.nameController,
               ),
             ),
-            SizedBox(width: 8.w),
+            SizedBox(width: AppSize.cs8.csh),
             SizedBox(
-              width: 90.w,
+              width: AppSize.cs90.csw,
               child: AppTextField(
                 label: 'Days',
                 controller: entry.daysController,
@@ -227,7 +237,7 @@ class _MedicationRow extends StatelessWidget {
           ],
         ),
 
-        SizedBox(height: 10.h),
+        SizedBox(height: AppSize.cs10.csh),
 
         /// ROW 2
         Row(
@@ -243,7 +253,7 @@ class _MedicationRow extends StatelessWidget {
                 },
               ),
             ),
-            SizedBox(width: 8.w),
+            SizedBox(width: AppSize.cs8.csw),
             Expanded(
               child: AppTextField(
                 label: 'Strength',
@@ -253,7 +263,7 @@ class _MedicationRow extends StatelessWidget {
           ],
         ),
 
-        SizedBox(height: 10.h),
+        SizedBox(height: AppSize.cs10.csh),
 
         /// ROW 3
         Row(
@@ -264,7 +274,7 @@ class _MedicationRow extends StatelessWidget {
                 controller: entry.frequencyController,
               ),
             ),
-            SizedBox(width: 8.w),
+            SizedBox(width: AppSize.cs8.csw),
             Expanded(
               child: _SimpleMultiSelect(
                 items: timings,
@@ -278,7 +288,7 @@ class _MedicationRow extends StatelessWidget {
           ],
         ),
 
-        SizedBox(height: 10.h),
+        SizedBox(height: AppSize.cs10.csh),
 
         /// ROW 4
         Row(
@@ -289,7 +299,7 @@ class _MedicationRow extends StatelessWidget {
                 controller: entry.instructionsController,
               ),
             ),
-            SizedBox(width: 12.w),
+            SizedBox(width: AppSize.cs12.csw),
             AppCircleButton(
               bgColor: AppColors.white,
               icon: isLast

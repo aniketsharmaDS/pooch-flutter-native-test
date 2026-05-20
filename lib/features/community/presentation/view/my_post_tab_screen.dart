@@ -52,23 +52,23 @@ class _MyPostTabScreenState extends State<MyPostTabScreen> {
                     tabs: [
                       ChipTabItem(
                         title: 'All My Posts',
-                        icon: AppIcons.svg.tabs.gut,
+                        icon: AppIcons.svg.community.petPost,
                       ),
                       ChipTabItem(
-                        title: 'My tips & guide',
-                        icon: AppIcons.svg.tabs.gut,
+                        title: 'My Tips & Guide',
+                        icon: AppIcons.svg.community.petTipsGuide,
                       ),
                       ChipTabItem(
                         title: 'My Events',
-                        icon: AppIcons.svg.tabs.pain,
+                        icon: AppIcons.svg.community.petEvents,
                       ),
                       ChipTabItem(
-                        title: 'My missing pet reports',
-                        icon: AppIcons.svg.tabs.symptom,
+                        title: 'My Missing Pet Reports',
+                        icon: AppIcons.svg.community.petSearch,
                       ),
                       ChipTabItem(
-                        title: 'My found pets',
-                        icon: AppIcons.svg.tabs.vet,
+                        title: 'My Found Pets',
+                        icon: AppIcons.svg.community.petHouse,
                       ),
                     ],
                     selectedIndex: tabsRouter.activeIndex,

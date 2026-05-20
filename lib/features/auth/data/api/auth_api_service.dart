@@ -27,6 +27,38 @@ class AuthApiService {
   static const String _sendOtpCodePath = '/auth/otp/send';
   static const String _verifyOtpPath = '/auth/verify-otp';
   static const String _refreshTokenPath = '/auth/refresh-token';
+  static const String _userSplashPath = '/splash/user-splash';
+
+  Future<Map<String, dynamic>> fetchUserSplash() async {
+    try {
+      final Response<dynamic> response = await _dio.get<dynamic>(
+        _userSplashPath,
+      );
+      final dynamic body = response.data;
+      if (body is! Map<String, dynamic>) {
+        throw const ApiException('Invalid server response', statusCode: 500);
+      }
+
+      final ApiResponse envelope = ApiResponseMapper.fromMap(body);
+      if (!envelope.success) {
+        throw ApiException(
+          envelope.message.isNotEmpty
+              ? envelope.message
+              : 'Failed to load splash content.',
+          statusCode: envelope.status,
+        );
+      }
+
+      final dynamic payload = envelope.data;
+      if (payload is! Map<String, dynamic>) {
+        throw const ApiException('Invalid server response', statusCode: 500);
+      }
+
+      return payload;
+    } on DioException catch (error) {
+      throw _mapDioError(error);
+    }
+  }
 
   Future<VerifyOtpTokensResponse> refreshToken({
     required String refreshToken,

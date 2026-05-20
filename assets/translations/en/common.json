@@ -3,6 +3,11 @@
     "cancel": "Cancel",
     "confirm": "Confirm",
     "yes": "Yes",
-    "no": "No"
+    "no": "No",
+    "viewDetails": "View Details",
+    "close": "Close",
+    "delete": "Delete",
+    "edit": "Edit",
+    "save": "Save"
   }
 }

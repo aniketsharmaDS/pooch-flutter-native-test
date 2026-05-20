@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:poochcare/core/domain/models/user.dart';
 import 'package:poochcare/core/store/auth/auth_store_event.dart';
@@ -17,6 +19,7 @@ class AuthStoreBloc extends HydratedBloc<AuthStoreEvent, AuthStoreState> {
     on<ProfileCompletionUpdated>(_onProfileCompletionUpdated);
     on<OnboardingPetCountUpdated>(_onOnboardingPetCountUpdated);
     on<OnboardingPetCountCleared>(_onOnboardingPetCountCleared);
+    on<BuyPetJourneyCompleted>(_onBuyPetJourneyCompleted);
   }
 
   void _onBoardingComplete(
@@ -37,13 +40,9 @@ class AuthStoreBloc extends HydratedBloc<AuthStoreEvent, AuthStoreState> {
     Emitter<AuthStoreState> emit,
   ) {
     final user = state.user;
-    if (user == null) {
-      return;
-    }
-
     emit(
       state.copyWith(
-        user: user.copyWith(isPetOnboarded: true),
+        user: user?.copyWith(isPetOnboarded: true),
         inviteSheetSkipped: false,
       ),
     );
@@ -187,5 +186,17 @@ class AuthStoreBloc extends HydratedBloc<AuthStoreEvent, AuthStoreState> {
       'onboardingPetCount': state.onboardingPetCount,
       'inviteSheetSkipped': state.inviteSheetSkipped,
     };
+  }
+
+  FutureOr<void> _onBuyPetJourneyCompleted(
+    BuyPetJourneyCompleted event,
+    Emitter<AuthStoreState> emit,
+  ) async {
+    final user = state.user;
+    if (user == null) {
+      return;
+    }
+
+    emit(state.copyWith(user: user.copyWith(hasBoughtPet: true)));
   }
 }

@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:poochcare/core/di/service_locator.dart';
 import 'package:poochcare/core/enums/medical_history_record_type_filter.dart';
 import 'package:poochcare/core/store/auth/auth_store_bloc.dart';
+import 'package:poochcare/core/store/onboarding/onboarding_journey_store_bloc.dart';
+import 'package:poochcare/core/store/onboarding/onboarding_journey_store_state.dart';
 // import 'package:poochcare/core/widgets/list_items/product_list_item_card.dart';
 import 'package:poochcare/core/widgets/others/image_crop_screen.dart';
 import 'package:poochcare/features/appointments/data/models/appointments_response_model.dart';
@@ -43,6 +45,8 @@ import 'package:poochcare/features/community/presentation/view/pooch_parent_chat
 import 'package:poochcare/features/community/presentation/view/pooch_parent_chat_screen.dart';
 import 'package:poochcare/features/community/presentation/view/pooch_pet_shelter_list_screen.dart';
 import 'package:poochcare/features/community/presentation/view/report_missing_pet_form_screen.dart';
+import 'package:poochcare/features/community/presentation/view/transitions/pet_is_home_transition_screen.dart';
+import 'package:poochcare/features/community/presentation/view/transitions/pet_still_missing_transition_screen.dart';
 import 'package:poochcare/features/community/presentation/view/transitions/report_missing_pet_transition_screen.dart';
 import 'package:poochcare/features/coupons/presentation/view/coupons_screen.dart';
 import 'package:poochcare/features/ecommerce/data/models/address/address_model.dart';
@@ -369,6 +373,8 @@ class AppRouter extends RootStackRouter {
     AutoRoute(page: MissingVerifyBiometricRoute.page),
     AutoRoute(page: MissingBiometricPetFoundRoute.page),
     AutoRoute(page: MissingBiometricPetNotFoundRoute.page),
+    AutoRoute(page: PetStillMissingTransitionRoute.page),
+    AutoRoute(page: PetIsHomeTransitionRoute.page),
     AutoRoute(page: PoochPetShelterListRoute.page),
     AutoRoute(page: PoochParentChatListRoute.page),
     AutoRoute(page: PoochParentChatRoute.page),
@@ -438,7 +444,13 @@ class AppFlowGuard extends AutoRouteGuard {
       final bool isOnboarded = user.isOnboarded;
       log('isPetOnboarded - $isPetOnboarded and isOnboarded - $isOnboarded');
 
-      if (!isPetOnboarded) {
+      final journeyType = getIt<OnboardingJourneyStoreBloc>().state.journeyType;
+      // final isBuyPetJourney = journeyType == OnboardingJourneyType.buyPet;
+
+      if (user.hasBoughtPet) {
+        resolver.next();
+        return;
+      } else if (!isPetOnboarded) {
         if (petCount > 0) {
           router.replaceAll([
             OnboardingSuccessfulTransitionRoute(
