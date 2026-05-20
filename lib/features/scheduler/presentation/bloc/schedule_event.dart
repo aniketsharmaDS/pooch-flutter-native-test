@@ -12,22 +12,41 @@ class LoadMonthlySchedule extends ScheduleEvent {
   LoadMonthlySchedule({required this.month, required this.year});
 }
 
-class ChangeScheduleMonth extends ScheduleEvent {
-  final int month;
+// class ChangeScheduleMonth extends ScheduleEvent {
+//   final int month;
 
-  ChangeScheduleMonth(this.month);
-}
+//   ChangeScheduleMonth(this.month);
+// }
 
-class ChangeScheduleYear extends ScheduleEvent {
-  final int year;
+// class ChangeScheduleYear extends ScheduleEvent {
+//   final int year;
 
-  ChangeScheduleYear(this.year);
-}
+//   ChangeScheduleYear(this.year);
+// }
 
-class ChangeSelectedDate extends ScheduleEvent {
+// class ChangeVisibleMonthYear extends ScheduleEvent {
+//   final int month;
+//   final int year;
+
+//   ChangeVisibleMonthYear({required this.month, required this.year});
+// }
+
+// class ChangeVisibleWeekDate extends ScheduleEvent {
+//   final DateTime date;
+
+//   ChangeVisibleWeekDate(this.date);
+// }
+
+// class ChangeSelectedDate extends ScheduleEvent {
+//   final DateTime date;
+
+//   ChangeSelectedDate(this.date);
+// }
+
+class ChangeFocusedDate extends ScheduleEvent {
   final DateTime date;
 
-  ChangeSelectedDate(this.date);
+  ChangeFocusedDate(this.date);
 }
 
 class CreateReminder extends ScheduleEvent {

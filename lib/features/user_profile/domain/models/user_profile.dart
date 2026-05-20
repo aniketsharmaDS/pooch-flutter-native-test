@@ -23,6 +23,7 @@ class UserProfile extends Equatable {
     this.isOnboarded = false,
     this.isProfileCompleted = false,
     this.isPetOnboarded = false,
+    this.hasBoughtPet = false,
     this.points = 0,
     this.createdAt = '',
     this.updatedAt = '',
@@ -63,6 +64,7 @@ class UserProfile extends Equatable {
   final bool isOnboarded;
   final bool isProfileCompleted;
   final bool isPetOnboarded;
+  final bool hasBoughtPet;
   final int points;
   final String createdAt;
   final String updatedAt;
@@ -121,6 +123,7 @@ class UserProfile extends Equatable {
     profileUserIdLegacy,
     parentGroups,
     invites,
+    hasBoughtPet
   ];
 }
 

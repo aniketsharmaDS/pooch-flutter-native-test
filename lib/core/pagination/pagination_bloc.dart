@@ -1,10 +1,14 @@
 // ignore_for_file: invalid_use_of_visible_for_testing_member
+import 'dart:async';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:poochcare/core/errors/api_exception.dart';
 import 'package:poochcare/core/pagination/pagination_event.dart';
 import 'package:poochcare/core/pagination/pagination_result.dart';
 import 'package:poochcare/core/pagination/pagination_state.dart';
+import 'package:poochcare/core/services/crashlytics_service.dart';
 
 typedef PaginatedFetch<T> =
     Future<PaginationResult<T>> Function({
@@ -128,6 +132,8 @@ abstract class PaginationBloc<T>
         filters: filters,
       );
 
+      // if (isClosed) return;
+
       final currentList = state.scopedItems[scope] ?? const [];
 
       final updatedList = appendResults
@@ -154,14 +160,37 @@ abstract class PaginationBloc<T>
           filters: filters,
         ),
       );
-    } catch (e) {
+    } catch (e, st) {
+      CrashlyticsService.recordError(e, st);
+      String friendlyMessage;
+
+      if (e is ApiException) {
+        friendlyMessage = e.message;
+      } else if (e is SocketException) {
+        friendlyMessage = 'No internet connection. Please check your network.';
+      } else if (e is TimeoutException) {
+        friendlyMessage = 'Request timed out. Please try again.';
+      } else if (e is FormatException) {
+        friendlyMessage = 'Invalid response received from server.';
+      } else {
+        /// TEMP for debugging
+        friendlyMessage = e.toString();
+
+        /// FOR PRODUCTION you can fallback:
+        friendlyMessage = 'Please try again.';
+      }
+
+      if (friendlyMessage.isEmpty) {
+        friendlyMessage = 'Please try again.';
+      }
+
       emit(
         state.copyWith(
           isLoading: false,
           isSearching: false,
           isFetchingMore: false,
           isRefreshing: false,
-          errorMessage: e.toString(),
+          errorMessage: friendlyMessage,
         ),
       );
     }

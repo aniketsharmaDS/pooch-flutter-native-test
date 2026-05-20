@@ -8,6 +8,7 @@ enum AppChipVariant { singleLine, wrap }
 
 class AppChip extends StatelessWidget {
   final String label;
+  final Widget? child;
   final bool isSelected;
   final ValueChanged<bool>? onSelected;
   final AppChipVariant? variant;
@@ -22,6 +23,7 @@ class AppChip extends StatelessWidget {
   const AppChip({
     super.key,
     required this.label,
+    this.child,
     this.isSelected = false,
     this.onSelected,
     this.variant = AppChipVariant.singleLine,
@@ -60,15 +62,17 @@ class AppChip extends StatelessWidget {
           ),
           borderRadius: BorderRadius.circular(effectiveBorderRadius),
         ),
-        child: AppText.h4(
-          label,
-          color: selectedTextColor ?? AppColors.textSecondary,
-          variant: AppTextVariant.noEllipsis,
-          // maxLines: null,
-          style: TextStyle(
-            fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
-          ),
-        ),
+        child:
+            child ??
+            AppText.h4(
+              label,
+              color: selectedTextColor ?? AppColors.textSecondary,
+              variant: AppTextVariant.noEllipsis,
+              // maxLines: null,
+              style: TextStyle(
+                fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
+              ),
+            ),
       ),
     );
   }

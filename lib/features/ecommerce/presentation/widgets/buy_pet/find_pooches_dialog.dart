@@ -8,8 +8,8 @@ import 'package:poochcare/core/widgets/dialogs/app_dialog.dart';
 /// ======================================================
 
 class FindPoochesDialog {
-  static Future<String?> show({required BuildContext context}) {
-    return AppDialog.show<String?>(
+  static Future<bool?> show(BuildContext context) {
+    return AppDialog.show<bool?>(
       context: context,
       title: 'Find Pooches Near You',
       content:
@@ -17,12 +17,8 @@ class FindPoochesDialog {
       icon: Lottie.asset(AppIcons.lottie.findPooches, repeat: false),
       primaryLabel: 'Allow',
       secondaryLabel: 'Deny',
-      onPrimary: () async {
-        return null;
-      },
-      onSecondary: () async {
-        return null;
-      },
+      onPrimary: () => Future.value(true),
+      onSecondary: () => Future.value(false),
     );
   }
 }

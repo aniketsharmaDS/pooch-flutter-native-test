@@ -1,3 +1,5 @@
+import 'package:fpdart/fpdart.dart';
+import 'package:poochcare/core/errors/failure.dart';
 import 'package:poochcare/features/ecommerce/data/models/address/address_model.dart';
 import 'package:poochcare/features/ecommerce/data/models/cart/cart_item_model.dart';
 import 'package:poochcare/features/ecommerce/data/models/coupon/apply_coupon_response.dart';
@@ -7,7 +9,7 @@ import 'package:poochcare/features/invites/data/models/invite_action_api_result.
 
 abstract class CartRepository {
   Future<CartData> getCart();
-  Future<int> getCartCount();
+  Future<Either<Failure, int>> getCartCount();
   Future<CartOrderSummary> addToCart(List<String> productIds);
   Future<CartOrderSummary> removeFromCart(String productId);
   Future<List<Coupon>> getCoupons({int page = 1, String? couponsType});

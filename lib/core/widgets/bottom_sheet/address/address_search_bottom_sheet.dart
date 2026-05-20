@@ -6,8 +6,10 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:poochcare/core/config/app_config.dart';
+import 'package:poochcare/core/di/service_locator.dart';
 import 'package:poochcare/core/widgets/bottom_sheet/app_bottom_sheet.dart';
 import 'package:poochcare/core/widgets/texts/app_search_field.dart';
+import 'package:poochcare/features/user_profile/presentation/bloc/user_profile_bloc.dart';
 
 class AddressResult {
   final String description;
@@ -27,8 +29,24 @@ class AddressSearchBottomSheet {
   static final String _apiKey = AppConfig.googlePlacesApiKey ?? '';
 
   static String getCountryCode() {
+    final userProfile = getIt<UserProfileBloc>().state.profile;
+    log(
+      'User profile in AddressSearchBottomSheet: '
+      '${userProfile?.country} | ${userProfile?.countryCode}',
+    );
+    if (userProfile != null) {
+      final countryCode = (userProfile.countryCode).trim().toLowerCase();
+
+      final country = (userProfile.country).trim().toLowerCase();
+
+      final isIndia =
+          countryCode == '91' || countryCode == '+91' || country == 'in';
+
+      return isIndia ? 'IN' : 'AE';
+    }
+
     return (PlatformDispatcher.instance.locale.countryCode ?? 'IN')
-        .toLowerCase();
+        .toUpperCase();
   }
 
   static String cleanAddress(String address) {
@@ -41,7 +59,7 @@ class AddressSearchBottomSheet {
     return parts.join(', ');
   }
 
-  /// 🔥 NEW: Fetch lat/lng + formatted address
+  /// Fetch place details
   static Future<AddressResult?> _getPlaceDetails(
     String placeId,
     String fallbackDescription,
@@ -54,22 +72,25 @@ class AddressSearchBottomSheet {
 
     try {
       final res = await http.get(Uri.parse(url));
+
       final data = json.decode(res.body);
 
       if (data['status'] != 'OK') return null;
 
       final result = data['result'];
+
       final location = result['geometry']['location'];
 
       return AddressResult(
         description: cleanAddress(
           result['formatted_address']?.toString() ?? fallbackDescription,
-        ), // ✅ formatted
+        ),
         placeId: placeId,
         latitude: (location['lat'] as num).toDouble(),
         longitude: (location['lng'] as num).toDouble(),
       );
-    } catch (_) {
+    } catch (e) {
+      log('Place details error: $e');
       return null;
     }
   }
@@ -80,11 +101,17 @@ class AddressSearchBottomSheet {
     Future<void> Function(AddressResult result)? onSelectedApiCall,
   }) {
     final controller = TextEditingController();
+
+    // final focusNode = FocusNode();
+
     final resultsNotifier = ValueNotifier<List<AddressResult>>([]);
+
     final loadingNotifier = ValueNotifier<bool>(false);
 
+    Timer? debounce;
+
     Future<void> search(String query) async {
-      if (query.isEmpty) {
+      if (query.trim().isEmpty) {
         resultsNotifier.value = [];
         return;
       }
@@ -95,7 +122,7 @@ class AddressSearchBottomSheet {
 
       final url =
           'https://maps.googleapis.com/maps/api/place/autocomplete/json'
-          '?input=$query'
+          '?input=${Uri.encodeComponent(query)}'
           '&key=$_apiKey'
           '&components=country:$countryCode';
 
@@ -103,7 +130,14 @@ class AddressSearchBottomSheet {
 
       try {
         final res = await http.get(Uri.parse(url));
+
         final data = json.decode(res.body);
+
+        if (data['status'] != 'OK' && data['status'] != 'ZERO_RESULTS') {
+          resultsNotifier.value = [];
+          loadingNotifier.value = false;
+          return;
+        }
 
         final predictions = data['predictions'] as List;
 
@@ -112,12 +146,13 @@ class AddressSearchBottomSheet {
               (e) => AddressResult(
                 description: e['description']?.toString() ?? '',
                 placeId: e['place_id']?.toString() ?? '',
-                latitude: 0.0, // placeholder
-                longitude: 0.0, // placeholder
+                latitude: 0.0,
+                longitude: 0.0,
               ),
             )
             .toList();
-      } catch (_) {
+      } catch (e) {
+        log('Autocomplete error: $e');
         resultsNotifier.value = [];
       }
 
@@ -127,40 +162,49 @@ class AddressSearchBottomSheet {
     return AppBottomSheet.show<AddressResult>(
       context: context,
       title: title,
+      initialHeightFactor: 0.8,
+      actions: const [],
       content: Column(
         children: [
-          /// 🔍 SEARCH FIELD
-          ValueListenableBuilder<bool>(
-            valueListenable: loadingNotifier,
-            builder: (_, isLoading, _) {
-              return AppSearchField(
-                hintText: 'Search location',
-                controller: controller,
-                isLoading: isLoading,
-                onChanged: (value) {
-                  search(value);
-                },
-                onSubmitted: (value) {
-                  search(value);
-                },
-              );
+          /// SEARCH FIELD
+          AppSearchField(
+            hintText: 'Search location',
+            controller: controller,
+            // focusNode: focusNode,
+            onChanged: (value) {
+              debounce?.cancel();
+
+              debounce = Timer(const Duration(milliseconds: 1000), () {
+                search(value);
+              });
+            },
+            onSubmitted: (value) {
+              debounce?.cancel();
+              search(value);
             },
           ),
+
           const SizedBox(height: 16),
 
-          /// 📍 RESULTS
+          /// RESULTS
           ValueListenableBuilder<bool>(
             valueListenable: loadingNotifier,
             builder: (_, isLoading, _) {
               if (isLoading) {
-                return const Center(child: CircularProgressIndicator());
+                return const Padding(
+                  padding: EdgeInsets.all(24),
+                  child: Center(child: CircularProgressIndicator()),
+                );
               }
 
               return ValueListenableBuilder<List<AddressResult>>(
                 valueListenable: resultsNotifier,
                 builder: (_, results, _) {
                   if (results.isEmpty) {
-                    return const Text('No results');
+                    return const Padding(
+                      padding: EdgeInsets.all(24),
+                      child: Text('No results'),
+                    );
                   }
 
                   return ListView.separated(
@@ -176,7 +220,6 @@ class AddressSearchBottomSheet {
                         onTap: () async {
                           FocusScope.of(context).unfocus();
 
-                          /// 🔥 Fetch full details (lat/lng + formatted address)
                           final enriched = await _getPlaceDetails(
                             item.placeId,
                             item.description,
@@ -184,7 +227,7 @@ class AddressSearchBottomSheet {
 
                           if (enriched == null) return;
 
-                          /// optional API call after selection
+                          /// optional API call
                           if (onSelectedApiCall != null) {
                             await onSelectedApiCall(enriched);
                           }
@@ -202,17 +245,12 @@ class AddressSearchBottomSheet {
           ),
         ],
       ),
-      actions: const [],
-      initialHeightFactor: 0.8,
     ).whenComplete(() {
-      // Optional: safe cleanup if you want later
-      // FocusManager.instance.primaryFocus?.unfocus();
-      // Future.microtask(() {
-      //   controller.dispose();
-      //   resultsNotifier.dispose();
-      //   loadingNotifier.dispose();
-      //   debounce?.cancel();
-      // });
+      debounce?.cancel();
+      controller.dispose();
+      // focusNode.dispose();
+      resultsNotifier.dispose();
+      loadingNotifier.dispose();
     });
   }
 }

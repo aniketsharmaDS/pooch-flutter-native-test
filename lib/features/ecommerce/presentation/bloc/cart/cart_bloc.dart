@@ -23,9 +23,9 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     FetchCartEvent event,
     Emitter<CartState> emit,
   ) async {
-    emit(state.copyWith(status: CartStatus.loading));
-
     try {
+      emit(state.copyWith(status: CartStatus.loading));
+
       final isBuynow =
           event.productId != null && (event.productId ?? '').isNotEmpty;
       final cartData = isBuynow ? null : await repository.getCart();
@@ -123,12 +123,20 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     FetchCartCountEvent event,
     Emitter<CartState> emit,
   ) async {
-    try {
-      final count = await repository.getCartCount();
-      emit(state.copyWith(cartCount: count, actionId: state.actionId + 1));
-    } catch (_) {
-      // Silently ignore errors for count fetch
-    }
+    final result = await repository.getCartCount();
+    result.fold(
+      (failure) {
+        emit(
+          state.copyWith(
+            status: CartStatus.failure,
+            errorMessage: failure.message,
+          ),
+        );
+      },
+      (count) {
+        emit(state.copyWith(cartCount: count, actionId: state.actionId + 1));
+      },
+    );
   }
 
   Future<void> _onAddItemToCart(

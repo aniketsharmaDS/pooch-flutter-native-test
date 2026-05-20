@@ -13,6 +13,9 @@ class SecureStorageKeys {
   static const chatReturn = 'chat_return';
 
   static const appLanguage = 'app_language';
+  static const userSplashData = 'user_splash_data';
+
+  static const locationPermissionGranted = 'location_permission_granted';
 }
 
 class SecureStorageService {
@@ -113,6 +116,18 @@ class SecureStorageService {
 
   Future<String?> readLanguage() async {
     return await _storage.read(key: SecureStorageKeys.appLanguage);
+  }
+
+  /// -------------------------------
+  /// 🌊 Splash content
+  /// -------------------------------
+
+  Future<void> writeUserSplashData(Map<String, dynamic> value) async {
+    await writeJson(SecureStorageKeys.userSplashData, value);
+  }
+
+  Future<Map<String, dynamic>?> readUserSplashData() async {
+    return readJson(SecureStorageKeys.userSplashData);
   }
 }
 

@@ -1,0 +1,8 @@
+{
+  "expense": {
+    "monthly": "Monthly",
+    "yearly": "Yearly",
+    "expenseBreakdown": "Expense Breakdown",
+    "noDataAvailable": "No data available"
+  }
+}

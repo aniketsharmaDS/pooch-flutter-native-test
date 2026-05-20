@@ -414,7 +414,7 @@ class _MissingPoochListItemCardState extends State<MissingPoochListItemCard> {
                       style: const TextStyle(fontWeight: FontWeight.w600),
                     ),
                     AppText.h1(
-                      widget.item.rewardAmount.toString(),
+                      '${widget.item.currencyUnit.toString()} ${widget.item.rewardAmount.toString()}',
                       color: const Color(0xFFE7B123),
                       fontSize: AppFontSize.fs14,
                       style: const TextStyle(fontWeight: FontWeight.w600),

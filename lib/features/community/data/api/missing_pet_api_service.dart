@@ -143,6 +143,34 @@ class MissingPetApiService {
     }
   }
 
+  Future<ApiResponse> updatedMissingPetReport({
+    required String reportId,
+    required MissingPetReportPayloadModel payload,
+  }) async {
+    try {
+      log(
+        'selectedAddress in payload: ${payload.lastKnownLocation} lat: ${payload.latitude} long: ${payload.longitude}',
+      );
+      log(
+        'selectedAddress Updating missing pet report with ID: $reportId and payload: ${payload.toJson()}',
+      );
+      final Response<dynamic> response = await _dio.put(
+        '/missing-pooch/$reportId',
+        data: payload.toJson(),
+        options: Options(
+          validateStatus: (status) => true, // 👈 IMPORTANT
+        ),
+      );
+      final responseData = response.data;
+      if (responseData == null || responseData is! Map<String, dynamic>) {
+        return const ApiResponse(message: 'Invalid response from server');
+      }
+      return ApiResponseMapper.fromMap(responseData);
+    } catch (e) {
+      return ApiResponse(message: e.toString());
+    }
+  }
+
   /// Fetch missing report details by ID
   /// @param reportId: Filter by reportId ID (null for all categories)
   Future<Map<String, dynamic>> getMissingReportDetails({
@@ -188,6 +216,42 @@ class MissingPetApiService {
       final Response<dynamic> response = await _dio.post(
         '/missing-pooch/found/report',
         data: payload,
+        options: Options(
+          validateStatus: (status) => true, // 👈 IMPORTANT
+        ),
+      );
+      final responseData = response.data;
+      if (responseData == null || responseData is! Map<String, dynamic>) {
+        return const ApiResponse(message: 'Invalid response from server');
+      }
+      return ApiResponseMapper.fromMap(responseData);
+    } catch (e) {
+      return ApiResponse(message: e.toString());
+    }
+  }
+
+  Future<ApiResponse> reUnitePooch({required String reportId}) async {
+    try {
+      final Response<dynamic> response = await _dio.patch(
+        '/missing-pooch/$reportId/reunite',
+        options: Options(
+          validateStatus: (status) => true, // 👈 IMPORTANT
+        ),
+      );
+      final responseData = response.data;
+      if (responseData == null || responseData is! Map<String, dynamic>) {
+        return const ApiResponse(message: 'Invalid response from server');
+      }
+      return ApiResponseMapper.fromMap(responseData);
+    } catch (e) {
+      return ApiResponse(message: e.toString());
+    }
+  }
+
+  Future<ApiResponse> deleteReportPost({required String reportId}) async {
+    try {
+      final Response<dynamic> response = await _dio.delete(
+        '/missing-pooch/$reportId',
         options: Options(
           validateStatus: (status) => true, // 👈 IMPORTANT
         ),

@@ -98,10 +98,13 @@ class MissingPoochHlistItemCard extends StatelessWidget {
     return Stack(
       alignment: Alignment.topLeft,
       children: [
-        AppImageFrame(
-          width: double.infinity,
-          height: AppSpacing.s124.h,
-          imageUrl: item.pet.profilePicture ?? '',
+        AspectRatio(
+          aspectRatio: 145 / 124,
+          child: AppImageFrame(
+            width: double.infinity,
+            height: AppSpacing.s124.h,
+            imageUrl: item.pet.profilePicture ?? '',
+          ),
         ),
         Positioned(
           top: AppSpacing.s5.h,

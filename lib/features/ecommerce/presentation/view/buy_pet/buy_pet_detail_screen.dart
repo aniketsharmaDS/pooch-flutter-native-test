@@ -29,8 +29,9 @@ import 'package:poochcare/features/ecommerce/presentation/bloc/cart/cart_event.d
 import 'package:poochcare/features/ecommerce/presentation/bloc/cart/cart_state.dart';
 import 'package:poochcare/features/ecommerce/presentation/bloc/wishlist/wishlist_bloc.dart';
 import 'package:poochcare/features/ecommerce/presentation/bloc/wishlist/wishlist_event.dart';
+import 'package:poochcare/features/ecommerce/presentation/view/buy_pet/common_pet_listing_screen.dart';
+import 'package:poochcare/features/ecommerce/presentation/widgets/buy_pet/common_pet_section.dart';
 import 'package:poochcare/features/ecommerce/presentation/widgets/buy_pet/pet_details_widget.dart';
-import 'package:poochcare/features/ecommerce/presentation/widgets/buy_pet/recently_viewed_section.dart';
 import 'package:poochcare/router/app_router.dart';
 
 @RoutePage()
@@ -233,33 +234,42 @@ class _BuyPetDetailScreenState extends State<BuyPetDetailScreen> {
     if (dob == null) return '';
 
     final DateTime now = DateTime.now();
-    final bool hasBirthdayPassed =
-        now.month > dob.month || (now.month == dob.month && now.day >= dob.day);
-    final int years = now.year - dob.year - (hasBirthdayPassed ? 0 : 1);
 
-    if (years > 0) {
-      return '$years ${years == 1 ? 'yr' : 'yrs'}';
-    }
+    int years = now.year - dob.year;
+    int months = now.month - dob.month;
 
-    int months = (now.year - dob.year) * 12 + (now.month - dob.month);
     if (now.day < dob.day) {
       months -= 1;
     }
 
+    if (months < 0) {
+      years -= 1;
+      months += 12;
+    }
+
+    final parts = <String>[];
+
+    if (years > 0) {
+      parts.add('$years ${years == 1 ? 'year' : 'years'}');
+    }
+
     if (months > 0) {
-      return '$months ${months == 1 ? 'mo' : 'mos'}';
+      parts.add('$months ${months == 1 ? 'month' : 'months'}');
     }
 
-    final int days = now.difference(dob).inDays;
-    if (days <= 0) {
-      return '0 d';
-    }
-    if (days < 7) {
-      return '$days ${days == 1 ? 'd' : 'ds'}';
+    // For very young pets
+    if (parts.isEmpty) {
+      final days = now.difference(dob).inDays;
+
+      if (days < 7) {
+        return '$days ${days == 1 ? 'day' : 'days'}';
+      }
+
+      final weeks = (days / 7).floor();
+      return '$weeks ${weeks == 1 ? 'week' : 'weeks'}';
     }
 
-    final int weeks = (days / 7).floor();
-    return '$weeks ${weeks == 1 ? 'wk' : 'wks'}';
+    return parts.join(' ');
   }
 
   String _firstNonEmpty(List<String?> values) {
@@ -571,20 +581,28 @@ class _BuyPetDetailScreenState extends State<BuyPetDetailScreen> {
                                         BuyPetLandingState
                                       >(
                                         builder: (context, landingState) {
-                                          return RecentlyViewedSection(
-                                            headerVariant:
-                                                PrimaryWidgetHeaderVariant
-                                                    .centered,
+                                          return CommonPetSection(
+                                            title: 'Recently Viewed',
+
+                                            listingType:
+                                                ListingType.recentlyViewed,
+
                                             products:
                                                 landingState.recentlyViewed,
+
                                             isLoading: landingState.isLoading,
+
                                             error: landingState
                                                 .recentlyViewedError,
+
                                             onRetry: () => context
                                                 .read<BuyPetLandingBloc>()
                                                 .add(
                                                   const FetchRecentlyViewedOnly(),
                                                 ),
+                                            headerVariant:
+                                                PrimaryWidgetHeaderVariant
+                                                    .centered,
                                           );
                                         },
                                       ),

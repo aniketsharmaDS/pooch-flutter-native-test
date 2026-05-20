@@ -55,6 +55,9 @@ class _ConfirmActionCardState extends State<ConfirmActionCard> {
               padding: EdgeInsets.only(top: AppSpacing.s4.h),
               child: AppCheckbox(
                 value: _isAgreed,
+                borderColor: AppColors.black,
+                activeColor: AppColors.black,
+                checkColor: AppColors.white,
                 onChanged: (val) {
                   setState(() => _isAgreed = val ?? false);
                 },

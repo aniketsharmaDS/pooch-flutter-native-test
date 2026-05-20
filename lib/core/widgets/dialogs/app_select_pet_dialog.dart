@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:lottie/lottie.dart';
 import 'package:poochcare/core/theme/app_colors.dart';
+import 'package:poochcare/core/theme/app_icons.dart';
 import 'package:poochcare/core/widgets/dialogs/app_dialog.dart';
 import 'package:poochcare/core/widgets/images/app_image_frame.dart';
 import 'package:poochcare/core/widgets/radio/app_circle_radio.dart';
@@ -48,7 +50,7 @@ class AppSelectPetDialog {
     return AppDialog.show<AppSelectPetResult>(
       context: context,
       title: 'Choose your pet',
-      icon: const Icon(Icons.pets, color: Colors.orange),
+      icon: Lottie.asset(AppIcons.lottie.petPawn, repeat: false),
       isPrimaryButtonEnabled:
           initiallySelectedPet != null, // <-- enable if there's an initial pet
       primaryLabel: 'Continue',

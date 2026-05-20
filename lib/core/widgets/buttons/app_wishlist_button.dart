@@ -53,37 +53,67 @@ class _AppWishlistButtonState extends State<AppWishlistButton>
   Widget build(BuildContext context) {
     return ScaleTransition(
       scale: _scaleAnimation,
-      child: Material(
-        color: Colors.transparent,
-        shape: const CircleBorder(),
-        child: InkWell(
-          borderRadius: BorderRadius.circular(18),
-          onTap: _onTap,
-          overlayColor: WidgetStatePropertyAll(Colors.white.withAlpha(30)),
-          child: Center(
-            child: widget.isSelected
-                ? ShaderMask(
-                    shaderCallback: (bounds) {
-                      return const LinearGradient(
-                        colors: [Color(0xFFFFBC20), Color(0xFFFFDB88)],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ).createShader(bounds);
-                    },
-                    child: AppIcon(
-                      AppIcons.svg.generic.heartFilledGradient,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8),
+        child: Material(
+          color: Colors.transparent,
+          shape: const CircleBorder(),
+          child: InkWell(
+            borderRadius: BorderRadius.circular(18),
+            onTap: _onTap,
+            overlayColor: WidgetStatePropertyAll(Colors.white.withAlpha(30)),
+            child: Center(
+              child: widget.isSelected
+                  ? ShaderMask(
+                      shaderCallback: (bounds) {
+                        return const LinearGradient(
+                          colors: [Color(0xFFFFBC20), Color(0xFFFFDB88)],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ).createShader(bounds);
+                      },
+                      child: AppIcon(
+                        AppIcons.svg.generic.heartFilledGradient,
+                        size: widget.size,
+                        color: Colors.white,
+                      ),
+                    )
+                  : AppIcon(
+                      AppIcons.svg.generic.heartOutlined,
                       size: widget.size,
-                      color: Colors.white,
+                      color: const Color(0xFF8A8782),
                     ),
-                  )
-                : AppIcon(
-                    AppIcons.svg.generic.heartOutlined,
-                    size: widget.size,
-                    color: const Color(0xFF8A8782),
-                  ),
+            ),
           ),
         ),
       ),
     );
   }
+
+  // @override
+  // Widget build(BuildContext context) {
+  //   return ScaleTransition(
+  //     scale: _scaleAnimation,
+  //     child: AppCircleButton(
+  //       icon: widget.isSelected
+  //           ? AppIcons.svg.generic.heartFilledGradient
+  //           : AppIcons.svg.generic.heartOutlined,
+
+  //       onTap: _onTap,
+
+  //       variant: AppCircleButtonVariant.secondary,
+  //       showShadow: false,
+  //       visualSize: 24,
+  //       iconSize: 28,
+
+  //       hitSlop: const EdgeInsets.symmetric(horizontal: 8),
+
+  //       bgColor: Colors.transparent,
+
+  //       preserveSvgColor: widget.isSelected,
+
+  //       iconColor: widget.isSelected ? null : const Color(0xFF8A8782),
+  //     ),
+  //   );
+  // }
 }

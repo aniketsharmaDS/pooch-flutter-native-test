@@ -195,6 +195,14 @@ class UserProfileResponseMapper extends ClassMapperBase<UserProfileResponse> {
     def: false,
     hook: SafeBoolHook(),
   );
+  static bool _$hasBoughtPet(UserProfileResponse v) => v.hasBoughtPet;
+  static const Field<UserProfileResponse, bool> _f$hasBoughtPet = Field(
+    'hasBoughtPet',
+    _$hasBoughtPet,
+    opt: true,
+    def: false,
+    hook: SafeBoolHook(),
+  );
   static int _$points(UserProfileResponse v) => v.points;
   static const Field<UserProfileResponse, int> _f$points = Field(
     'points',
@@ -281,6 +289,7 @@ class UserProfileResponseMapper extends ClassMapperBase<UserProfileResponse> {
     #isOnboarded: _f$isOnboarded,
     #isProfileCompleted: _f$isProfileCompleted,
     #isPetOnboarded: _f$isPetOnboarded,
+    #hasBoughtPet: _f$hasBoughtPet,
     #points: _f$points,
     #createdAt: _f$createdAt,
     #updatedAt: _f$updatedAt,
@@ -314,6 +323,7 @@ class UserProfileResponseMapper extends ClassMapperBase<UserProfileResponse> {
       isOnboarded: data.dec(_f$isOnboarded),
       isProfileCompleted: data.dec(_f$isProfileCompleted),
       isPetOnboarded: data.dec(_f$isPetOnboarded),
+      hasBoughtPet: data.dec(_f$hasBoughtPet),
       points: data.dec(_f$points),
       createdAt: data.dec(_f$createdAt),
       updatedAt: data.dec(_f$updatedAt),
@@ -430,6 +440,7 @@ abstract class UserProfileResponseCopyWith<
     bool? isOnboarded,
     bool? isProfileCompleted,
     bool? isPetOnboarded,
+    bool? hasBoughtPet,
     int? points,
     String? createdAt,
     String? updatedAt,
@@ -500,6 +511,7 @@ class _UserProfileResponseCopyWithImpl<$R, $Out>
     bool? isOnboarded,
     bool? isProfileCompleted,
     bool? isPetOnboarded,
+    bool? hasBoughtPet,
     int? points,
     String? createdAt,
     String? updatedAt,
@@ -531,6 +543,7 @@ class _UserProfileResponseCopyWithImpl<$R, $Out>
       if (isOnboarded != null) #isOnboarded: isOnboarded,
       if (isProfileCompleted != null) #isProfileCompleted: isProfileCompleted,
       if (isPetOnboarded != null) #isPetOnboarded: isPetOnboarded,
+      if (hasBoughtPet != null) #hasBoughtPet: hasBoughtPet,
       if (points != null) #points: points,
       if (createdAt != null) #createdAt: createdAt,
       if (updatedAt != null) #updatedAt: updatedAt,
@@ -570,6 +583,7 @@ class _UserProfileResponseCopyWithImpl<$R, $Out>
       or: $value.isProfileCompleted,
     ),
     isPetOnboarded: data.get(#isPetOnboarded, or: $value.isPetOnboarded),
+    hasBoughtPet: data.get(#hasBoughtPet, or: $value.hasBoughtPet),
     points: data.get(#points, or: $value.points),
     createdAt: data.get(#createdAt, or: $value.createdAt),
     updatedAt: data.get(#updatedAt, or: $value.updatedAt),

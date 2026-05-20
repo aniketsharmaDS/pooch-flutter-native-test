@@ -11,11 +11,12 @@ sealed class CouponsEvent extends Equatable {
 
 class FetchCouponsEvent extends CouponsEvent {
   final int page;
+  final String? couponType;
 
-  const FetchCouponsEvent({this.page = 1});
+  const FetchCouponsEvent({this.page = 1, this.couponType});
 
   @override
-  List<Object?> get props => [page];
+  List<Object?> get props => [page, couponType];
 }
 
 class ApplyCouponEvent extends CouponsEvent {

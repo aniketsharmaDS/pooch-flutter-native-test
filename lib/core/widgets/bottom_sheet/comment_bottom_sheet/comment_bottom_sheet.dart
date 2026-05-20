@@ -294,12 +294,13 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
                       ),
                       SizedBox(height: 5.h),
                       _buildCommentText(comment, textTheme),
-                      SizedBox(height: 5.h),
+                      // SizedBox(height: 5.h),
                       if (!isPosting && !isDeleting && !isReply) ...[
                         AppButton(
+                          disableRippleEffect: true,
                           variant: AppButtonVariant.text,
                           onPressed: () => _handleReplyTap(comment),
-                          padding: EdgeInsets.zero,
+                          removePadding: true,
                           size: AppButtonSize.xSmall,
                           width: null,
                           label: 'Reply',
@@ -316,6 +317,7 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
               Padding(
                 padding: EdgeInsets.only(left: 52.w, top: 8.h),
                 child: AppButton(
+                  disableRippleEffect: true,
                   isLoading: isFetchingReplies,
                   isDisabled: isFetchingReplies,
                   width: null,
@@ -349,6 +351,7 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
               Padding(
                 padding: EdgeInsets.only(left: 52.w, top: 8.h),
                 child: AppButton(
+                  disableRippleEffect: true,
                   size: AppButtonSize.xSmall,
                   width: null,
                   onPressed: () => _toggleReplies(comment),
@@ -565,11 +568,13 @@ class _CommentsBottomSheetState extends State<CommentsBottomSheet> {
             onTap: () {
               if (parentCommentId != null) {
                 context.read<TipsCommentBloc>().deleteChildComment(
+                  tipId: widget.tipId,
                   commentId: commentId,
                   parentCommentId: parentCommentId,
                 );
               } else {
                 context.read<TipsCommentBloc>().deleteComment(
+                  tipId: widget.tipId,
                   commentId: commentId,
                 );
               }

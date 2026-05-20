@@ -1,0 +1,14 @@
+{
+    "cart": {
+        "myCart": "سلتي",
+        "payNow": "ادفع الآن",
+        "selectAddress": "اختر العنوان",
+        "addItemsToCart": "أضف عناصر إلى السلة",
+        "noAddress": "لا توجد عناوين متاحة. أضف عنوان جديد",
+        "addNewAddress": "أضف عنوان جديد",
+        "chooseJourney": "اختر الرحلة",
+        "checkoutJourneyText": "حدد رحلة للمتابعة في سير الدفع الخاص بك.",
+        "success": "نجح",
+        "failure": "فشل"
+    }
+}

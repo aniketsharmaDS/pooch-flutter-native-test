@@ -1,8 +1,14 @@
 import 'dart:async';
 import 'package:auto_route/auto_route.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart' hide TransitionRoute;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:poochcare/core/di/service_locator.dart';
+import 'package:poochcare/core/services/snackbar_service.dart';
+import 'package:poochcare/core/store/auth/auth_store_bloc.dart';
+import 'package:poochcare/core/store/auth/auth_store_event.dart';
+import 'package:poochcare/core/store/onboarding/onboarding_journey_store_bloc.dart';
+import 'package:poochcare/core/store/onboarding/onboarding_journey_store_state.dart';
 import 'package:poochcare/core/theme/app_colors.dart';
 import 'package:poochcare/core/theme/app_icons.dart';
 import 'package:poochcare/core/theme/app_spacing.dart';
@@ -79,7 +85,9 @@ class _CartScreenState extends State<CartScreen> {
     super.initState();
     context.read<CartBloc>().add(FetchCartEvent(widget.productId));
     context.read<AddressBloc>().add(const FetchAddressesEvent());
-    context.read<CouponsBloc>().add(const FetchCouponsEvent());
+    context.read<CouponsBloc>().add(
+      const FetchCouponsEvent(couponType: 'products'),
+    );
   }
 
   @override
@@ -90,7 +98,7 @@ class _CartScreenState extends State<CartScreen> {
         child: SafeArea(
           child: Column(
             children: [
-              const PoochScreenAppBar(title: 'My Cart'),
+              PoochScreenAppBar(title: 'cart.myCart'.tr()),
               const SizedBox(height: AppSpacing.s20),
               cartItems(),
             ],
@@ -102,7 +110,15 @@ class _CartScreenState extends State<CartScreen> {
         padding: const EdgeInsets.symmetric(horizontal: AppSpacing.s8),
         child: BlocBuilder<AddressBloc, AddressState>(
           builder: (context, addressState) {
-            return BlocBuilder<CartBloc, CartState>(
+            return BlocConsumer<CartBloc, CartState>(
+              listener: (context, state) {
+                if (state.status == CartStatus.failure) {
+                  CustomSnackbar.show(
+                    state.errorMessage ?? '',
+                    SnackbarType.error,
+                  );
+                }
+              },
               builder: (context, cartState) {
                 final isBuyNow = widget.productId != null;
                 final itemAvailable = isBuyNow ? true : cartState.cartCount > 0;
@@ -111,9 +127,9 @@ class _CartScreenState extends State<CartScreen> {
                 return AppButton(
                   label: itemAvailable
                       ? selectedAddress != null
-                            ? 'Pay Now'
-                            : 'Select Address'
-                      : 'Add Items To Cart',
+                            ? 'cart.payNow'.tr()
+                            : 'cart.selectAddress'.tr()
+                      : 'cart.addItemsToCart'.tr(),
                   size: AppButtonSize.medium,
                   onPressed: () {
                     if (selectedAddress != null) {
@@ -186,11 +202,7 @@ class _CartScreenState extends State<CartScreen> {
                   final id = item.id;
 
                   return Padding(
-                    padding: const EdgeInsets.only(
-                      bottom: AppSpacing.s10,
-                      left: AppSpacing.s8,
-                      right: AppSpacing.s8,
-                    ),
+                    padding: const EdgeInsets.only(bottom: AppSpacing.s10),
                     child: PetItemCard(
                       id: id,
                       age: petAge,
@@ -338,7 +350,7 @@ class _CartScreenState extends State<CartScreen> {
       context: context,
       actionBackgroundColor: AppColors.white,
       backgroundColor: const Color(0xFFFEF3E6),
-      title: 'Select Address',
+      title: 'cart.selectAddress'.tr(),
       contentPadding: EdgeInsets.zero,
       content: BlocBuilder<AddressBloc, AddressState>(
         builder: (context, state) {
@@ -354,9 +366,7 @@ class _CartScreenState extends State<CartScreen> {
                 ? Center(
                     child: Padding(
                       padding: const EdgeInsets.all(AppSpacing.s16),
-                      child: AppText.bodyS(
-                        'No addresses available. Add a new address.',
-                      ),
+                      child: AppText.bodyS('cart.noAddress'.tr()),
                     ),
                   )
                 : ListView.builder(
@@ -418,7 +428,7 @@ class _CartScreenState extends State<CartScreen> {
         AppButton(
           backgroundColor: AppColors.white,
           variant: AppButtonVariant.outlined,
-          label: 'Add New Address',
+          label: 'cart.addNewAddress'.tr(),
           size: AppButtonSize.medium,
           onPressed: () {
             Navigator.pop(context); // Close bottom sheet
@@ -440,10 +450,10 @@ class _CartScreenState extends State<CartScreen> {
   ) async {
     final result = await AppDialog.show<bool>(
       context: context,
-      title: 'Choose Journey',
-      content: 'Select a journey to continue with your checkout flow.',
-      primaryLabel: 'Success',
-      secondaryLabel: 'Failure',
+      title: 'cart.chooseJourney'.tr(),
+      content: 'cart.checkoutJourneyText'.tr(),
+      primaryLabel: 'cart.success'.tr(),
+      secondaryLabel: 'cart.failure'.tr(),
       onPrimary: () async {
         await _placeOrder(context, address.id, cartData, orderPreviewData);
         return true;
@@ -456,7 +466,24 @@ class _CartScreenState extends State<CartScreen> {
     }
 
     if (result) {
-      context.read<CartBloc>().add(const ResetCartEvent());
+      final journeyType = getIt<OnboardingJourneyStoreBloc>().state.journeyType;
+      if (journeyType == OnboardingJourneyType.buyPet) {
+        final authStoreBloc = getIt<AuthStoreBloc>();
+        authStoreBloc.add(const BuyPetJourneyCompleted());
+        authStoreBloc.add(const PetOnboardingCompleted());
+        authStoreBloc.add(const InviteSheetSkipped());
+        await authStoreBloc.stream.firstWhere(
+          (element) =>
+              element.user?.hasBoughtPet == true &&
+              element.user?.isPetOnboarded == true &&
+              element.inviteSheetSkipped == true,
+        );
+      }
+      if (widget.productId == null) {
+        if (!context.mounted) return;
+        context.read<CartBloc>().add(const ResetCartEvent());
+      }
+      if (!context.mounted) return;
       context.router.replaceAll([const OrderSuccessTransitionRoute()]);
       return;
     }
@@ -500,10 +527,6 @@ class _CartScreenState extends State<CartScreen> {
             ),
           ]
         : _buildPlaceOrderItems(cartData);
-
-    if (items.isEmpty) {
-      throw Exception('No cart items available to place order.');
-    }
 
     final orderBloc = getIt<OrderBloc>();
     final completer = Completer<PlaceOrderData>();
@@ -610,7 +633,8 @@ class PetItemCard extends StatelessWidget {
         gender: gender,
         isVaccinated: isVaccinated,
         price: int.tryParse((basePrice).split('.')[0]) ?? 0,
-        deliveryText: 'Delivery Fee ₹${(deliveryFee ?? 0).toStringAsFixed(0)}',
+        deliveryText:
+            'Delivery Fee ₹${(deliveryFee ?? 0).toStringAsFixed(0)} • Expected ',
         imageUrl: (productImages ?? []).isNotEmpty && productImages != null
             ? productImages![0]
             : AppIcons.png.generic.poochPet,

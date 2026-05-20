@@ -18,6 +18,12 @@ class MissingPetReportPayloadModel with MissingPetReportPayloadModelMappable {
   @MappableField(key: 'last_known_location')
   final String? lastKnownLocation;
 
+  @MappableField(key: 'latitude')
+  final double? latitude;
+
+  @MappableField(key: 'longitude')
+  final double? longitude;
+
   final String? description;
 
   @MappableField(key: 'reward_amount')
@@ -31,6 +37,8 @@ class MissingPetReportPayloadModel with MissingPetReportPayloadModelMappable {
     this.missingTime,
     this.color,
     this.lastKnownLocation,
+    this.latitude,
+    this.longitude,
     this.description,
     this.rewardAmount,
     this.images,

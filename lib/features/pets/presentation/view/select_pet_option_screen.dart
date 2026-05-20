@@ -1,5 +1,9 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:poochcare/core/store/onboarding/onboarding_journey_store_bloc.dart';
+import 'package:poochcare/core/store/onboarding/onboarding_journey_store_event.dart';
+import 'package:poochcare/core/store/onboarding/onboarding_journey_store_state.dart';
 import 'package:poochcare/core/theme/app_colors.dart';
 import 'package:poochcare/core/theme/app_font_size.dart';
 import 'package:poochcare/core/theme/app_icon_size.dart';
@@ -34,7 +38,11 @@ class _SelectPetOptionScreenState extends State<SelectPetOptionScreen> {
   int selectedIndex = -1;
 
   void _onNext() {
+    final journeyBloc = context.read<OnboardingJourneyStoreBloc>();
     if (selectedIndex == 0) {
+      journeyBloc.add(
+        const OnboardingJourneyStarted(OnboardingJourneyType.existingPet),
+      );
       context.router.push(
         CreatePetProfileRoute(
           initialPhoneNumber: widget.initialPhoneNumber,
@@ -46,9 +54,10 @@ class _SelectPetOptionScreenState extends State<SelectPetOptionScreen> {
     }
 
     if (selectedIndex == 1) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('Coming soon.')));
+      journeyBloc.add(
+        const OnboardingJourneyStarted(OnboardingJourneyType.buyPet),
+      );
+      context.router.push(const GetHelpRoute());
     }
   }
 

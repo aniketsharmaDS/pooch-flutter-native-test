@@ -168,7 +168,7 @@ class _UpdatesAndReminderState extends State<UpdatesAndReminder> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Center(child: AppText.h3('Updated and Reminders')),
+          Center(child: AppText.h3(widget.title ?? '')),
           SizedBox(height: AppSpacing.s14.h),
           Padding(
             padding: const EdgeInsets.only(
@@ -235,7 +235,12 @@ class _DaySelector extends StatelessWidget {
                 borderRadius: BorderRadius.circular(AppRadiusSize.r12.rr),
                 gradient: isSelected
                     ? const LinearGradient(
-                        colors: [Color(0xFFFFE277), Color(0xFFFFCC3D)],
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          AppColors.gradientPrimaryLightStart,
+                          AppColors.gradientPrimaryLightEnd,
+                        ],
                       )
                     : null,
               ),

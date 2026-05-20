@@ -7,8 +7,8 @@ import 'package:poochcare/core/theme/app_icons.dart';
 import 'package:poochcare/core/theme/app_size.dart';
 import 'package:poochcare/core/theme/app_spacing.dart';
 import 'package:poochcare/core/widgets/buttons/app_button.dart';
+import 'package:poochcare/core/widgets/buttons/app_circle_button.dart';
 import 'package:poochcare/core/widgets/checkbox/app_checkbox.dart';
-import 'package:poochcare/core/widgets/images/app_icon.dart';
 import 'package:poochcare/core/widgets/radio/app_circle_radio.dart';
 import 'package:poochcare/core/widgets/texts/app_text.dart';
 import 'package:poochcare/core/widgets/texts/app_text_field.dart';
@@ -192,13 +192,21 @@ class _AppFilterDialogState extends State<AppFilterDialog>
                   //   onPressed: () => Navigator.of(context).pop(),
                   //   icon: const Icon(Icons.close, size: 22),
                   // ),
-                  GestureDetector(
+                  // GestureDetector(
+                  //   onTap: () => Navigator.of(context).pop(),
+                  //   child: AppIcon(
+                  //     AppIcons.svg.generic.close,
+                  //     size: AppIconSize.is16,
+                  //     color: AppColors.p4_900,
+                  //   ),
+                  // ),
+                  AppCircleButton(
+                    icon: AppIcons.svg.generic.close,
+                    iconColor: (AppColors.p4_900),
+                    bgColor: AppColors.transparent,
+                    visualSize: AppIconSize.is20,
                     onTap: () => Navigator.of(context).pop(),
-                    child: AppIcon(
-                      AppIcons.svg.generic.close,
-                      size: AppIconSize.is16,
-                      color: AppColors.p4_900,
-                    ),
+                    showShadow: false,
                   ),
                 ],
               ),
@@ -351,6 +359,7 @@ class _AppFilterDialogState extends State<AppFilterDialog>
                   child: section.selectionType == FilterSelectionType.multiple
                       ? IgnorePointer(
                           child: AppCheckbox(
+                            borderColor: AppColors.activeColor,
                             value: isSelected,
                             onChanged: (_) {},
                           ),
@@ -358,7 +367,8 @@ class _AppFilterDialogState extends State<AppFilterDialog>
                       : AppCircleRadio(
                           isSelected: isSelected,
                           label: '',
-                          onTap: () {},
+                          onTap: () =>
+                              _onOptionTapped(section: section, option: option),
                         ),
                 ),
               ),

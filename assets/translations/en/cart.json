@@ -1,0 +1,14 @@
+{
+    "cart": {
+        "myCart": "My Cart",
+        "payNow": "Pay Now",
+        "selectAddress": "Select Address",
+        "addItemsToCart": "Add Items To Cart",
+        "noAddress": "No addresses available. Add a new address",
+        "addNewAddress": "Add New Address",
+        "chooseJourney": "Choose Journey",
+        "checkoutJourneyText": "Select a journey to continue with your checkout flow.",
+        "success": "Success",
+        "failure": "Failure"
+    }
+}

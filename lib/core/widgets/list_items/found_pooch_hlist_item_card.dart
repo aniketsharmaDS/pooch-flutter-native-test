@@ -108,10 +108,13 @@ class FoundPoochHlistItemCard extends StatelessWidget {
     return Stack(
       alignment: Alignment.topLeft,
       children: [
-        AppImageFrame(
-          width: double.infinity,
-          height: AppSpacing.s124.h,
-          imageUrl: imageUrl,
+        AspectRatio(
+          aspectRatio: 145 / 124,
+          child: AppImageFrame(
+            width: double.infinity,
+            height: AppSpacing.s124.h,
+            imageUrl: imageUrl,
+          ),
         ),
         Positioned(
           top: AppSpacing.s8.h,

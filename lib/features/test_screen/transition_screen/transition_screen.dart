@@ -32,6 +32,8 @@ class TransitionScreen extends StatelessWidget {
   final VoidCallback? onSecondaryPressed;
   final VoidCallback? onTertiaryPressed;
   final String? petName;
+  final bool isPrimaryLoader;
+  final bool isSecondaryLoader;
 
   const TransitionScreen({
     super.key,
@@ -39,6 +41,8 @@ class TransitionScreen extends StatelessWidget {
     this.onPrimaryPressed,
     this.onSecondaryPressed,
     this.onTertiaryPressed,
+    this.isPrimaryLoader = false,
+    this.isSecondaryLoader = false,
     this.petName,
   });
 
@@ -80,6 +84,8 @@ class TransitionScreen extends StatelessWidget {
                     onPrimaryPressed: onPrimaryPressed,
                     onSecondaryPressed: onSecondaryPressed,
                     onTertiaryPressed: onTertiaryPressed,
+                    isPrimaryLoader: isPrimaryLoader,
+                    isSecondaryLoader: isSecondaryLoader,
                     petName: petName ?? 'your pooch',
                   ),
                 ),
@@ -192,6 +198,8 @@ class _TransitionBottomContent extends StatelessWidget {
   final VoidCallback? onSecondaryPressed;
   final VoidCallback? onTertiaryPressed;
   final String? petName;
+  final bool isPrimaryLoader;
+  final bool isSecondaryLoader;
 
   const _TransitionBottomContent({
     required this.variant,
@@ -199,6 +207,8 @@ class _TransitionBottomContent extends StatelessWidget {
     this.onSecondaryPressed,
     this.onTertiaryPressed,
     this.petName,
+    this.isPrimaryLoader = false,
+    this.isSecondaryLoader = false,
   });
 
   @override
@@ -236,6 +246,8 @@ class _TransitionBottomContent extends StatelessWidget {
       TransitionScreenVariant.closeMissingPooch => CloseMissingPoochBottom(
         onKeepOpenPressed: onSecondaryPressed,
         onCloseReportPressed: onPrimaryPressed,
+        isPrimaryLoader: isPrimaryLoader,
+        isSecondaryLoader: isSecondaryLoader,
       ),
       TransitionScreenVariant.poochWillBeHomeSoon => PoochWillBeHomeSoonBottom(
         onContinuePressed: onPrimaryPressed,

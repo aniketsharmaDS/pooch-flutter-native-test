@@ -114,3 +114,7 @@ class VerifyOtpCodeRequested extends AuthEvent {
 class LogoutRequested extends AuthEvent {
   const LogoutRequested();
 }
+
+class FetchUserSplashRequested extends AuthEvent {
+  const FetchUserSplashRequested();
+}

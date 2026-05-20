@@ -9,7 +9,7 @@ import 'package:poochcare/core/di/service_locator.dart';
 import 'package:poochcare/core/theme/app_colors.dart';
 import 'package:poochcare/core/theme/app_icons.dart';
 import 'package:poochcare/core/widgets/Tabs/app_bottom_tab_nav.dart';
-import 'package:poochcare/core/widgets/app_loader.dart';
+// import 'package:poochcare/core/widgets/app_loader.dart';
 import 'package:poochcare/core/widgets/appbar/pooch_app_bar.dart';
 import 'package:poochcare/core/widgets/dialogs/app_dialog.dart';
 import 'package:poochcare/core/widgets/drawer/app_drawer.dart';
@@ -41,6 +41,7 @@ class HomeScreen extends StatefulWidget implements AutoRouteWrapper {
 
 class _HomeScreenState extends State<HomeScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  bool _hasShownServeTransition = false;
 
   @override
   void initState() {
@@ -410,6 +411,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 onMenuTap: () {
                   _scaffoldKey.currentState?.openDrawer(); //  👈
                 },
+                onDateTap: () {
+                  context.router.push(const ScheduleRoute());
+                },
                 userName: userName,
                 welcomeText: 'Welcome 👋🏻',
 
@@ -473,17 +477,17 @@ class _HomeScreenState extends State<HomeScreen> {
                         : RefreshIndicator(
                             onRefresh: _onPullToRefresh,
                             notificationPredicate: (_) => true,
-                            child:
-                                BlocSelector<HomeBloc, HomeState, HomeStatus>(
-                                  selector: (state) => state.status,
-                                  builder: (context, status) {
-                                    if (status == HomeStatus.loading ||
-                                        status == HomeStatus.initial) {
-                                      return const AppLoader();
-                                    }
-                                    return child;
-                                  },
-                                ),
+                            child: BlocSelector<HomeBloc, HomeState, HomeStatus>(
+                              selector: (state) => state.status,
+                              builder: (context, status) {
+                                //  Not requried as the data is alredy loaded.
+                                // if (status == HomeStatus.loading ||
+                                //     status == HomeStatus.initial) {
+                                //   return const AppLoader();
+                                // }
+                                return child;
+                              },
+                            ),
                           ),
                     // : RefreshIndicator(
                     //     onRefresh: _onPullToRefresh,
@@ -527,10 +531,17 @@ class _HomeScreenState extends State<HomeScreen> {
                     bottom: 10.h,
                     child: AppBottomTabNav(
                       onChanged: (index) {
-                        if (index == 3) {
+                        if (index == 3 && tabsRouter.activeIndex != 3) {
                           // Serve tab - set active index first, then show full screen transition
                           tabsRouter.setActiveIndex(index);
-                          context.router.push(const EcommerceTransitionRoute());
+
+                          if (!_hasShownServeTransition) {
+                            _hasShownServeTransition = true;
+
+                            context.router.push(
+                              const EcommerceTransitionRoute(),
+                            );
+                          }
                         } else {
                           tabsRouter.setActiveIndex(index);
                         }

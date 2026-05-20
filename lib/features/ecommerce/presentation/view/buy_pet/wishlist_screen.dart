@@ -61,25 +61,33 @@ class _WishlistScreenState extends State<WishlistScreen> {
                 AppSpacing.s12.hBox,
 
                 /// 🔍 Search (optional - you can remove later)
-                AppTextField(
-                  label: 'Search in wishlist',
-                  controller: _searchController,
-                  onChanged: (value) {
-                    if (_debounce?.isActive ?? false) _debounce!.cancel();
+                BlocBuilder<WishlistBloc, WishlistState>(
+                  builder: (context, state) {
+                    return AppTextField(
+                      label: 'Search in wishlist',
+                      controller: _searchController,
+                      enabled: state.products.isNotEmpty,
+                      onChanged: (value) {
+                        if (_debounce?.isActive ?? false) _debounce!.cancel();
 
-                    _debounce = Timer(const Duration(milliseconds: 300), () {
-                      context.read<WishlistBloc>().add(
-                        SearchWishlistEvent(value),
-                      );
-                    });
+                        _debounce = Timer(
+                          const Duration(milliseconds: 300),
+                          () {
+                            context.read<WishlistBloc>().add(
+                              SearchWishlistEvent(value),
+                            );
+                          },
+                        );
+                      },
+                      suffixWidget: Padding(
+                        padding: EdgeInsets.only(right: AppSpacing.s6.w),
+                        child: AppIcon(
+                          AppIcons.svg.generic.search,
+                          size: AppIconSize.is20,
+                        ),
+                      ),
+                    );
                   },
-                  suffixWidget: Padding(
-                    padding: EdgeInsets.only(right: AppSpacing.s6.w),
-                    child: AppIcon(
-                      AppIcons.svg.generic.search,
-                      size: AppIconSize.is20,
-                    ),
-                  ),
                 ),
 
                 AppSpacing.s12.hBox,

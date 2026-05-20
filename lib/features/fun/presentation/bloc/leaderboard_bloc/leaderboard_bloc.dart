@@ -20,6 +20,9 @@ class LeaderboardBloc extends Bloc<LeaderboardEvent, LeaderboardState> {
     List<LeaderboardUserModel> leaderboardSortedData = List.from(
       leaderBoardData.leaderboard,
     );
+    leaderboardSortedData.removeWhere(
+      (element) => element.name.trim().isEmpty && (element.phone ?? '').isEmpty,
+    );
     leaderboardSortedData.sort((a, b) => a.rank.compareTo(b.rank));
     emit(
       state.copyWith(

@@ -232,7 +232,7 @@ class _HomeTabScreenState extends State<HomeTabScreen> {
                   const SizedBox(height: AppSpacing.s38),
                   const Padding(
                     padding: EdgeInsets.symmetric(horizontal: AppSpacing.s9),
-                    child: UpdatesAndReminder(title: 'Updated and Reminders'),
+                    child: UpdatesAndReminder(title: 'Updates and Reminders'),
                   ),
                   const SizedBox(height: AppSpacing.s44),
                   AppText.displayL(
@@ -268,7 +268,21 @@ class _HomeTabScreenState extends State<HomeTabScreen> {
                               title: feature.title,
                               buttonText: feature.buttonText,
                               imagePath: feature.imageUrl,
-                              onTap: () {},
+                              onTap: () {
+                                if (index == 0) {
+                                  context.router.push(
+                                    const BuyPetListingRoute(),
+                                  );
+                                  // context.router.push(const GetHelpRoute());
+                                } else if (index == 1) {
+                                  // context.router.push(const VetSearchRoute());
+                                  context.router.push(
+                                    const FindVetClinicsRoute(),
+                                  );
+                                } else if (index == 2) {
+                                  // context.router.push(const HelpAndSupportRoute());
+                                }
+                              },
                             ),
                           ),
                         );

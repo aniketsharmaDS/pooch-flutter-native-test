@@ -112,7 +112,7 @@ class _TipsInfoListItemCardState extends State<TipsInfoListItemCard> {
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: _buildPostImage(),
             ),
-            if (widget.item.showTipsBadge) ...[
+            if (widget.isDetailView) ...[
               AppSpacing.s10.hBox,
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),

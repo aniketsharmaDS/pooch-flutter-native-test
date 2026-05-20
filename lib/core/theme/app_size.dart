@@ -10,6 +10,7 @@ class AppSize {
   static const double cs1 = 1;
   static const double cs8 = 8;
   static const double cs12 = 12;
+  static const double cs14 = 14;
   static const double cs16 = 16;
   static const double cs18 = 18;
   static const double cs24 = 24;
@@ -26,6 +27,7 @@ class AppSize {
   /// ===============================
   /// EXTENDED (RARE USE)
   /// ===============================
+  static const double cs4 = 9;
   static const double cs6 = 6;
   static const double cs10 = 10;
   static const double cs26 = 26;
@@ -58,13 +60,17 @@ class AppSize {
   static const double cs142 = 142;
   static const double cs165 = 165;
   static const double cs150 = 150;
+  static const double cs155 = 155;
+  static const double cs170 = 170;
   static const double cs180 = 180;
   static const double cs200 = 200;
   static const double cs210 = 210;
   static const double cs220 = 220;
   static const double cs250 = 250;
   static const double cs260 = 260;
+  static const double cs300 = 300;
   static const double cs320 = 320;
+  static const double cs330 = 330;
   static const double cs350 = 350;
 }
 

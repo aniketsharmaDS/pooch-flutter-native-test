@@ -22,7 +22,8 @@ import 'package:poochcare/router/app_router.dart';
 
 @RoutePage()
 class AppointmentTransitionScreen extends StatefulWidget {
-  const AppointmentTransitionScreen({super.key});
+  final String planStatus; // e.g., 'NEW_SUBS', 'UPGRADE_SUBS', 'BOOK_SLOT'.
+  const AppointmentTransitionScreen({required this.planStatus, super.key});
 
   @override
   State<AppointmentTransitionScreen> createState() =>
@@ -50,6 +51,23 @@ class _AppointmentTransitionScreenState
     _imageOpacity = Tween<double>(begin: 0, end: 1).animate(
       CurvedAnimation(parent: _animationController, curve: Curves.easeOut),
     );
+
+    if (widget.planStatus != 'BOOK_SLOT') {
+      _hasScheduledSuccess = true;
+      Future.delayed(const Duration(seconds: 2), () {
+        if (mounted) {
+          setState(() {
+            _isSetupComplete = true;
+          });
+          try {
+            getIt<ClinicBloc>().add(const ResetFindVetForm());
+          } catch (e) {
+            log('Error resetting find vet form: $e');
+          }
+        }
+      });
+      return;
+    }
 
     final bookingData = getIt<AppointmentCubit>().bookingData;
     final FindVetForm? form = context.read<ClinicBloc>().state.findVetForm;
