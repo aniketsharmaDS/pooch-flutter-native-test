@@ -428,9 +428,12 @@ class _AppTextFieldState extends State<AppTextField> {
                                     ),
                                   ),
                                   if (widget.isMandatory)
-                                    const TextSpan(
-                                      text: '*',
-                                      style: TextStyle(color: Colors.red),
+                                    TextSpan(
+                                      text: ' *',
+                                      style: labelStyle.copyWith(
+                                        color: Colors.red,
+                                        fontSize: widget.floatingFontSize,
+                                      ),
                                     ),
                                 ],
                               ),

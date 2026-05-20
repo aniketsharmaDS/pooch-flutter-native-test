@@ -96,15 +96,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
               children: [
                 const AuthPetShapeHeaderView(),
                 AppSpacing.s28.hBox,
-                AppText.bodyM(
+                AppText.bodyL(
                   "Create an account to get started\non your pet's health and happiness journey.",
-                  color: const Color(0xFF461A02),
-                  fontSize: AppFontSize.fs16,
+                  color: AppColors.p3_900,
                   textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    height: 1.2,
-                    fontWeight: FontWeight.w600,
-                  ),
+                  style: const TextStyle(height: 1.2),
                 ),
                 AppSpacing.s13.hBox,
                 AppPhoneEmailInputField(

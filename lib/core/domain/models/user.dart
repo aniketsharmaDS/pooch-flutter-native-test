@@ -9,6 +9,7 @@ class User extends Equatable {
     this.isProfileCompleted = false,
     this.isPetOnboarded = false,
     this.isOnboarded = false,
+    this.hasBoughtPet = false,
     this.countryCode,
     this.primaryIdentifier,
   });
@@ -19,6 +20,7 @@ class User extends Equatable {
   final String? phone;
   final bool isProfileCompleted;
   final bool isPetOnboarded;
+  final bool hasBoughtPet;
   final bool isOnboarded;
   final String? countryCode;
   final String? primaryIdentifier;
@@ -33,8 +35,10 @@ class User extends Equatable {
     bool? isOnboarded,
     String? countryCode,
     String? primaryIdentifier,
+    bool? hasBoughtPet
   }) {
     return User(
+      hasBoughtPet: hasBoughtPet ?? this.hasBoughtPet,
       id: id ?? this.id,
       name: name ?? this.name,
       email: email ?? this.email,
@@ -58,5 +62,6 @@ class User extends Equatable {
     isOnboarded,
     countryCode,
     primaryIdentifier,
+    hasBoughtPet
   ];
 }

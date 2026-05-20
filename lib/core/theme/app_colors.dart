@@ -182,6 +182,12 @@ class AppColors {
   /// ===============================
   /// Accent Colors Ends
   /// ===============================
+  ///
+
+  /// ===============================
+
+  static const Color gradientPrimaryLightStart = Color(0xFFFFBC20);
+  static const Color gradientPrimaryLightEnd = Color(0xFFFFDB88);
 
   static const Color transparent = Color(0x00000000);
   static const Color black = Color(0xFF000000);
@@ -235,7 +241,7 @@ class AppColors {
   static const Color textFieldInputTextDefault = p4_900;
 
   static const Color textFieldHintDisabled = Color(0xFF7F7F80);
-  static const Color textFieldHintFocus = Color.fromARGB(255, 195, 55, 0);
+  static const Color textFieldHintFocus = p4_50;
   static const Color textFieldHintDefault = p4_50;
 
   static const Color detailText = p5;

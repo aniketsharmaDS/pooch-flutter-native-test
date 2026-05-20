@@ -97,11 +97,14 @@ class _CommunityPetMissingHlistState extends State<CommunityPetMissingHlist> {
         separatorBuilder: (_, _) => SizedBox(width: AppSpacing.s12.w),
         itemBuilder: (context, index) {
           final item = _items[index];
-          return MissingPoochHlistItemCard(
-            item: item,
-            onCardTap: () {
-              widget.onTap?.call(item.id, item.isAuthor ?? false);
-            },
+          return AspectRatio(
+            aspectRatio: 160 / 310,
+            child: MissingPoochHlistItemCard(
+              item: item,
+              onCardTap: () {
+                widget.onTap?.call(item.id, item.isAuthor ?? false);
+              },
+            ),
           );
         },
       ),

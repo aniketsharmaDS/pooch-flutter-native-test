@@ -35,16 +35,30 @@ class GetHelpChatMessageTile extends StatelessWidget {
         message.options != null &&
         message.options!.isNotEmpty;
 
+    // if (message.isCTA) {
+    //   final state = context.watch<GetHelpBloc>().state;
+
+    //   if (state.hasRequestedRecommendations) {
+    //     return const SizedBox.shrink();
+    //   }
+
+    //   return PetSeeResultView(
+    //     onTap: () {
+    //       context.read<GetHelpBloc>().add(FetchRecommendations());
+    //     },
+    //   );
+    // }
+
     if (message.isCTA) {
       final state = context.watch<GetHelpBloc>().state;
 
-      if (state.hasRequestedRecommendations) {
+      if (state.hasOpenedRecommendations) {
         return const SizedBox.shrink();
       }
 
       return PetSeeResultView(
         onTap: () {
-          context.read<GetHelpBloc>().add(FetchRecommendations());
+          context.read<GetHelpBloc>().add(OpenRecommendations());
         },
       );
     }
@@ -144,7 +158,7 @@ class GetHelpChatMessageTile extends StatelessWidget {
 
           BlocBuilder<GetHelpBloc, GetHelpState>(
             builder: (context, state) {
-              final isLoading = state.isLoading;
+              final isLoading = state.isLoadingRecommendations;
 
               return AppButton(
                 label: isLoading ? '' : 'Try Again',

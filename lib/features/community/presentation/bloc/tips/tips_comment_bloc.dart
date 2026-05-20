@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:poochcare/core/di/service_locator.dart';
 import 'package:poochcare/core/network/api_response.dart';
 import 'package:poochcare/core/pagination/pagination_bloc.dart';
 import 'package:poochcare/core/pagination/pagination_result.dart';
 import 'package:poochcare/core/services/snackbar_service.dart';
+import 'package:poochcare/core/sync/global_update_bus.dart';
 import 'package:poochcare/features/community/data/models/tips_comment_api_response.dart';
 import 'package:poochcare/features/community/data/models/tips_comment_info_model.dart';
 import 'package:poochcare/features/community/repository/tips_and_guide_repository.dart';
@@ -20,9 +22,9 @@ enum MessageStatus { posting, posted, pending, failed, deleting }
 
 class TipsCommentBloc extends PaginationBloc<TipsCommentInfoModel> {
   final TipsAndGuideRepository repository;
-  // late final GlobalUpdateBus<dynamic> _bus;
-  // late final StreamSubscription _busSub;
-  // static const String _source = 'TipsCommentBloc';
+  late final GlobalUpdateBus<dynamic> _bus;
+  late final StreamSubscription _busSub;
+  static const String _source = 'TipsCommentBloc';
   TipsCommentBloc({required this.repository})
     : super(
         fetchPage:
@@ -54,15 +56,15 @@ class TipsCommentBloc extends PaginationBloc<TipsCommentInfoModel> {
             },
       ) {
     /// ✅ 👇 (constructor body)
-    // _bus = getIt<GlobalUpdateBus<dynamic>>();
-    // _busSub = _bus.stream.listen((event) {
-    //   log('📡 Bus:- EventsBloc received for ${event.source}');
-    //   if (event.source == _source) return;
-    //   final updatedItem = event.data;
-    //   log(
-    //     '📡 Bus:- EventsBloc received for ${event.source}: ${updatedItem.id}',
-    //   );
-    // });
+    _bus = getIt<GlobalUpdateBus<dynamic>>();
+    _busSub = _bus.stream.listen((event) {
+      log('📡 Bus:- TipsCommentBlock received for ${event.source}');
+      // if (event.source == _source) return;
+      // final updatedItem = event.data;
+      // log(
+      //   '📡 Bus:- EventsBloc received for ${event.source}: ${updatedItem.id}',
+      // );
+    });
   }
 
   void fetchInitialComments({
@@ -153,6 +155,21 @@ class TipsCommentBloc extends PaginationBloc<TipsCommentInfoModel> {
             select: false, // 👈 makes it selected immediately
             targetScopes: {buildScope(type: TipsCommentScopeType.allComments)},
           );
+
+          // final post = eventInfoItemModel.toSubmittedPost();
+
+          _bus.emit(
+            data: {
+              'id': payload.tipId,
+              'countStatus': 'INCRIMENT', // 👈 can be used for targeted updates
+            },
+            source: _source,
+            destination: [
+              'MyLivePostsBloc',
+              'TipsGuideBloc',
+            ], // 👈 OPTIONAL, can be used for targeted updates
+          );
+
           CustomSnackbar.show(result.message, SnackbarType.success);
         } else {
           log(
@@ -285,6 +302,17 @@ class TipsCommentBloc extends PaginationBloc<TipsCommentInfoModel> {
               );
             },
           );
+          _bus.emit(
+            data: {
+              'id': payload.tipId,
+              'countStatus': 'INCRIMENT', // 👈 can be used for targeted updates
+            },
+            source: _source,
+            destination: [
+              'MyLivePostsBloc',
+              'TipsGuideBloc',
+            ], // 👈 OPTIONAL, can be used for targeted updates
+          );
           log('Create Comment API Netsted: updated');
           CustomSnackbar.show(result.message, SnackbarType.success);
         } else {
@@ -302,7 +330,10 @@ class TipsCommentBloc extends PaginationBloc<TipsCommentInfoModel> {
     }
   }
 
-  Future<void> deleteComment({required String commentId}) async {
+  Future<void> deleteComment({
+    required String tipId,
+    required String commentId,
+  }) async {
     log('Deleting comment with ID: $commentId');
     try {
       updateItemEverywhere(
@@ -333,6 +364,19 @@ class TipsCommentBloc extends PaginationBloc<TipsCommentInfoModel> {
           test: (e) => e.id == commentId,
           targetScopes: {buildScope(type: TipsCommentScopeType.allComments)},
         );
+
+        _bus.emit(
+          data: {
+            'id': tipId,
+            'countStatus': 'DECRIMENT', // 👈 can be used for targeted updates
+          },
+          source: _source,
+          destination: [
+            'MyLivePostsBloc',
+            'TipsGuideBloc',
+          ], // 👈 OPTIONAL, can be used for targeted updates
+        );
+
         CustomSnackbar.show(result.message, SnackbarType.success);
       }
     } catch (e) {
@@ -360,6 +404,7 @@ class TipsCommentBloc extends PaginationBloc<TipsCommentInfoModel> {
   }
 
   Future<void> deleteChildComment({
+    required String tipId,
     required String parentCommentId,
     required String commentId,
   }) async {
@@ -391,6 +436,17 @@ class TipsCommentBloc extends PaginationBloc<TipsCommentInfoModel> {
         );
         throw Exception(result.message);
       } else {
+        _bus.emit(
+          data: {
+            'id': tipId,
+            'countStatus': 'DECRIMENT', // 👈 can be used for targeted updates
+          },
+          source: _source,
+          destination: [
+            'MyLivePostsBloc',
+            'TipsGuideBloc',
+          ], // 👈 OPTIONAL, can be used for targeted updates
+        );
         deleteItem(
           test: (e) => e.id == commentId,
           targetScopes: {buildScope(type: TipsCommentScopeType.allComments)},
@@ -434,7 +490,7 @@ class TipsCommentBloc extends PaginationBloc<TipsCommentInfoModel> {
 
   @override
   Future<void> close() {
-    // _busSub.cancel();
+    _busSub.cancel();
     return super.close();
   }
 }

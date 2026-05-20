@@ -30,6 +30,8 @@ class AppPopupMenu extends StatefulWidget {
 
   final List<AppPopupMenuItem> items;
   final bool showCloseIcon;
+  final bool? showBadge;
+  final int? badgeCount;
   final VoidCallback? onClose;
   final AppCircleButtonSize size;
   final double? iconSize;
@@ -51,6 +53,8 @@ class AppPopupMenu extends StatefulWidget {
     this.padding,
     this.iconColor,
     this.child,
+    this.showBadge = false,
+    this.badgeCount = 0,
   });
 
   @override
@@ -388,6 +392,8 @@ class _AppPopupMenuState extends State<AppPopupMenu>
     return Padding(
       padding: widget.padding ?? EdgeInsets.zero,
       child: AppCircleButton(
+        showBadge: widget.showBadge,
+        badgeCount: widget.badgeCount,
         variant: widget.variant,
         size: widget.size,
         showShadow: false,

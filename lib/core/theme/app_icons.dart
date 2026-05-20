@@ -110,6 +110,7 @@ class _SvgDrawerIcons {
   final String paymentMethod = 'assets/icons/svg/drawer/payment_method.svg';
   final String settings = 'assets/icons/svg/drawer/settings.svg';
   final String subscription = 'assets/icons/svg/drawer/subscription.svg';
+  final String logout = 'assets/icons/svg/drawer/logout.svg';
 
   final String userSound = 'assets/icons/svg/drawer/user_sound.svg';
   final String notePencil = 'assets/icons/svg/drawer/note_pencil.svg';
@@ -215,6 +216,7 @@ class _SvgGenericIcons {
   final String caretRight = 'assets/icons/svg/generic/caret_right.svg';
   final String poochLogoWhite = 'assets/icons/svg/generic/pooch_logo_white.svg';
   final String sealPercent = 'assets/icons/svg/generic/seal_percent.svg';
+  final String filterFillter = 'assets/icons/svg/generic/filter-filled.svg';
 }
 
 // --- Transition Icons
@@ -239,6 +241,11 @@ class _SvgCommunityIcons {
   final String reward = 'assets/icons/svg/community/reward.svg';
   final String viewMyCommunityVector =
       'assets/icons/svg/community/view-my-community-vector.svg';
+  final String petPost = 'assets/icons/svg/community/pet_post.svg';
+  final String petTipsGuide = 'assets/icons/svg/community/pet_tips_guide.svg';
+  final String petEvents = 'assets/icons/svg/community/pet_events.svg';
+  final String petSearch = 'assets/icons/svg/community/pet_search.svg';
+  final String petHouse = 'assets/icons/svg/community/pet_house.svg';
 }
 
 // --- Specialist Icons
@@ -277,6 +284,7 @@ class _PngIcons {
   const _PngIcons();
 
   final generic = const _PngGenericIcons();
+  final bcs = const _PngBcsIcons();
   final symptoms = const _PngSymptomsIcons();
   final explore = const _PngExploreIcons();
   final nudges = const _PngNudgesIcons();
@@ -313,8 +321,26 @@ class _PngGenericIcons {
   final String male3D = 'assets/icons/png/generic/male_three_d.png';
   final String placeholder = 'assets/icons/png/generic/placeholder.png';
   final String poochPet = 'assets/icons/png/generic/pooch_pet.png';
+  final String poochPetBg = 'assets/icons/png/generic/pooch_pet_bg.png';
   final String poochPetFeet = 'assets/icons/png/generic/pooch_pet_feet.png';
   final String hospital = 'assets/icons/png/generic/hospital.png';
+}
+
+/// ---- BCS PNG
+class _PngBcsIcons {
+  const _PngBcsIcons();
+
+  final String bcsCatDefault = 'assets/images/png/bcs/bcs_cat_default.png';
+  final String bcsDogGiantDefault =
+      'assets/images/png/bcs/bcs_dog_giant_default.png';
+  final String bcsDogLargeDefault =
+      'assets/images/png/bcs/bcs_dog_large_default.png';
+  final String bcsDogMediumDefault =
+      'assets/images/png/bcs/bcs_dog_medium_default.png';
+  final String bcsDogSmallDefault =
+      'assets/images/png/bcs/bcs_dog_small_default.png';
+  final String bcsDogToyDefault =
+      'assets/images/png/bcs/bcs_dog_toy_default.png';
 }
 
 class _PngVerifyBiometricsIcons {
@@ -362,6 +388,15 @@ class _PngNudgesIcons {
   final String dogPeeking = 'assets/icons/png/nudges/dog_peeking.png';
   final String accessoriesPoochBanner =
       'assets/icons/png/nudges/accessories_coupon_banner.png';
+  final String buyAdoptPoochCardBg =
+      'assets/icons/png/nudges/buy-adopt-pet.png';
+  final String helpDiscoverPoochCardBg =
+      'assets/icons/png/nudges/help-me-discover-pooch.png';
+  final String joinPoochCommunityCardBg =
+      'assets/icons/png/nudges/join-pooch-community.png';
+  final String reportPetPoochCardBg = 'assets/icons/png/nudges/report-pet.png';
+  final String vetSupportPoochCardBg =
+      'assets/icons/png/nudges/vet-support.png';
 }
 
 class _PngTransitionIcons {
@@ -439,6 +474,8 @@ class _LottieAnimations {
   final String reportFlag = 'assets/lottie/report_flag.json';
   final String animalFriendly = 'assets/lottie/animal_friendly.json';
   final String completeSuccessful = 'assets/lottie/complete_successful.json';
+  final String petPawn = 'assets/lottie/pet_pawn.json';
+  final String poochPetDog = 'assets/lottie/pooch_pet_dog.json';
 }
 
 /// =============================

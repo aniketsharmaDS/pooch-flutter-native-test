@@ -8,7 +8,13 @@ import 'package:flutter/services.dart';
 class MultiJsonLoader extends AssetLoader {
   const MultiJsonLoader();
 
-  static const List<String> modules = ['common', 'drawer', 'settings'];
+  static const List<String> modules = [
+    'common',
+    'drawer',
+    'settings',
+    'community',
+    'cart',
+  ];
 
   @override
   Future<Map<String, dynamic>> load(String path, Locale locale) async {

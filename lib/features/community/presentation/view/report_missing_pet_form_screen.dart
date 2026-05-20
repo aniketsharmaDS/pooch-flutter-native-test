@@ -1,7 +1,9 @@
+import 'dart:developer';
 import 'dart:io';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
 import 'package:poochcare/core/di/service_locator.dart';
@@ -136,42 +138,45 @@ class _ReportMissingPetFormState extends State<ReportMissingPetFormScreen> {
 
     /// TEXT FIELDS
     descController.text = item.description;
-    // rewardController.text = item.location;
-    // addressController.text = item.addressDetails;
+    rewardController.text = item.rewardAmount != null
+        ? item.rewardAmount!.toInt().toString()
+        : '';
+    addressController.text = item.lastKnownLocation;
 
-    // selectedAddress = AddressResult(
-    //   description: item.addressDetails,
-    //   latitude: double.tryParse(item.latitude) ?? 0.0,
-    //   longitude: double.tryParse(item.longitude) ?? 0.0,
-    //   placeId: '',
-    // );
+    selectedAddress = AddressResult(
+      description: item.lastKnownLocation,
+      latitude: item.latitude ?? 0.0,
+      longitude: item.longitude ?? 0.0,
+      placeId: '',
+    );
 
-    // selectedPet = item.categoryId;
+    selectedPet = item.petId;
+    selectedPetNotifier.value = item.petId;
 
     /// DATE
-    // if (item.missingDate.isNotEmpty) {
-    //   try {
-    //     final parsedDate = DateTime.parse(item.missingDate).toLocal();
+    if (item.missingDate != null && item.missingDate != '') {
+      try {
+        final parsedDate = DateTime.parse(item.missingDate ?? '').toLocal();
 
-    //     missingDate = parsedDate;
-    //     _lastSceenDateController.text =
-    //         '${parsedDate.day}-${parsedDate.month}-${parsedDate.year}';
-    //   } catch (e) {
-    //     log('Date parse error: $e');
-    //   }
-    // }
+        missingDate = parsedDate;
+        _lastSceenDateController.text =
+            '${parsedDate.day}-${parsedDate.month}-${parsedDate.year}';
+      } catch (e) {
+        log('Date parse error: $e');
+      }
+    }
 
     /// TIME
-    // if (item.missingTime.isNotEmpty) {
-    //   try {
-    //     final parsedTime = _parseTime(item.missingTime);
-    //     missingTime = parsedTime;
+    if (item.missingTime != null && item.missingTime != '') {
+      try {
+        final parsedTime = _parseTime(item.missingTime ?? '');
+        missingTime = parsedTime;
 
-    //     _lastSceenTimeController.text = formatTimeOfDay(parsedTime) ?? '';
-    //   } catch (e) {
-    //     log('Time parse error: $e');
-    //   }
-    // }
+        _lastSceenTimeController.text = formatTimeOfDay(parsedTime) ?? '';
+      } catch (e) {
+        log('Time parse error: $e');
+      }
+    }
 
     /// IMAGES (IMPORTANT)
 
@@ -179,9 +184,9 @@ class _ReportMissingPetFormState extends State<ReportMissingPetFormScreen> {
         (item.images as List?)?.map((e) {
           return {
             'id': (e as dynamic).id?.toString() ?? '',
-            'url': (e as dynamic).url ?? (e as dynamic).imageUrl ?? '',
-            'name': (e as dynamic).name ?? '',
-            'size': ((e as dynamic).size ?? '').toString(),
+            'url': (e as dynamic)?.imageUrl ?? (e as dynamic)?.imageUrl ?? '',
+            // 'name': (e as dynamic)?.name ?? '',
+            // 'size': ((e as dynamic)?.size ?? '').toString(),
           };
         }).toList() ??
         [];
@@ -321,12 +326,16 @@ class _ReportMissingPetFormState extends State<ReportMissingPetFormScreen> {
                           AppTextField(
                             label: 'Add Reward Amount',
                             controller: rewardController,
+                            keyboardType: TextInputType.number,
+                            inputFormatter: [
+                              FilteringTextInputFormatter.digitsOnly,
+                              LengthLimitingTextInputFormatter(5),
+                            ],
                             textInputAction: TextInputAction.next,
                             suffixWidget: AppIcon(
                               AppIcons.svg.generic.money,
                               size: AppIconSize.is20.ir,
                             ),
-                            keyboardType: TextInputType.number,
                           ),
                         ],
                       ),
@@ -365,6 +374,9 @@ class _ReportMissingPetFormState extends State<ReportMissingPetFormScreen> {
                         children: [
                           AppCheckbox(
                             size: AppSize.cs24.csw,
+                            borderColor: AppColors.black,
+                            activeColor: AppColors.black,
+                            checkColor: AppColors.white,
                             value: isAgreed,
                             onChanged: (val) {
                               setState(() {
@@ -429,7 +441,9 @@ class _ReportMissingPetFormState extends State<ReportMissingPetFormScreen> {
                     /// SUBMIT
                     AppButton(
                       isLoading: isSubmitting,
-                      label: 'Submit',
+                      label: widget.type == ReportMissingPetFormType.edit
+                          ? 'Update'
+                          : 'Submit',
                       onPressed: isSubmitEnabled
                           ? () => _createEvent(false)
                           : null,
@@ -568,10 +582,14 @@ class _ReportMissingPetFormState extends State<ReportMissingPetFormScreen> {
         .map((e) => e['url'].toString())
         .toList();
 
+    final List<String> remoteUrls = (remoteFiles)
+        .map((e) => e['url'].toString())
+        .toList();
+
     try {
       // ignore: unused_local_variable
       final List<dynamic> urls = [
-        ...remoteFiles, // remaining existing ones
+        ...remoteUrls, // remaining existing ones
         // ...attachmentUrls, // newly uploaded ones
         ...newUrls, // newly uploaded ones
       ];
@@ -588,12 +606,20 @@ class _ReportMissingPetFormState extends State<ReportMissingPetFormScreen> {
         lastKnownLocation: addressController.text.trim().isEmpty
             ? null
             : addressController.text.trim(),
+        latitude: selectedAddress?.latitude ?? 0.0,
+        longitude: selectedAddress?.longitude ?? 0.0,
         rewardAmount: int.tryParse(rewardController.text.trim()),
         images: (urls.isEmpty) ? null : urls,
       );
 
+      log('selectedAddress in payload: ${payload.toJson()}');
+      // log('selectedAddress in payload: ${payload.lastKnownLocation} lat: ${payload.latitude} long: ${payload.longitude}');
+
       if (widget.type == ReportMissingPetFormType.edit) {
-        // await context.read<MyMissingPetsBloc>().updateEvent(payload: payload);
+        await context.read<MyMissingPetsBloc>().updatedMissingPetReport(
+          reportId: widget.reportId ?? '',
+          payload: payload,
+        );
       } else {
         await context.read<MyMissingPetsBloc>().reprortMissingPet(
           payload: payload,
@@ -601,16 +627,21 @@ class _ReportMissingPetFormState extends State<ReportMissingPetFormScreen> {
       }
       if (!mounted) return; // ✅ I
       context.read<AllMissingPetsBloc>().fetchInitialMissingPets();
+      context.read<MyMissingPetsBloc>().fetchInitialMissingPets();
       context.router.replace(
         ReportMissingPetTransitionRoute(petId: selectedPet ?? ''),
       );
     } catch (e) {
+      String errorMessage = e.toString();
+      if (errorMessage.contains(':')) {
+        errorMessage = errorMessage.split(':').skip(1).join(':').trim();
+      }
       if (!mounted) return; // ✅ I
       AppDialog.show(
         icon: Lottie.asset(AppIcons.lottie.successful, repeat: false),
         context: context,
         title: 'Oops! There was an error.',
-        content: 'Unable to report missing pet. Please retry posting again.',
+        content: errorMessage,
         primaryLabel: 'Try Again',
         secondaryLabel: 'Later',
         onPrimary: () async {

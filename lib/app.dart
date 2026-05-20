@@ -7,6 +7,8 @@ import 'package:poochcare/core/store/appointments/appointments_store_bloc.dart';
 import 'package:poochcare/core/store/auth/auth_store_bloc.dart';
 import 'package:poochcare/core/store/auth/auth_store_state.dart';
 import 'package:poochcare/core/store/cart/cart_store_bloc.dart';
+import 'package:poochcare/core/store/onboarding/onboarding_journey_store_bloc.dart';
+import 'package:poochcare/core/store/onboarding/onboarding_journey_store_event.dart';
 import 'package:poochcare/core/store/pets/pets_store_bloc.dart';
 import 'package:poochcare/core/store/products/products_store_bloc.dart';
 import 'package:poochcare/core/store/theme/theme_store_bloc.dart';
@@ -50,6 +52,9 @@ class PoochCareApp extends StatelessWidget {
       providers: <BlocProvider<dynamic>>[
         // Store Blocs — app-lifetime singletons
         BlocProvider<AuthStoreBloc>.value(value: getIt<AuthStoreBloc>()),
+        BlocProvider<OnboardingJourneyStoreBloc>.value(
+          value: getIt<OnboardingJourneyStoreBloc>(),
+        ),
         BlocProvider<PetsStoreBloc>.value(value: getIt<PetsStoreBloc>()),
         BlocProvider<AppointmentsStoreBloc>.value(
           value: getIt<AppointmentsStoreBloc>(),
@@ -118,6 +123,9 @@ class PoochCareApp extends StatelessWidget {
                       //   _appRouter.replaceAll([const LoginRoute()]);
                       // }
                       if (!state.isAuthenticated) {
+                        context.read<OnboardingJourneyStoreBloc>().add(
+                          const OnboardingJourneyCleared(),
+                        );
                         // 🔥 CLEAR OLD USER DATA
                         context.read<WishlistBloc>().add(ResetWishlistEvent());
                         context.read<CartBloc>().add(const ResetCartEvent());
@@ -192,8 +200,24 @@ class PoochCareApp extends StatelessWidget {
                       localizationsDelegates: context.localizationDelegates,
                       // home: const CouponsScreen(),
                       routerConfig: appRouter.config(),
-                      builder: (context, child) =>
-                          GlobalLoaderOverlay(child: child!),
+                      // This is Old One before TextScaler
+                      // builder: (context, child) =>
+                      //     GlobalLoaderOverlay(child: child!),
+                      //
+                      // This is New One with TextScaler added to hadle the font scaling issue.
+                      // We are clamping the text scaler to a max of 1.2 to prevent the UI from breaking.
+                      builder: (context, child) {
+                        final mq = MediaQuery.of(context);
+                        final scaler = mq.textScaler;
+                        final clampedScaler = scaler.clamp(
+                          minScaleFactor: 0.95,
+                          maxScaleFactor: 1.2,
+                        );
+                        return MediaQuery(
+                          data: mq.copyWith(textScaler: clampedScaler),
+                          child: GlobalLoaderOverlay(child: child!),
+                        );
+                      },
                     );
                   },
                 ),

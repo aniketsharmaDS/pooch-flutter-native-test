@@ -129,6 +129,7 @@ class AppDrawer extends StatelessWidget {
 
                   /// Logout Button
                   AppButton(
+                    leadingSvgAsset: AppIcons.svg.drawer.logout,
                     label: 'drawer.logOut'.tr(),
                     onPressed: () async {
                       // Navigator.pop(context);
@@ -236,7 +237,7 @@ class DrawerItemsWidget extends StatelessWidget {
               /// Social Media Title
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20.w),
-                child: Row(children: [Text('drawer.socialMedia'.tr())]),
+                child: Row(children: [AppText.h3('drawer.socialMedia'.tr())]),
               ),
 
               SizedBox(height: 10.h),
@@ -280,7 +281,7 @@ class DrawerExpandableItem extends StatelessWidget {
     const fontFamily = 'Gilroy600';
 
     return ExpansionTile(
-      minTileHeight: 70.h,
+      // minTileHeight: 70.h,
       iconColor: AppColors.p5_900, // Expanded state
       collapsedIconColor: AppColors.p5_900, // C
 

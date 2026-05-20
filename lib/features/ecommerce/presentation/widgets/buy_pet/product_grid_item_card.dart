@@ -64,19 +64,22 @@ class ProductGridCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(AppRadiusSize.r16),
         onTap: onTap,
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min, // Important: avoid Expanded
+          crossAxisAlignment:
+              CrossAxisAlignment.start, // Important: avoid Expanded
           children: [
             // IMAGE + POPULAR BADGE
             Stack(
               children: [
                 Container(
                   padding: EdgeInsets.all(AppSpacing.s10.w),
-                  child: AppImageFrame(
-                    width: double.infinity,
-                    height: 130.h,
-                    imageUrl: product.image,
-                    // fit: BoxFit.cover,
+                  child: AspectRatio(
+                    aspectRatio: 145 / 124,
+                    child: AppImageFrame(
+                      width: double.infinity,
+                      height: 124.h,
+                      imageUrl: product.image,
+                      // fit: BoxFit.cover,
+                    ),
                   ),
                 ),
                 if (product.isPopular)
@@ -215,7 +218,7 @@ class ProductGridCard extends StatelessWidget {
                             removePadding: true,
                             variant: AppButtonVariant.text,
                             label: 'View Details',
-                            height: AppSize.cs16,
+                            height: AppSize.cs18,
                             trailingIcon: AppIcon(
                               AppIcons.svg.generic.chevronRight,
                               size: AppIconSize.is14,

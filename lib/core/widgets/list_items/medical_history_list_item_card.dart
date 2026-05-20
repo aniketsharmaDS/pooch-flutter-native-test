@@ -74,6 +74,7 @@ class MedicalDocument {
 class MedicalHistoryListItemCard extends StatefulWidget {
   final MedicalHistoryItem item;
   final VoidCallback? onItemClick;
+  final VoidCallback? onViewReportClick;
   final Duration successDuration;
   final ViewType? viewType;
 
@@ -81,6 +82,7 @@ class MedicalHistoryListItemCard extends StatefulWidget {
     super.key,
     required this.item,
     this.onItemClick,
+    this.onViewReportClick,
     this.successDuration = const Duration(seconds: 2),
     this.viewType = ViewType.vertical,
   });
@@ -160,7 +162,7 @@ class _MedicalHistoryListItemCardState
     final data = item.data;
 
     return GestureDetector(
-      onTap: widget.onItemClick,
+      onTap: () => data != null ? _onRowClick(data, type: item.type) : null,
       child: Container(
         padding: (_docs.isEmpty || widget.viewType == ViewType.horizontal)
             ? EdgeInsets.only(top: 6.h)
@@ -219,24 +221,27 @@ class _MedicalHistoryListItemCardState
     );
   }
 
+  void _onRowClick(MedicalData data, {required ItemType type}) {
+    if (widget.onItemClick != null) {
+      widget.onItemClick!();
+      return;
+    }
+    appRouter.push(
+      PetMedicalDetailsRoute(
+        recordId: data.recordId ?? '',
+        appointmentId: data.appointmentId ?? '',
+        recordType: type == ItemType.consultation
+            ? MedicalHistoryRecordTypeFilter.consultation
+            : type == ItemType.vaccination
+            ? MedicalHistoryRecordTypeFilter.vaccination
+            : MedicalHistoryRecordTypeFilter.labReport,
+      ),
+    );
+  }
+
   Widget _headerVertical(MedicalData data, {required ItemType type}) {
     return InkWell(
-      onTap: () {
-        // if (widget.onItemClick != null) {
-        //   widget.onItemClick!();
-        // }
-        appRouter.push(
-          PetMedicalDetailsRoute(
-            recordId: data.recordId ?? '',
-            appointmentId: data.appointmentId ?? '',
-            recordType: type == ItemType.consultation
-                ? MedicalHistoryRecordTypeFilter.consultation
-                : type == ItemType.vaccination
-                ? MedicalHistoryRecordTypeFilter.vaccination
-                : MedicalHistoryRecordTypeFilter.labReport,
-          ),
-        );
-      },
+      onTap: () => _onRowClick(data, type: type),
       borderRadius: BorderRadius.circular(12.r),
       child: Container(
         padding: EdgeInsets.symmetric(
@@ -373,7 +378,9 @@ class _MedicalHistoryListItemCardState
                         variant: AppButtonVariant.text,
                         label: 'View Report',
                         trailingSvgAsset: AppIcons.svg.generic.chevronRight,
-                        onPressed: widget.onItemClick,
+                        onPressed:
+                            widget.onViewReportClick ??
+                            () => _onRowClick(data, type: type),
                         size: AppButtonSize.xSmall,
                         textStyle: TextStyle(
                           fontSize: 12.sp,
@@ -473,7 +480,7 @@ class _MedicalHistoryListItemCardState
         );
       case DocumentDownloadState.error:
         return AppCircleButton(
-          icon: AppIcons.svg.generic.sun,
+          icon: AppIcons.svg.generic.download,
           size: AppCircleButtonSize.small,
           variant: AppCircleButtonVariant.secondary,
           onTap: () => _handleDownload(index),

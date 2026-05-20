@@ -160,6 +160,7 @@ class _TrackOrderView extends StatelessWidget {
                 // 🔥 OUT FOR DELIVERY → VALIDATION CODE + CANCEL ORDER
                 else if (isOutForDelivery)
                   OrderBottomActions(
+                    needHelpPosition: NeedHelpPosition.top,
                     order: requestedItem,
                     primaryLabel: 'Validation Code',
                     secondaryLabel: 'Cancel Order',
@@ -183,6 +184,7 @@ class _TrackOrderView extends StatelessWidget {
                   OrderBottomActions(
                     order: requestedItem,
                     centerLabel: 'Cancellation Status',
+                    needHelpPosition: NeedHelpPosition.top,
                     onCenterAction: () {
                       OrderActionBottomSheet.show(
                         context: context,
@@ -200,6 +202,7 @@ class _TrackOrderView extends StatelessWidget {
                   OrderBottomActions(
                     order: requestedItem,
                     centerLabel: 'Cancel Order',
+                    needHelpPosition: NeedHelpPosition.top,
                     onCenterAction: () {
                       context.router.push(
                         RequestCancellationRoute(

@@ -70,3 +70,7 @@ class OnboardingPetCountUpdated extends AuthStoreEvent {
 class OnboardingPetCountCleared extends AuthStoreEvent {
   const OnboardingPetCountCleared();
 }
+
+class BuyPetJourneyCompleted extends AuthStoreEvent {
+  const BuyPetJourneyCompleted();
+}

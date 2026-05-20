@@ -48,7 +48,7 @@ class MessageShapeCard extends StatelessWidget {
                 notchHeight: 0,
                 notchWidth: 140,
                 variant: AppCardNotchVariant.topRightBottomLeft,
-                bottomNotchWidth: 80,
+                bottomNotchWidth: 60,
                 bottomNotchHeight: 10,
                 child: Container(
                   decoration: const BoxDecoration(
@@ -85,12 +85,20 @@ class MessageShapeCard extends StatelessWidget {
                           fontSize: 32.sp,
                         ),
                         SizedBox(height: 3.h),
-                        AppText.bodyM(
-                          headerDescription,
-                          fontSize: 16.sp,
-                          textAlign: TextAlign.center,
-                          color: AppColors.textFieldLabelDefault,
-                          variant: AppTextVariant.noEllipsis,
+                        const Spacer(),
+                        Padding(
+                          padding: EdgeInsets.only(
+                            left: 50.w,
+                            right: 50.w,
+                            bottom: 30.h,
+                          ),
+                          child: AppText.bodyM(
+                            headerDescription,
+                            fontSize: 16.sp,
+                            textAlign: TextAlign.center,
+                            color: AppColors.textFieldLabelDefault,
+                            variant: AppTextVariant.noEllipsis,
+                          ),
                         ),
                       ],
                     ),

@@ -30,7 +30,7 @@ class CouponsBloc extends Bloc<CouponsEvent, CouponsState> {
     try {
       final coupons = await repository.getCoupons(
         page: event.page,
-        // couponsType: 'products',
+        couponsType: event.couponType,
       );
       emit(
         state.copyWith(

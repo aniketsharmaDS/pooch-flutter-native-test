@@ -22,3 +22,5 @@ class LoadStage extends GetHelpEvent {
 }
 
 class FetchRecommendations extends GetHelpEvent {}
+
+class OpenRecommendations extends GetHelpEvent {}

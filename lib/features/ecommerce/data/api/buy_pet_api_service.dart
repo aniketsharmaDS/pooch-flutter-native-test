@@ -80,9 +80,12 @@ class BuyPetApiService {
 
           if (allergy != null && allergy.isNotEmpty) 'allergy': allergy,
 
-          // 'couponCode': couponCode ?? '',
           if (couponCode != null && couponCode.trim().isNotEmpty)
             'couponCode': couponCode.trim(),
+
+          // 'couponCode': couponCode ?? '',
+          // if (couponCode != null && couponCode.trim().isNotEmpty)
+          // 'couponCode': couponCode.trim(),
         },
       );
 

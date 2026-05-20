@@ -56,7 +56,7 @@ class _OrdersListingScreenState extends State<OrdersListingScreen> {
               Expanded(
                 child: AppDefaultRouteTabs(
                   tabNames: const ['All', 'Active', 'Completed', 'Cancelled'],
-                  isScrollable: true,
+                  // isScrollable: true,
                   onTabChanged: (index) {
                     final status = _mapTabToStatus(index);
 

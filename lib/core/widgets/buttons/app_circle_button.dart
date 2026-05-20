@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:poochcare/core/theme/app_colors.dart';
+import 'package:poochcare/core/theme/app_font_size.dart';
 import 'package:poochcare/core/theme/app_radius_size.dart';
 import 'package:poochcare/core/theme/app_spacing.dart';
 import 'package:poochcare/core/widgets/texts/app_text.dart';
@@ -206,9 +207,9 @@ class _AppCircleButtonState extends State<AppCircleButton> {
               widget.icon,
               width: iconSize,
               height: iconSize,
-              colorFilter: widget.preserveSvgColor
-                  ? null
-                  : ColorFilter.mode(iconColor, BlendMode.srcIn),
+              // colorFilter: widget.preserveSvgColor
+              //     ? null
+              //     : ColorFilter.mode(iconColor, BlendMode.srcIn),
             );
     } else {
       icon = _isNetwork(widget.icon)
@@ -253,14 +254,23 @@ class _AppCircleButtonState extends State<AppCircleButton> {
                 ]
               : [],
         ),
-        child: ClipRRect(
-          borderRadius: borderRadius,
-          child: widget.variant == AppCircleButtonVariant.glass
-              ? BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 25, sigmaY: 25),
-                  child: _innerContainer(bgColor, borderRadius, icon),
-                )
-              : _innerContainer(bgColor, borderRadius, icon),
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: [
+            ClipRRect(
+              borderRadius: borderRadius,
+              child: widget.variant == AppCircleButtonVariant.glass
+                  ? BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 25, sigmaY: 25),
+                      child: _innerContainer(bgColor, borderRadius, icon),
+                    )
+                  : _innerContainer(bgColor, borderRadius, icon),
+            ),
+            // 👇 move badge here (outside clipping)
+            if (widget.showBadge == true) ...[
+              Positioned(top: -2, right: -2, child: _buildBadge()),
+            ],
+          ],
         ),
       ),
     );
@@ -272,7 +282,7 @@ class _AppCircleButtonState extends State<AppCircleButton> {
 
     if (useMaterial) {
       gestureLayer = Material(
-        color: Colors.transparent,
+        color: AppColors.transparent,
         child: InkWell(
           onTap: isDisabled
               ? null
@@ -344,13 +354,7 @@ class _AppCircleButtonState extends State<AppCircleButton> {
               )
             : null,
       ),
-      child: Stack(
-        clipBehavior: Clip.none,
-        children: [
-          Center(child: icon),
-          _buildBadge(),
-        ],
-      ),
+      child: Center(child: icon),
     );
   }
 
@@ -369,22 +373,35 @@ class _AppCircleButtonState extends State<AppCircleButton> {
     }
 
     return Positioned(
-      top: -2,
-      right: -2,
+      top: -AppSpacing.s2.h,
+      right: -AppSpacing.s4.w,
       child: Container(
-        width: 18.r,
-        height: 18.r,
+        width: AppRadiusSize.r16.rr,
+        height: AppRadiusSize.r16.rr,
         alignment: Alignment.center,
         decoration: BoxDecoration(
           color: widget.badgeColor,
           shape: BoxShape.circle,
         ),
+        clipBehavior: Clip.antiAlias,
         child: isDot
-            ? SizedBox(width: 6.r, height: 6.r)
-            : FittedBox(
-                child: Padding(
-                  padding: EdgeInsets.all(AppRadiusSize.r2.rr),
-                  child: AppText.support(text, color: widget.badgeTextColor),
+            ? Container(
+                width: 6.r,
+                height: 6.r,
+                decoration: BoxDecoration(
+                  color: widget.badgeColor,
+                  shape: BoxShape.circle,
+                ),
+              )
+            : Center(
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: AppText.support(
+                    text,
+                    color: widget.badgeTextColor,
+                    textAlign: TextAlign.center,
+                    fontSize: AppFontSize.fs8,
+                  ),
                 ),
               ),
       ),

@@ -35,6 +35,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<LogoutRequested>(_onLogoutRequested);
     on<SendOtpCodeRequested>(_onSendOtpCodeRequested);
     on<VerifyOtpCodeRequested>(_onVerifyOtpCodeRequested);
+    on<FetchUserSplashRequested>(_onFetchUserSplashRequested);
     _initGoogleSignIn(); // Initialize Google Sign-In
   }
 
@@ -49,6 +50,48 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final TokenStorage _tokenStorage;
   final SessionResetService _sessionResetService;
   final GoogleSignIn _googleSignIn = GoogleSignIn.instance;
+
+  Future<void> _onFetchUserSplashRequested(
+    FetchUserSplashRequested event,
+    Emitter<AuthState> emit,
+  ) async {
+    emit(
+      state.copyWith(
+        status: AuthStatus.loading,
+        requestType: AuthRequestType.userSplash,
+        clearError: true,
+      ),
+    );
+
+    try {
+      final Map<String, dynamic> splashData = await _repository
+          .fetchUserSplash();
+      emit(
+        state.copyWith(
+          status: AuthStatus.success,
+          requestType: AuthRequestType.userSplash,
+          userSplashData: splashData,
+          clearError: true,
+        ),
+      );
+    } on ApiException catch (error) {
+      emit(
+        state.copyWith(
+          status: AuthStatus.failure,
+          requestType: AuthRequestType.userSplash,
+          errorMessage: error.message,
+        ),
+      );
+    } catch (_) {
+      emit(
+        state.copyWith(
+          status: AuthStatus.failure,
+          requestType: AuthRequestType.userSplash,
+          errorMessage: 'Failed to load splash content. Please try again.',
+        ),
+      );
+    }
+  }
 
   void _onAuthStarted(AuthStarted event, Emitter<AuthState> emit) {
     emit(

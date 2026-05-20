@@ -17,6 +17,9 @@ class AppDefaultRouteTabs extends StatelessWidget {
   /// Use this when inside Card / Column (not full screen)
   final double? contentHeight;
 
+  /// New: initial tab index, defaults to 0
+  final int? initialIndex;
+
   const AppDefaultRouteTabs({
     super.key,
     this.routes,
@@ -26,6 +29,7 @@ class AppDefaultRouteTabs extends StatelessWidget {
     this.onTabChanged,
     this.isScrollable = false,
     this.labelPadding,
+    this.initialIndex = 0,
   }) : assert(
          (routes != null && children == null) ||
              (routes == null && children != null),
@@ -77,6 +81,7 @@ class AppDefaultRouteTabs extends StatelessWidget {
     // );
     return DefaultTabController(
       length: tabNames.length,
+      initialIndex: initialIndex!,
       child: _TabChangeListener(
         onTabChanged: onTabChanged,
         child: Builder(

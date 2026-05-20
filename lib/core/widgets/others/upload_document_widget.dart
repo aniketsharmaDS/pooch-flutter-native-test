@@ -4,6 +4,7 @@ import 'package:path/path.dart' as p;
 import 'package:poochcare/core/services/image_picker_service.dart';
 import 'package:poochcare/core/theme/app_colors.dart';
 import 'package:poochcare/core/theme/app_font_size.dart';
+import 'package:poochcare/core/theme/app_icon_size.dart';
 import 'package:poochcare/core/theme/app_icons.dart';
 import 'package:poochcare/core/theme/app_size.dart';
 import 'package:poochcare/core/theme/app_spacing.dart';
@@ -212,9 +213,11 @@ class _UploadDocumentWidgetState extends State<UploadDocumentWidget> {
           AppCircleButton(
             icon: AppIcons.svg.generic.delete,
             bgColor: AppColors.white,
+            visualSize: AppIconSize.is32.ir,
+            iconSize: AppIconSize.is14.ir,
             onTap: onRemove,
             borderRadius: 16.r,
-            shadowColor: const Color(0xCB9B6266).withValues(alpha: 0.4),
+            shadowColor: const Color(0xFFCB9B62).withValues(alpha: 0.4),
           ),
         ],
       ),

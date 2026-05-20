@@ -95,15 +95,11 @@ class _LoginScreenState extends State<LoginScreen> {
               children: [
                 const AuthPetShapeHeaderView(),
                 AppSpacing.s28.hBox,
-                AppText.bodyM(
-                  "Login to continue\non your pet's health and happiness journey.",
-                  color: const Color(0xFF461A02),
-                  fontSize: AppFontSize.fs16,
-                  style: const TextStyle(
-                    height: 1.2,
-                    fontWeight: FontWeight.w600,
-                  ),
+                AppText.bodyL(
+                  "Login to continue on your\npet's health and happiness journey.",
+                  color: AppColors.p3_900,
                   textAlign: TextAlign.center,
+                  style: const TextStyle(height: 1.2),
                 ),
                 AppSpacing.s13.hBox,
                 AppPhoneEmailInputField(

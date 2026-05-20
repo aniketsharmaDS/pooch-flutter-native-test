@@ -81,7 +81,7 @@ class _ActionCardWidgetState extends State<_ActionCardWidget> {
           setState(() => isPressed = value);
         },
         borderRadius: BorderRadius.circular(AppRadiusSize.r10.rr),
-        child: Ink(
+        child: DecoratedBox(
           decoration: BoxDecoration(
             color: const Color(0xFFFFFEFD),
             borderRadius: BorderRadius.circular(AppRadiusSize.r10.rr),

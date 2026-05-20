@@ -75,12 +75,31 @@ class TipsGuideBloc extends PaginationBloc<TipsInfoItemModel> {
     /// ✅ 👇 (constructor body)
     _bus = getIt<GlobalUpdateBus<dynamic>>();
     _busSub = _bus.stream.listen((event) {
-      log('📡 Bus:- EventsBloc received for ${event.source}');
       if (event.source == _source) return;
-      final updatedItem = event.data;
-      log(
-        '📡 Bus:- EventsBloc received for ${event.source}: ${updatedItem.id}',
-      );
+      // final updatedItem = event.data;
+      if (event.source == 'TipsCommentBloc') {
+        final String countStatus = event.data['countStatus'] as String;
+
+        if (countStatus == 'INCRIMENT' || countStatus == 'DECRIMENT') {
+          final String tipsId = event.data['id'] as String;
+
+          updateItemEverywhere(
+            test: (item) => item.id == tipsId,
+            update: (item) {
+              final int updatedCommentsCount = countStatus == 'INCRIMENT'
+                  ? item.commentsCount + 1
+                  : (item.commentsCount - 1).clamp(0, 1000000);
+
+              return item.copyWith(commentsCount: updatedCommentsCount);
+            },
+          );
+        }
+
+        log('📡 Bus:- TipsGuideBloc received Status $countStatus');
+        log('📡 Bus:- TipsGuideBloc received Id ${event.data['id']}');
+
+        return;
+      }
 
       // updateItemEverywhere(
       //   test: (item) => item.id == event.id,
@@ -328,10 +347,16 @@ class TipsGuideBloc extends PaginationBloc<TipsInfoItemModel> {
               TipsInfoItemModelMapper.fromMap(
                 result.data as Map<String, dynamic>,
               );
+          // insertItem(
+          //   item: tipsInfoItemModel,
+          //   select: true, // 👈 makes it selected immediately
+          // );
           insertItem(
             item: tipsInfoItemModel,
-            select: true, // 👈 makes it selected immediately
+            select: true,
+            targetScopes: buildCreateTargetScopes(),
           );
+
           CustomSnackbar.show(result.message, SnackbarType.success);
         } else {
           CustomSnackbar.show('Invalid response format', SnackbarType.error);
@@ -342,6 +367,14 @@ class TipsGuideBloc extends PaginationBloc<TipsInfoItemModel> {
       // CustomSnackbar.show('some thing went wrong', SnackbarType.error);
       rethrow;
     }
+  }
+
+  Set<String> buildCreateTargetScopes() {
+    return {
+      buildScope(type: TipsGuideType.allMyTipsGuides),
+
+      buildScope(type: TipsGuideType.allMyUpcomingTipsGuides),
+    };
   }
 
   Future<void> updateTipGuide({

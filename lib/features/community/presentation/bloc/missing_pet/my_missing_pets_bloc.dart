@@ -114,6 +114,38 @@ class MyMissingPetsBloc extends PaginationBloc<MissingPetModel> {
     }
   }
 
+  Future<void> updatedMissingPetReport({
+    required String reportId,
+    required MissingPetReportPayloadModel payload,
+  }) async {
+    log('Creating tip/guide with petId: $payload.petId');
+    try {
+      /// 2. API call
+      final ApiResponse result = await repository.updatedMissingPetReport(
+        reportId: reportId,
+        payload: payload,
+      );
+      log(
+        'Create event API response: success=${result.success}, message=${result.message}, data=${result.data}',
+      );
+      if (!result.success) {
+        CustomSnackbar.show(result.message, SnackbarType.error);
+        throw Exception(result.message);
+      } else {
+        fetchMissingReportDetails(reportId, isRefresh: true);
+        if (result.data is Map<String, dynamic>) {
+          CustomSnackbar.show(result.message, SnackbarType.success);
+        } else {
+          CustomSnackbar.show('Invalid response format', SnackbarType.error);
+          throw Exception('Invalid response format');
+        }
+      }
+    } catch (e) {
+      // CustomSnackbar.show('some thing went wrong', SnackbarType.error);
+      rethrow;
+    }
+  }
+
   Future<void> fetchMissingReportDetails(
     String reportId, {
     bool isRefresh = false,
@@ -196,6 +228,69 @@ class MyMissingPetsBloc extends PaginationBloc<MissingPetModel> {
           //   item: eventInfoItemModel,
           //   select: true, // 👈 makes it selected immediately
           // );
+          CustomSnackbar.show(result.message, SnackbarType.success);
+        } else {
+          CustomSnackbar.show('Invalid response format', SnackbarType.error);
+          throw Exception('Invalid response format');
+        }
+      }
+    } catch (e) {
+      CustomSnackbar.show('some thing went wrong', SnackbarType.error);
+      rethrow;
+    }
+  }
+
+  Future<void> reUnitePooch({required String reportId}) async {
+    log('Creating tip/guide with petId: $reportId');
+    try {
+      /// 2. API call
+      final ApiResponse result = await repository.reUnitePooch(
+        reportId: reportId,
+      );
+      log(
+        'Create event API response: success=${result.success}, message=${result.message}, data=${result.data}',
+      );
+      if (!result.success) {
+        CustomSnackbar.show(result.message, SnackbarType.error);
+        throw Exception(result.message);
+      } else {
+        if (result.data is Map<String, dynamic>) {
+          // ignore: unused_local_variable
+          // final EventInfoItemModel eventInfoItemModel =
+          //     EventInfoItemModelMapper.fromMap(
+          //       result.data as Map<String, dynamic>,
+          //     );
+          // insertItem(
+          //   item: eventInfoItemModel,
+          //   select: true, // 👈 makes it selected immediately
+          // );
+          CustomSnackbar.show(result.message, SnackbarType.success);
+        } else {
+          CustomSnackbar.show('Invalid response format', SnackbarType.error);
+          throw Exception('Invalid response format');
+        }
+      }
+    } catch (e) {
+      CustomSnackbar.show('some thing went wrong', SnackbarType.error);
+      rethrow;
+    }
+  }
+
+  Future<void> deleteReportPost({required String reportId}) async {
+    log('Creating tip/guide with petId: $reportId');
+    try {
+      /// 2. API call
+      final ApiResponse result = await repository.deleteReportPost(
+        reportId: reportId,
+      );
+      log(
+        'Create event API response: success=${result.success}, message=${result.message}, data=${result.data}',
+      );
+      if (!result.success) {
+        CustomSnackbar.show(result.message, SnackbarType.error);
+        throw Exception(result.message);
+      } else {
+        if (result.data is Map<String, dynamic>) {
           CustomSnackbar.show(result.message, SnackbarType.success);
         } else {
           CustomSnackbar.show('Invalid response format', SnackbarType.error);

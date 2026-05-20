@@ -5,6 +5,7 @@ import 'package:poochcare/core/network/dio_client.dart';
 import 'package:poochcare/core/services/document_upload_service.dart';
 import 'package:poochcare/core/services/image_upload_service.dart';
 import 'package:poochcare/core/services/localization_service.dart';
+import 'package:poochcare/core/services/location_permission_service.dart';
 import 'package:poochcare/core/services/secure_storage_service.dart';
 import 'package:poochcare/core/services/session_reset_service.dart';
 import 'package:poochcare/core/services/token_storage.dart';
@@ -12,6 +13,7 @@ import 'package:poochcare/core/store/appointments/appointments_store_bloc.dart';
 import 'package:poochcare/core/store/auth/auth_store_bloc.dart';
 import 'package:poochcare/core/store/cart/cart_store_bloc.dart';
 import 'package:poochcare/core/store/community/community_store_bloc.dart';
+import 'package:poochcare/core/store/onboarding/onboarding_journey_store_bloc.dart';
 import 'package:poochcare/core/store/pets/pets_store_bloc.dart';
 import 'package:poochcare/core/store/products/products_store_bloc.dart';
 import 'package:poochcare/core/store/theme/theme_store_bloc.dart';
@@ -145,6 +147,9 @@ void setupDI() {
 
   // Store Blocs — registerLazySingleton (single source of truth)
   getIt.registerLazySingleton<AuthStoreBloc>(AuthStoreBloc.new);
+  getIt.registerLazySingleton<OnboardingJourneyStoreBloc>(
+    OnboardingJourneyStoreBloc.new,
+  );
   getIt.registerLazySingleton<PetsStoreBloc>(PetsStoreBloc.new);
   getIt.registerLazySingleton<AppointmentsStoreBloc>(AppointmentsStoreBloc.new);
   getIt.registerLazySingleton<AppointmentCubit>(AppointmentCubit.new);
@@ -532,6 +537,10 @@ void setupDI() {
   getIt.registerSingleton<SecureStorageService>(SecureStorageService());
   getIt.registerLazySingleton<AppointmentBloc>(
     () => AppointmentBloc(getIt<ClinicsRepository>()),
+  );
+
+  getIt.registerLazySingleton<LocationPermissionService>(
+    () => LocationPermissionService(getIt<SecureStorageService>()),
   );
 
   getIt.registerLazySingleton<SessionResetService>(

@@ -128,7 +128,7 @@ class _EventListItemCardState extends State<EventListItemCard> {
               padding: EdgeInsets.symmetric(horizontal: AppSpacing.s16.w),
               child: _buildPostImage(),
             ),
-            if (widget.item.showEventsBadge) ...[
+            if (widget.isDetailView) ...[
               AppSpacing.s10.hBox,
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: AppSpacing.s16.w),

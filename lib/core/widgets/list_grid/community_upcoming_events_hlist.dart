@@ -84,7 +84,7 @@ class _CommunityUpcomingEventsHlistState
     }
 
     return SizedBox(
-      height: AppSpacing.s320.h,
+      height: AppSize.cs320.csh,
       child: ListView.separated(
         padding: EdgeInsets.symmetric(horizontal: AppSpacing.s16.w),
         scrollDirection: Axis.horizontal,

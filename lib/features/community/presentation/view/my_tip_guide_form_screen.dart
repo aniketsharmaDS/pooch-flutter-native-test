@@ -62,20 +62,29 @@ class _MyTipGuideFormScreenState extends State<MyTipGuideFormScreen> {
   final TextEditingController descController = TextEditingController();
 
   bool isSubmitting = false;
+  bool isDrafting = false;
   String? selectedCategory;
   bool isAgreed = false;
   String tipStatus =
       'DRAFT'; // default to draft, can be changed to 'published' on submit
   List<File> localFiles = [];
-  List<String> remoteFiles = [];
+  List<dynamic> remoteFiles = [];
 
   /// =========================
   /// VALIDATION GETTERS
   /// =========================
-  bool get isTitleValid => titleController.text.trim().isNotEmpty;
+  bool get isTitleValid =>
+      titleController.text.trim().isNotEmpty &&
+      titleController.text.trim().length >= 5;
+  bool get isDescriptionValid =>
+      descController.text.trim().isNotEmpty &&
+      descController.text.trim().length >= 10;
 
   bool get isSubmitEnabled =>
-      isTitleValid && selectedCategory != null && isAgreed;
+      isTitleValid &&
+      isDescriptionValid &&
+      selectedCategory != null &&
+      isAgreed;
 
   bool get isDraftEnabled => isTitleValid;
 
@@ -85,6 +94,10 @@ class _MyTipGuideFormScreenState extends State<MyTipGuideFormScreen> {
 
     /// Rebuild on title change
     titleController.addListener(() {
+      setState(() {});
+    });
+
+    descController.addListener(() {
       setState(() {});
     });
 
@@ -115,8 +128,18 @@ class _MyTipGuideFormScreenState extends State<MyTipGuideFormScreen> {
     isAgreed =
         item.status !=
         'DRAFT'; // Only allow edit if it's draft, if published then show as read-only
-    remoteFiles = List<String>.from(item.attachmentUrls);
-
+    // remoteFiles = List<String>.from(item.attachmentUrls);
+    remoteFiles =
+        (item.attachmentUrls as List?)?.map((e) {
+          return {
+            'id': (e as dynamic).id?.toString() ?? '',
+            'url': (e as dynamic).url ?? (e as dynamic).imageUrl ?? '',
+            'name': (e as dynamic).name ?? '',
+            'size': ((e as dynamic).size ?? '').toString(),
+          };
+        }).toList() ??
+        [];
+    log('remoteFiles prefill: $remoteFiles');
     setState(() {});
   }
 
@@ -277,6 +300,9 @@ class _MyTipGuideFormScreenState extends State<MyTipGuideFormScreen> {
                           children: [
                             AppCheckbox(
                               size: AppSize.cs24.csw,
+                              borderColor: AppColors.black,
+                              activeColor: AppColors.black,
+                              checkColor: AppColors.white,
                               value: isAgreed,
                               onChanged: (val) {
                                 setState(() {
@@ -341,22 +367,24 @@ class _MyTipGuideFormScreenState extends State<MyTipGuideFormScreen> {
                     /// SUBMIT
                     AppButton(
                       isLoading: isSubmitting,
+                      isDisabled:
+                          (!isSubmitEnabled || isDrafting || isSubmitting),
                       label: 'Submit',
                       onPressed: isSubmitEnabled
                           ? () => _createTip(false)
                           : null,
-                      isDisabled: !isSubmitEnabled,
                     ),
 
                     SizedBox(height: AppSpacing.s10.h),
 
                     /// SAVE AS DRAFT
                     AppButton(
-                      isLoading: isSubmitting,
+                      isLoading: isDrafting,
+                      isDisabled:
+                          (!isDraftEnabled || isSubmitting || isDrafting),
                       variant: AppButtonVariant.outlined,
                       label: 'Save as Draft',
                       onPressed: isDraftEnabled ? () => _createTip(true) : null,
-                      isDisabled: !isDraftEnabled,
                     ),
                   ],
                 ),
@@ -396,6 +424,10 @@ class _MyTipGuideFormScreenState extends State<MyTipGuideFormScreen> {
     );
 
     if (!result.shouldProceedWithSave) {
+      setState(() {
+        isSubmitting = false;
+        isDrafting = false;
+      });
       throw Exception('Upload failed');
     }
 
@@ -408,7 +440,8 @@ class _MyTipGuideFormScreenState extends State<MyTipGuideFormScreen> {
   Future<void> _createTip(bool isDraft) async {
     log('Creating tip with title: ${titleController.text.trim()}');
     setState(() {
-      isSubmitting = true;
+      isSubmitting = isDraft ? false : true;
+      isDrafting = isDraft ? true : false;
     });
 
     final attachmentUrls = await _uploadAttachments();
@@ -492,10 +525,12 @@ class _MyTipGuideFormScreenState extends State<MyTipGuideFormScreen> {
       );
       setState(() {
         isSubmitting = false;
+        isDrafting = false;
       });
     } finally {
       setState(() {
         isSubmitting = false;
+        isDrafting = false;
       });
     }
   }

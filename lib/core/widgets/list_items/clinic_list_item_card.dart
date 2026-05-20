@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:poochcare/core/theme/app_font_size.dart';
 import 'package:poochcare/core/theme/app_icons.dart';
+import 'package:poochcare/core/theme/app_typography.dart';
 import 'package:poochcare/core/widgets/buttons/app_button.dart';
 import 'package:poochcare/core/widgets/images/app_icon.dart';
 import 'package:poochcare/core/widgets/texts/app_text.dart';
@@ -210,7 +211,7 @@ class _ClinicContent extends StatelessWidget {
               ),
             ),
             SizedBox(width: 8.w),
-            AppText.h4(price, color: const Color(0xFFF28A07), fontSize: 14.sp),
+            AppText.h1(price, color: const Color(0xFFF28A07), fontSize: 14.sp),
           ],
         ),
         Row(
@@ -240,8 +241,9 @@ class _ClinicContent extends StatelessWidget {
             AppButton(
               width: null,
               variant: AppButtonVariant.text,
-              label: 'Book Now',
+              label: 'Book Appointment',
               size: AppButtonSize.small,
+              textStyle: AppTypography.h3.copyWith(fontSize: AppFontSize.fs12),
               height: 22.h,
               onPressed: onPressed,
               padding: EdgeInsets.only(

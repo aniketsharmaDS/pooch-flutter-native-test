@@ -14,6 +14,7 @@ enum AuthRequestType {
   googleLogin,
   sendOtp,
   verifyOtp,
+  userSplash,
 }
 
 class AuthState extends Equatable {
@@ -25,6 +26,7 @@ class AuthState extends Equatable {
     this.registerResult,
     this.otpResult,
     this.otpSendResult,
+    this.userSplashData,
     this.errorMessage,
   });
 
@@ -35,6 +37,7 @@ class AuthState extends Equatable {
   final RegisterResult? registerResult;
   final OtpVerificationResult? otpResult;
   final OtpSendResult? otpSendResult;
+  final Map<String, dynamic>? userSplashData;
   final String? errorMessage;
 
   AuthState copyWith({
@@ -45,6 +48,7 @@ class AuthState extends Equatable {
     RegisterResult? registerResult,
     OtpVerificationResult? otpResult,
     OtpSendResult? otpSendResult,
+    Map<String, dynamic>? userSplashData,
     String? errorMessage,
     bool clearError = false,
     bool clearData = false,
@@ -63,6 +67,9 @@ class AuthState extends Equatable {
           : (registerResult ?? this.registerResult),
       otpResult: clearData ? null : (otpResult ?? this.otpResult),
       otpSendResult: clearData ? null : (otpSendResult ?? this.otpSendResult),
+      userSplashData: clearData
+          ? null
+          : (userSplashData ?? this.userSplashData),
       errorMessage: clearError ? null : (errorMessage ?? this.errorMessage),
     );
   }
@@ -76,6 +83,7 @@ class AuthState extends Equatable {
     registerResult,
     otpResult,
     otpSendResult,
+    userSplashData,
     errorMessage,
   ];
 }

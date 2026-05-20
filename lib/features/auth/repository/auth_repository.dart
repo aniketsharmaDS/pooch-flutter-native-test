@@ -22,6 +22,10 @@ class AuthRepository {
     return UserMapper.toDomain(response);
   }
 
+  Future<Map<String, dynamic>> fetchUserSplash() async {
+    return _api.fetchUserSplash();
+  }
+
   Future<SocialLoginResult> googleLogin({
     required String uid,
     required String fullName,

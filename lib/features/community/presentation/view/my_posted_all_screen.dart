@@ -4,12 +4,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:poochcare/core/di/service_locator.dart';
 import 'package:poochcare/core/pagination/pagination_state.dart';
 import 'package:poochcare/core/services/secure_storage_service.dart';
+import 'package:poochcare/core/theme/app_icons.dart';
 import 'package:poochcare/core/theme/app_spacing.dart';
 import 'package:poochcare/core/widgets/list_grid/community_latest_tips_guide_hlist.dart';
 import 'package:poochcare/core/widgets/list_grid/community_pet_found_hlist.dart';
 import 'package:poochcare/core/widgets/list_grid/community_pet_missing_hlist.dart';
 import 'package:poochcare/core/widgets/list_grid/community_upcoming_events_hlist.dart';
-import 'package:poochcare/core/widgets/nudges/report_a_lost_pet_nudge.dart';
 import 'package:poochcare/features/community/data/models/event_info_item_model.dart';
 import 'package:poochcare/features/community/data/models/found_pet_model.dart';
 import 'package:poochcare/features/community/data/models/missing_pet_model.dart';
@@ -19,6 +19,7 @@ import 'package:poochcare/features/community/presentation/bloc/found_pet/found_p
 import 'package:poochcare/features/community/presentation/bloc/missing_pet/my_missing_pets_bloc.dart';
 import 'package:poochcare/features/community/presentation/bloc/tips/tips_guide_bloc.dart';
 import 'package:poochcare/features/community/presentation/view/report_missing_pet_form_screen.dart';
+import 'package:poochcare/features/ecommerce/presentation/widgets/nudges/app_nudge_card.dart';
 import 'package:poochcare/router/app_router.dart';
 
 @RoutePage()
@@ -123,8 +124,14 @@ class _MyPostedAllScreenState extends State<MyPostedAllScreen> {
 
               Padding(
                 padding: EdgeInsets.all(AppSpacing.s16.w),
-                child: ReportALostPetNudge(
-                  onReport: () {
+                child: AppNudgeCard(
+                  cardTitle: 'Report a Lost Pet',
+                  cardDescription:
+                      'Help the community, spot your pooch and bring',
+                  cardButtonTitle: 'Report Now',
+                  cardBackgroundImage: AppIcons.png.nudges.reportPetPoochCardBg,
+                  cardTextInverse: true,
+                  cardAction: () {
                     context.pushRoute(
                       ReportMissingPetFormRoute(
                         type: ReportMissingPetFormType.create,
