@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:poochcare/core/di/service_locator.dart';
 import 'package:poochcare/core/theme/app_colors.dart';
 import 'package:poochcare/core/theme/app_spacing.dart';
-import 'package:poochcare/core/utils/save_parser_service.dart';
+import 'package:poochcare/core/utils/safe_parser_service.dart';
 import 'package:poochcare/core/widgets/buttons/app_button.dart';
 import 'package:poochcare/core/widgets/dialogs/app_dialog.dart';
 import 'package:poochcare/core/widgets/dialogs/app_select_pet_dialog.dart';
@@ -23,6 +23,8 @@ import 'package:poochcare/features/insight/presentation/bloc/clinic_bloc/clinic_
 import 'package:poochcare/features/insight/presentation/bloc/subscribed_clinics_bloc/subscribed_clinics_bloc.dart';
 import 'package:poochcare/features/insight/presentation/bloc/subscribed_clinics_bloc/subscribed_clinics_event.dart';
 import 'package:poochcare/features/insight/presentation/bloc/subscribed_clinics_bloc/subscribed_clinics_state.dart';
+import 'package:poochcare/features/user_profile/domain/models/user_pet.dart';
+import 'package:poochcare/features/user_profile/presentation/bloc/user_profile_bloc.dart';
 import 'package:poochcare/router/app_router.dart';
 
 @RoutePage()
@@ -43,6 +45,7 @@ class AppointmentPaymentSummaryScreen extends StatefulWidget {
 class _AppointmentPaymentSummaryScreenState
     extends State<AppointmentPaymentSummaryScreen> {
   Pet? selectedPet;
+  late List<Pet> petsList = [];
 
   @override
   void initState() {
@@ -58,6 +61,19 @@ class _AppointmentPaymentSummaryScreenState
         // couponCode: '',
       ),
     );
+    final List<UserPet> pets = context.read<UserProfileBloc>().state.pets;
+    petsList = pets.map((userPet) {
+      return Pet(
+        id: userPet.id,
+        name: userPet.name,
+        imageUrl: userPet.profilePicture ?? '',
+        isSelected: appointmentCubit.state.petId == userPet.id,
+      );
+    }).toList();
+
+    selectedPet = petsList.any((pet) => pet.isSelected)
+        ? petsList.firstWhere((pet) => pet.isSelected)
+        : null;
   }
 
   @override
@@ -307,6 +323,9 @@ class _AppointmentPaymentSummaryScreenState
                     ? SubscriptionPlanVariants.monthly
                     : SubscriptionPlanVariants.yearly;
 
+                final isAppointmentDateSeleted =
+                    appointmentCubit.state.appointmentDate != null;
+
                 return Stack(
                   children: [
                     Column(
@@ -367,6 +386,36 @@ class _AppointmentPaymentSummaryScreenState
                             },
                           ),
                         ),
+
+                        if (!isAppointmentDateSeleted) ...[
+                          SizedBox(height: 12.h),
+                          const PrimaryWidgetHeader(title: 'Subscribed For'),
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: AppSpacing.s16.w,
+                            ).copyWith(bottom: AppSpacing.s24.h),
+                            child: Row(
+                              crossAxisAlignment:
+                                  CrossAxisAlignment.end, // 👈 add this
+                              children: [
+                                SizedBox(
+                                  height: 120.h,
+                                  child: PetCard(
+                                    pet: Pet(
+                                      id: selectedPet?.id ?? '',
+                                      name: selectedPet?.name ?? '',
+                                      imageUrl: selectedPet?.imageUrl ?? '',
+                                      isSelected: true,
+                                      isClickable: false,
+                                    ),
+                                    isSelected: true,
+                                    onSelect: () {},
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ],
                     ),
                   ],

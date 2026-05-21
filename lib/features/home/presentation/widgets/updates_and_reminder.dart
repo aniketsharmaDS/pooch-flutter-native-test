@@ -1,4 +1,7 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:poochcare/core/di/service_locator.dart';
 import 'package:poochcare/core/theme/app_colors.dart';
 import 'package:poochcare/core/theme/app_font_size.dart';
 import 'package:poochcare/core/theme/app_icon_size.dart';
@@ -13,7 +16,12 @@ import 'package:poochcare/core/widgets/enums/notch_variant.dart';
 import 'package:poochcare/core/widgets/images/app_icon.dart';
 import 'package:poochcare/core/widgets/images/app_image_frame.dart';
 import 'package:poochcare/core/widgets/texts/app_text.dart';
+import 'package:poochcare/features/home/data/api/updates_api_service.dart';
+import 'package:poochcare/features/home/data/repositories/updates_repository_impl.dart';
 import 'package:poochcare/features/home/domain/models/updated_and_reminder_model.dart';
+import 'package:poochcare/features/home/presentation/bloc/updated_and_reminder_bloc.dart';
+import 'package:poochcare/features/home/presentation/bloc/updated_and_reminder_event.dart';
+import 'package:poochcare/features/home/presentation/bloc/updated_and_reminder_state.dart';
 
 class UpdatesAndReminder extends StatefulWidget {
   final String? title;
@@ -26,129 +34,102 @@ class UpdatesAndReminder extends StatefulWidget {
 }
 
 class _UpdatesAndReminderState extends State<UpdatesAndReminder> {
-  late final List<_CalendarDay> _days = _buildUpcomingWeekDays();
+  late final UpdatedAndReminderBloc _bloc;
+  DateTime? _selectedDate;
 
-  int _selectedDayIndex = 0;
-
-  late final Map<DateTime, List<UpdatedAndReminderModel>> _appointmentsByDate =
-      _buildAppointmentsByDate();
-
-  List<_CalendarDay> _buildUpcomingWeekDays() {
-    final now = DateTime.now();
-    final today = DateTime(now.year, now.month, now.day);
-
-    return List.generate(7, (index) {
-      final date = today.add(Duration(days: index));
-      return _CalendarDay(
-        dateTime: date,
-        day: _weekdayLabel(date.weekday),
-        date: date.day.toString().padLeft(2, '0'),
-      );
-    });
+  @override
+  void initState() {
+    super.initState();
+    _bloc = UpdatedAndReminderBloc(
+      UpdatesRepositoryImpl(UpdatesApiService(getIt<Dio>())),
+    )..add(const FetchUpdatesAndRemindersEvent());
   }
 
-  Map<DateTime, List<UpdatedAndReminderModel>> _buildAppointmentsByDate() {
-    final today = _normalizedDate(DateTime.now());
-    return {
-      today: [
-        const UpdatedAndReminderModel(
-          petName: 'Rudolph',
-          title: 'Vaccination for Rudolph',
-          time: '04:00 PM',
-          image:
-              'https://www.trupanion.com/images/trupanionwebsitelibraries/pet-blogs/golden-retriever-bridge-pose-1-.jpg?sfvrsn=8e205534_4',
-          message: 'Your Vet is available at 4:30 pm.',
-          type: 'appointment',
-        ),
-        const UpdatedAndReminderModel(
-          petName: 'Cadbury',
-          title: 'Rabies vaccination for Cadbury',
-          time: 'Monday 4:00 PM',
-          oldTime: 'Today 4:30 PM',
-          image:
-              'https://static.toiimg.com/imagenext/toiblogs/photo/readersblog/wp-content/uploads/2021/12/adorable-cavalier-king-charles-spaniel-puppy-royalty-dog.jpg',
-          type: 'Vaccination',
-        ),
-        const UpdatedAndReminderModel(
-          petName: 'Bella',
-          title: 'Vaccination for Bella',
-          time: '02:30 PM',
-          image:
-              'https://www.allianz.ie/blog/your-pet/pet-dental-care-is-vital/_jcr_content/root/stage/stageimage.img.82.3360.jpeg/1727883109843/cute-happy-pup.jpeg',
-          type: 'payment',
-        ),
-        const UpdatedAndReminderModel(
-          petName: 'Rudolph',
-          title: 'Vaccination for Rudolph',
-          time: '04:00 PM',
-          image:
-              'https://www.atozvet.com/wp-content/uploads/2017/07/Prevention-and-Treatment-For-Pet-Disease-Midland-TX-scaled.jpg',
-          message: 'Your Vet is available at 4:30 pm.',
-          type: 'appointment',
-        ),
-        const UpdatedAndReminderModel(
-          petName: 'Rudolph',
-          title: 'Vaccination for Rudolph',
-          time: '04:00 PM - 12:30 PM',
-          image:
-              'https://www.cdc.gov/healthy-pets/media/images/2024/04/GettyImages-598175960-cute-dog-headshot.jpg',
-          message: 'Your Vet is available at 4:30 pm.',
-          type: 'appointment',
-        ),
-        const UpdatedAndReminderModel(
-          petName: 'Rudolph',
-          title: 'Vaccination for Rudolph',
-          time: '04:00 PM - 05:00 PM',
-          image:
-              'https://static01.nyt.com/images/2020/05/09/multimedia/09sp-ai-pets-promo/09sp-ai-pets-promo-mediumSquareAt3X.jpg',
-          message: 'Your Vet is available at 4:30 pm.',
-          type: 'appointment',
-        ),
-        const UpdatedAndReminderModel(
-          petName: 'Rudolph',
-          title: 'Vaccination for Rudolph',
-          time: '04:00 PM',
-          image:
-              'https://static01.nyt.com/images/2020/05/09/multimedia/09sp-ai-pets-promo/09sp-ai-pets-promo-mediumSquareAt3X.jpg',
-          message: 'Your Vet is available at 4:30 pm.',
-          type: 'appointment',
-        ),
-      ],
-      today.add(const Duration(days: 1)): [
-        const UpdatedAndReminderModel(
-          petName: 'Milo',
-          title: 'General checkup for Milo',
-          time: '11:30 AM',
-          image:
-              'https://static01.nyt.com/images/2020/05/09/multimedia/09sp-ai-pets-promo/09sp-ai-pets-promo-mediumSquareAt3X.jpg',
-          type: 'grooming',
-        ),
-      ],
-      today.add(const Duration(days: 2)): [
-        const UpdatedAndReminderModel(
-          petName: 'Simba',
-          title: 'Deworming for Simba',
-          time: '03:15 PM',
-          image:
-              'https://static01.nyt.com/images/2020/05/09/multimedia/09sp-ai-pets-promo/09sp-ai-pets-promo-mediumSquareAt3X.jpg',
-          message: 'Vet asked to share current food pattern.',
-          type: 'appointment',
-        ),
-      ],
-    };
+  @override
+  void dispose() {
+    _bloc.close();
+    super.dispose();
+  }
+
+  List<_CalendarDay> _buildUpcomingWeekDays(
+    List<UpdatedAndReminderModel> items,
+  ) {
+    if (items.isEmpty) {
+      final now = DateTime.now();
+      final today = DateTime(now.year, now.month, now.day);
+
+      return List.generate(7, (index) {
+        final date = today.add(Duration(days: index));
+        return _CalendarDay(
+          dateTime: date,
+          day: _weekdayLabel(date.weekday),
+          date: date.day.toString().padLeft(2, '0'),
+        );
+      });
+    }
+
+    final uniqueDates = <DateTime>{
+      for (final item in items) _normalizedDate(item.dateTime),
+    }.toList()..sort();
+
+    return uniqueDates
+        .map(
+          (date) => _CalendarDay(
+            dateTime: date,
+            day: _weekdayLabel(date.weekday),
+            date: date.day.toString().padLeft(2, '0'),
+          ),
+        )
+        .toList(growable: false);
+  }
+
+  Map<DateTime, List<UpdatedAndReminderModel>> _buildAppointmentsByDate(
+    List<UpdatedAndReminderModel> items,
+  ) {
+    final Map<DateTime, List<UpdatedAndReminderModel>> grouped = {};
+
+    for (final item in items) {
+      final dateKey = _normalizedDate(item.dateTime);
+      grouped.putIfAbsent(dateKey, () => <UpdatedAndReminderModel>[]).add(item);
+    }
+
+    return grouped;
+  }
+
+  DateTime _selectedDateForDays(List<_CalendarDay> days) {
+    if (days.isEmpty) {
+      return _normalizedDate(DateTime.now());
+    }
+
+    final selectedDate = _selectedDate;
+    if (selectedDate == null) {
+      return days.first.dateTime;
+    }
+
+    for (final day in days) {
+      if (_normalizedDate(day.dateTime) == _normalizedDate(selectedDate)) {
+        return day.dateTime;
+      }
+    }
+
+    return days.first.dateTime;
   }
 
   DateTime _normalizedDate(DateTime date) {
     return DateTime(date.year, date.month, date.day);
   }
 
-  List<UpdatedAndReminderModel> _selectedDayAppointments() {
-    if (_days.isEmpty) {
+  List<UpdatedAndReminderModel> _selectedDayAppointments(
+    List<UpdatedAndReminderModel> items,
+    List<_CalendarDay> days,
+  ) {
+    if (days.isEmpty) {
       return const [];
     }
 
-    final selectedDate = _normalizedDate(_days[_selectedDayIndex].dateTime);
-    return _appointmentsByDate[selectedDate] ?? const [];
+    final selectedDate = _normalizedDate(_selectedDateForDays(days));
+    final appointmentsByDate = _buildAppointmentsByDate(items);
+    return appointmentsByDate[selectedDate] ?? const [];
   }
 
   String _weekdayLabel(int weekday) {
@@ -158,55 +139,132 @@ class _UpdatesAndReminderState extends State<UpdatesAndReminder> {
 
   @override
   Widget build(BuildContext context) {
-    return AppWaveCard(
-      borderRadius: AppRadiusSize.r16.rr,
-      notchWidth: AppSize.cs60.csw,
-      notchHeight: -AppSize.cs12.csh,
-      variant: AppCardNotchVariant.bottomLeft,
-      backgroundColor: const Color(0xFFFFD59A).withValues(alpha: 0.29),
-      padding: EdgeInsets.only(bottom: AppSpacing.s10.h, top: AppSpacing.s20.h),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Center(child: AppText.h3(widget.title ?? '')),
-          SizedBox(height: AppSpacing.s14.h),
-          Padding(
-            padding: const EdgeInsets.only(
-              left: AppSpacing.s6,
-              right: AppSpacing.s6,
+    return BlocBuilder<UpdatedAndReminderBloc, UpdatedAndReminderState>(
+      bloc: _bloc,
+      builder: (context, state) {
+        final days = _buildUpcomingWeekDays(state.items);
+        final appointments = _selectedDayAppointments(state.items, days);
+        final selectedDate = _selectedDateForDays(days);
+
+        if (state.status == UpdatedAndReminderStatus.loading &&
+            state.items.isEmpty) {
+          return AppWaveCard(
+            borderRadius: AppRadiusSize.r16.rr,
+            notchWidth: AppSize.cs60.csw,
+            notchHeight: -AppSize.cs12.csh,
+            variant: AppCardNotchVariant.bottomLeft,
+            backgroundColor: const Color(0xFFFFD59A).withValues(alpha: 0.29),
+            padding: EdgeInsets.only(
+              bottom: AppSpacing.s10.h,
+              top: AppSpacing.s20.h,
             ),
-            child: _DaySelector(
-              days: _days,
-              selectedIndex: _selectedDayIndex,
-              onChanged: (index) {
-                setState(() {
-                  _selectedDayIndex = index;
-                });
-              },
+            child: SizedBox(
+              height: AppSize.cs350.csh,
+              child: const Center(child: CircularProgressIndicator()),
             ),
+          );
+        }
+
+        if (state.status == UpdatedAndReminderStatus.failure &&
+            state.items.isEmpty) {
+          return AppWaveCard(
+            borderRadius: AppRadiusSize.r16.rr,
+            notchWidth: AppSize.cs60.csw,
+            notchHeight: -AppSize.cs12.csh,
+            variant: AppCardNotchVariant.bottomLeft,
+            backgroundColor: const Color(0xFFFFD59A).withValues(alpha: 0.29),
+            padding: EdgeInsets.only(
+              bottom: AppSpacing.s10.h,
+              top: AppSpacing.s20.h,
+            ),
+            child: SizedBox(
+              height: AppSize.cs350.csh,
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.s20,
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      AppText.bodyM(
+                        state.errorMessage.isEmpty
+                            ? 'Unable to load updates and reminders.'
+                            : state.errorMessage,
+                        textAlign: TextAlign.center,
+                      ),
+                      SizedBox(height: AppSpacing.s12.h),
+                      AppButton(
+                        label: 'RETRY',
+                        variant: AppButtonVariant.text,
+                        width: null,
+                        size: AppButtonSize.small,
+                        onPressed: () {
+                          _bloc.add(const FetchUpdatesAndRemindersEvent());
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          );
+        }
+
+        return AppWaveCard(
+          borderRadius: AppRadiusSize.r16.rr,
+          notchWidth: AppSize.cs60.csw,
+          notchHeight: -AppSize.cs12.csh,
+          variant: AppCardNotchVariant.bottomLeft,
+          backgroundColor: const Color(0xFFFFD59A).withValues(alpha: 0.29),
+          padding: EdgeInsets.only(
+            bottom: AppSpacing.s10.h,
+            top: AppSpacing.s20.h,
           ),
-          SizedBox(height: AppSpacing.s8.h),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.s6),
-            child: _AppointmentCard(
-              appointments: _selectedDayAppointments(),
-              btnLabel: widget.btnLabel,
-            ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(child: AppText.h3(widget.title ?? '')),
+              SizedBox(height: AppSpacing.s14.h),
+              Padding(
+                padding: const EdgeInsets.only(
+                  left: AppSpacing.s6,
+                  right: AppSpacing.s6,
+                ),
+                child: _DaySelector(
+                  days: days,
+                  selectedDate: selectedDate,
+                  onChanged: (date) {
+                    setState(() {
+                      _selectedDate = date;
+                    });
+                  },
+                ),
+              ),
+              SizedBox(height: AppSpacing.s8.h),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.s6),
+                child: _AppointmentCard(
+                  appointments: appointments,
+                  btnLabel: widget.btnLabel,
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 }
 
 class _DaySelector extends StatelessWidget {
   final List<_CalendarDay> days;
-  final int selectedIndex;
-  final ValueChanged<int> onChanged;
+  final DateTime selectedDate;
+  final ValueChanged<DateTime> onChanged;
 
   const _DaySelector({
     required this.days,
-    required this.selectedIndex,
+    required this.selectedDate,
     required this.onChanged,
   });
 
@@ -221,12 +279,12 @@ class _DaySelector extends StatelessWidget {
         separatorBuilder: (BuildContext context, int index) =>
             SizedBox(width: AppSpacing.s8.w),
         itemBuilder: (context, index) {
-          final isSelected = selectedIndex == index;
           final item = days[index];
+          final isSelected = DateUtils.isSameDay(item.dateTime, selectedDate);
 
           return InkWell(
             borderRadius: BorderRadius.circular(AppRadiusSize.r16.rr),
-            onTap: () => onChanged(index),
+            onTap: () => onChanged(item.dateTime),
             child: Container(
               width: AppSize.cs60.csw,
               height: AppSize.cs60.csh,
@@ -297,7 +355,7 @@ class _AppointmentCard extends StatelessWidget {
               child: appointments.isEmpty
                   ? Center(
                       child: AppText.bodyM(
-                        'No appointment found for this date.',
+                        'No updates found for this date.',
                         textAlign: TextAlign.center,
                       ),
                     )
@@ -373,7 +431,7 @@ class _AppointmentTile extends StatelessWidget {
               AppImageFrame(
                 width: 50.w,
                 height: 40.h,
-                imageUrl: appointment.image,
+                imageUrl: appointment.image ?? '',
               ),
               SizedBox(width: AppSpacing.s10.w),
               Expanded(
@@ -406,26 +464,41 @@ class _AppointmentTile extends StatelessWidget {
                       maxLines: 2,
                       color: AppColors.textPrimary,
                     ),
+                    if (appointment.message != null) ...[
+                      SizedBox(height: AppSpacing.s4.h),
+                      AppText.bodyM(
+                        appointment.message!,
+                        maxLines: 2,
+                        color: AppColors.textSecondary,
+                        fontSize: AppFontSize.fs12,
+                      ),
+                    ],
                   ],
                 ),
               ),
               SizedBox(width: AppSpacing.s8.w),
               Padding(
                 padding: EdgeInsets.only(top: AppSpacing.s4.h),
-                child: AppIcon(
-                  appointment.type == 'appointment'
-                      ? AppIcons.svg.generic.injection
-                      : appointment.type == 'grooming'
-                      ? AppIcons.svg.generic.grooming
-                      : AppIcons.svg.generic.wallet,
-                  size: 27.r,
-                  color: const Color(0xFFD7BC97),
-                ),
+                child: _buildTypeIcon(appointment.type),
               ),
             ],
           ),
         ],
       ),
+    );
+  }
+
+  AppIcon _buildTypeIcon(String type) {
+    final normalizedType = type.trim().toLowerCase();
+
+    return AppIcon(
+      normalizedType == 'appointment'
+          ? AppIcons.svg.generic.injection
+          : normalizedType == 'grooming'
+          ? AppIcons.svg.generic.grooming
+          : AppIcons.svg.generic.wallet,
+      size: 27.r,
+      color: const Color(0xFFD7BC97),
     );
   }
 }

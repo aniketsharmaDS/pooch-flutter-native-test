@@ -26,6 +26,8 @@ import 'package:poochcare/features/insight/data/cubit/appointment_request_cubit.
 import 'package:poochcare/features/insight/presentation/bloc/clinic_bloc/clinic_bloc.dart';
 import 'package:poochcare/features/insight/presentation/bloc/clinic_bloc/clinic_event.dart';
 import 'package:poochcare/features/insight/presentation/bloc/clinic_bloc/clinic_state.dart';
+import 'package:poochcare/features/insight/presentation/bloc/report_symptoms_bloc/report_symptoms_bloc.dart';
+import 'package:poochcare/features/insight/presentation/bloc/report_symptoms_bloc/report_symptoms_event.dart';
 import 'package:poochcare/features/insight/presentation/bloc/subscribed_clinics_bloc/subscribed_clinics_bloc.dart';
 import 'package:poochcare/features/insight/presentation/bloc/subscribed_clinics_bloc/subscribed_clinics_event.dart';
 import 'package:poochcare/features/insight/presentation/bloc/subscribed_clinics_bloc/subscribed_clinics_state.dart';
@@ -62,7 +64,7 @@ class _InsightVetsScreenState extends State<InsightVetsScreen> {
     );
     context.read<AppointmentBloc>().add(const FetchAllAppointments(1, true));
     context.read<ClinicBloc>().add(const FetchPopularClinics());
-
+    getIt<ReportSymptomsBloc>().add(const FetchSymptomsEvent());
     _requestMedicalHistory(isForceRefresh: true);
   }
 
@@ -140,7 +142,7 @@ class _InsightVetsScreenState extends State<InsightVetsScreen> {
                 cardTextInverse: true,
                 cardVariantVet: true,
                 cardAction: () {
-                  context.router.push(const FindVetClinicsRoute());
+                  context.router.push(FindVetClinicsRoute());
                 },
               ),
             ),
@@ -174,7 +176,13 @@ class _InsightVetsScreenState extends State<InsightVetsScreen> {
             ),
 
             AppSpacing.s30.hBox,
-            const PoochSymptomsList(),
+            PoochSymptomsList(
+              onTap: (symptom) {
+                context.router.push(
+                  FindVetClinicsRoute(initialSymptoms: symptom),
+                );
+              },
+            ),
             AppSpacing.s30.hBox,
 
             PrimaryWidgetHeader(

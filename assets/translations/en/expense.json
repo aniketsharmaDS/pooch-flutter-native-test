@@ -3,6 +3,12 @@
     "monthly": "Monthly",
     "yearly": "Yearly",
     "expenseBreakdown": "Expense Breakdown",
-    "noDataAvailable": "No data available"
+    "noDataAvailable": "No data available",
+    "noTransactions": "No transactions found",
+    "noDataForSelectedMonth": "No data available for the selected month.",
+    "noExpensesForMonth": "No expenses found for this month.",
+    "noExpensesForYear": "No expenses found for this year.",
+    "dailyExpensesFor": "Daily expenses for",
+    "monthlyExpensesFor": "Monthly expenses for"
   }
 }

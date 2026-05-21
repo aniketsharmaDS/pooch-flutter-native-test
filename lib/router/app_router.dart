@@ -6,9 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:poochcare/core/di/service_locator.dart';
 import 'package:poochcare/core/enums/medical_history_record_type_filter.dart';
 import 'package:poochcare/core/store/auth/auth_store_bloc.dart';
-import 'package:poochcare/core/store/onboarding/onboarding_journey_store_bloc.dart';
-import 'package:poochcare/core/store/onboarding/onboarding_journey_store_state.dart';
-// import 'package:poochcare/core/widgets/list_items/product_list_item_card.dart';
 import 'package:poochcare/core/widgets/others/image_crop_screen.dart';
 import 'package:poochcare/features/appointments/data/models/appointments_response_model.dart';
 import 'package:poochcare/features/appointments/presentation/view/appointments_tab_screen.dart';
@@ -81,6 +78,8 @@ import 'package:poochcare/features/fun/presentation/widgets/accessory_order_summ
 // import 'package:poochcare/features/ecommerce/presentation/widgets/buy_pet/product_grid_item_card.dart' hide ProductItem;
 import 'package:poochcare/features/home/presentation/view/home_screen.dart';
 import 'package:poochcare/features/home/presentation/view/home_tab_screen.dart';
+import 'package:poochcare/features/home/presentation/view/notifications_listing_screen.dart';
+import 'package:poochcare/features/insight/data/models/symptom_response.dart';
 import 'package:poochcare/features/insight/presentation/bloc/clinic_bloc/clinic_event.dart';
 import 'package:poochcare/features/insight/presentation/view/appointments/appointment_booking_summary_screen.dart';
 import 'package:poochcare/features/insight/presentation/view/appointments/appointment_payment_summary_screen.dart';
@@ -272,6 +271,7 @@ class AppRouter extends RootStackRouter {
         ),
       ],
     ),
+    AutoRoute(page: NotificationListingRoute.page),
     AutoRoute(page: VirtualPetGamingRoute.page),
     AutoRoute(page: PurchaseSuccessRoute.page),
     AutoRoute(page: AccessoryOrderSummaryRoute.page),
@@ -322,7 +322,6 @@ class AppRouter extends RootStackRouter {
     AutoRoute(page: EditParentProfileRoute.page),
     AutoRoute(page: UserProfileRoute.page),
     AutoRoute(page: AddPetMedicalRecordsTabRoute.page),
-    AutoRoute(page: BuyPetLandingRoute.page),
     AutoRoute(page: BuyPetListingRoute.page),
     AutoRoute(page: BuyPetDetailRoute.page),
     AutoRoute(page: CommonPetListingRoute.page),
@@ -444,7 +443,7 @@ class AppFlowGuard extends AutoRouteGuard {
       final bool isOnboarded = user.isOnboarded;
       log('isPetOnboarded - $isPetOnboarded and isOnboarded - $isOnboarded');
 
-      final journeyType = getIt<OnboardingJourneyStoreBloc>().state.journeyType;
+      // final journeyType = getIt<OnboardingJourneyStoreBloc>().state.journeyType;
       // final isBuyPetJourney = journeyType == OnboardingJourneyType.buyPet;
 
       if (user.hasBoughtPet) {

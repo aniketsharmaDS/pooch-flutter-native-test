@@ -2027,18 +2027,57 @@ class FileViewerRouteArgs {
 
 /// generated route for
 /// [FindVetClinicsScreen]
-class FindVetClinicsRoute extends PageRouteInfo<void> {
-  const FindVetClinicsRoute({List<PageRouteInfo>? children})
-    : super(FindVetClinicsRoute.name, initialChildren: children);
+class FindVetClinicsRoute extends PageRouteInfo<FindVetClinicsRouteArgs> {
+  FindVetClinicsRoute({
+    Key? key,
+    SymptomType? initialSymptoms,
+    List<PageRouteInfo>? children,
+  }) : super(
+         FindVetClinicsRoute.name,
+         args: FindVetClinicsRouteArgs(
+           key: key,
+           initialSymptoms: initialSymptoms,
+         ),
+         initialChildren: children,
+       );
 
   static const String name = 'FindVetClinicsRoute';
 
   static PageInfo page = PageInfo(
     name,
     builder: (data) {
-      return const FindVetClinicsScreen();
+      final args = data.argsAs<FindVetClinicsRouteArgs>(
+        orElse: () => const FindVetClinicsRouteArgs(),
+      );
+      return FindVetClinicsScreen(
+        key: args.key,
+        initialSymptoms: args.initialSymptoms,
+      );
     },
   );
+}
+
+class FindVetClinicsRouteArgs {
+  const FindVetClinicsRouteArgs({this.key, this.initialSymptoms});
+
+  final Key? key;
+
+  final SymptomType? initialSymptoms;
+
+  @override
+  String toString() {
+    return 'FindVetClinicsRouteArgs{key: $key, initialSymptoms: $initialSymptoms}';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! FindVetClinicsRouteArgs) return false;
+    return key == other.key && initialSymptoms == other.initialSymptoms;
+  }
+
+  @override
+  int get hashCode => key.hashCode ^ initialSymptoms.hashCode;
 }
 
 /// generated route for
@@ -3079,6 +3118,22 @@ class NetworkSentInvitesRoute extends PageRouteInfo<void> {
     name,
     builder: (data) {
       return const NetworkSentInvitesScreen();
+    },
+  );
+}
+
+/// generated route for
+/// [NotificationListingScreen]
+class NotificationListingRoute extends PageRouteInfo<void> {
+  const NotificationListingRoute({List<PageRouteInfo>? children})
+    : super(NotificationListingRoute.name, initialChildren: children);
+
+  static const String name = 'NotificationListingRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return WrappedRoute(child: const NotificationListingScreen());
     },
   );
 }

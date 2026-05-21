@@ -146,7 +146,7 @@ class _PincodeValidateViewState extends State<PincodeValidateView> {
                     size: AppButtonSize.medium,
                     borderRadius: AppRadiusSize.r16,
                     borderWidth: 1.5,
-
+                    isPill: false,
                     variant: AppButtonVariant.outlined,
                     borderColor: stateColor,
                     isLoading: isLoading,

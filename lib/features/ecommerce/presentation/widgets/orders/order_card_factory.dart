@@ -1,11 +1,19 @@
+import 'dart:developer';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:poochcare/core/di/service_locator.dart';
+import 'package:poochcare/core/widgets/dialogs/app_select_pet_dialog.dart';
 // import 'package:poochcare/core/di/service_locator.dart';
 import 'package:poochcare/features/ecommerce/data/mappers/orders/order_action_mapper.dart';
 import 'package:poochcare/features/ecommerce/data/models/orders/order_item_model.dart';
 import 'package:poochcare/features/ecommerce/data/types/orders/orders.dart';
 import 'package:poochcare/features/ecommerce/presentation/widgets/orders/consultation_order_list_card.dart';
 import 'package:poochcare/features/ecommerce/presentation/widgets/orders/order_list_card.dart';
+import 'package:poochcare/features/insight/data/cubit/appointment_request_cubit.dart';
+import 'package:poochcare/features/user_profile/domain/models/user_pet.dart';
+import 'package:poochcare/features/user_profile/presentation/bloc/user_profile_bloc.dart';
 // import 'package:poochcare/features/insight/data/cubit/appointment_request_cubit.dart';
 import 'package:poochcare/router/app_router.dart';
 
@@ -50,57 +58,77 @@ class OrderCardFactory extends StatelessWidget {
           status: item.status,
           image: NetworkImage(item.image),
           onUpgrade: () {
-            selectPetAndsubscribeClinic(item: item);
+            selectPetAndsubscribeClinic(context, item: item);
           },
         );
     }
   }
 
-  void selectPetAndsubscribeClinic({required OrderItemModel item}) async {
-    // final petId = item.subscriptionDetails.pet ?? [];
-    // final clinicId = item.subscriptionDetails.clinic ?? [];
-    // String? petId = '';
-    // final appointmentCubit = getIt<AppointmentCubit>();
+  void selectPetAndsubscribeClinic(
+    BuildContext context, {
+    required OrderItemModel item,
+  }) async {
+    final String? petId = item.subscriptionDetails.isNotEmpty
+        ? item.subscriptionDetails.first.pet?.id
+        : null;
 
-    // final List<Pet> petsList = pets.map((userPet) {
-    //   return Pet(
-    //     id: userPet.id,
-    //     name: userPet.name,
-    //     imageUrl: userPet.profilePicture ?? '',
-    //     isSelected: petId == userPet.id,
-    //   );
-    // }).toList();
+    final String? clinicId = item.subscriptionDetails.isNotEmpty
+        ? item.subscriptionDetails.first.clinic?.id
+        : null;
+    log(
+      'Upgrade tapped for order ${petId ?? 'No Pet ID'} and clinic ${clinicId ?? 'No Clinic ID'}',
+    );
+    log('Upgrade tapped for order ${item.toString()}');
+    if (petId == null || clinicId == null) {
+      // ignore: prefer_single_quotes
+      const SnackBar(content: Text('Invalid subscription details'));
+      return;
+    }
 
-    // final result = await AppSelectPetDialog.show(
-    //   context: context, // ✅ safe, captured before await
-    //   pets: petsList,
-    //   initiallySelectedPet: petsList.any((pet) => pet.isSelected)
-    //       ? petsList.firstWhere((pet) => pet.isSelected)
-    //       : null,
-    // );
+    final List<UserPet> pets = context.read<UserProfileBloc>().state.pets;
 
-    // if (!mounted) return;
+    final List<Pet> petsList = pets.map((userPet) {
+      return Pet(
+        id: userPet.id,
+        name: userPet.name,
+        imageUrl: userPet.profilePicture ?? '',
+        isSelected: petId == userPet.id,
+      );
+    }).toList();
 
-    // if (result != null) {
-    //   setState(() {});
-    //   if (!context.mounted) return;
-    //   final appointmentCubit = getIt<AppointmentCubit>();
+    final bool isPetValid = petsList.any((p) => p.id == petId);
 
-    //   /// Start fresh booking flow
-    //   appointmentCubit.reset();
+    if (!isPetValid) {
+      // ignore: prefer_single_quotes
+      const SnackBar(content: Text('Pet does not belong to you'));
+      return;
+    }
 
-    //   /// Save clinic
-    //   appointmentCubit.updateClinic(clinicId: clinicId);
+    /// If pet exists but not found in user list
+    Pet? selectedUserPet;
 
-    //   /// Save pet
-    //   appointmentCubit.updatePet(
-    //     petId: result.selectedPet.id,
-    //     petName: result.selectedPet.name,
-    //     petImage: result.selectedPet.imageUrl,
-    //     petNotes: result.note,
-    //   );
+    try {
+      selectedUserPet = petsList.firstWhere((p) => p.id == petId);
+    } catch (e) {
+      selectedUserPet = null;
+    }
 
-    //   context.router.push(ClinicPlanSelectionRoute(clinicId: clinicId));
-    // }
+    final appointmentCubit = getIt<AppointmentCubit>();
+
+    /// Start fresh booking flow
+    appointmentCubit.reset();
+
+    /// Save clinic
+    appointmentCubit.updateClinic(clinicId: clinicId);
+
+    /// Save pet
+    appointmentCubit.updatePet(
+      petId: selectedUserPet?.id,
+      petName: selectedUserPet?.name,
+      petImage: selectedUserPet?.imageUrl,
+      petNotes: '',
+    );
+
+    context.router.push(ClinicPlanSelectionRoute(clinicId: clinicId));
   }
 }

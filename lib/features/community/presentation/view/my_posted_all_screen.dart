@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:poochcare/core/di/service_locator.dart';
@@ -89,7 +90,7 @@ class _MyPostedAllScreenState extends State<MyPostedAllScreen> {
               BlocBuilder<TipsGuideBloc, PaginationState<TipsInfoItemModel>>(
                 builder: (context, state) {
                   return CommunityLatestTipsGuideHlist(
-                    title: 'My Tips and Guide',
+                    title: 'community.myPostedAllScreen.myTipsAndGuide'.tr(),
                     listItems: state.items
                         .take(6)
                         .toList(), // 👈 control data here
@@ -104,7 +105,7 @@ class _MyPostedAllScreenState extends State<MyPostedAllScreen> {
               BlocBuilder<EventsBloc, PaginationState<EventInfoItemModel>>(
                 builder: (context, state) {
                   return CommunityUpcomingEventsHlist(
-                    title: 'My Events',
+                    title: 'community.myPostedAllScreen.myEvents'.tr(),
                     listItems:
                         (state.scopedItems[EventsType
                                     .allMyUpcomingEvents
@@ -125,10 +126,10 @@ class _MyPostedAllScreenState extends State<MyPostedAllScreen> {
               Padding(
                 padding: EdgeInsets.all(AppSpacing.s16.w),
                 child: AppNudgeCard(
-                  cardTitle: 'Report a Lost Pet',
+                  cardTitle: 'community.myPostedAllScreen.reportALostPet'.tr(),
                   cardDescription:
-                      'Help the community, spot your pooch and bring',
-                  cardButtonTitle: 'Report Now',
+                      'community.myPostedAllScreen.reportDescription'.tr(),
+                  cardButtonTitle: 'community.myPostedAllScreen.reportNow'.tr(),
                   cardBackgroundImage: AppIcons.png.nudges.reportPetPoochCardBg,
                   cardTextInverse: true,
                   cardAction: () {

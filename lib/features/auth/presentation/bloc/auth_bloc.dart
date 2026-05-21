@@ -36,8 +36,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<SendOtpCodeRequested>(_onSendOtpCodeRequested);
     on<VerifyOtpCodeRequested>(_onVerifyOtpCodeRequested);
     on<FetchUserSplashRequested>(_onFetchUserSplashRequested);
-    _initGoogleSignIn(); // Initialize Google Sign-In
+    _googleInitFuture = _initGoogleSignIn(); // Initialize Google Sign-In
   }
+
+  late final Future<void> _googleInitFuture;
 
   Future<void> _initGoogleSignIn() async {
     await GoogleSignIn.instance.initialize(
@@ -154,6 +156,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     );
 
     try {
+      await _googleInitFuture; // 🔥 IMPORTANT
+
       GoogleSignInAccount? account = await _googleSignIn
           .attemptLightweightAuthentication();
       // account = await _googleSignIn.authenticate();
@@ -452,8 +456,44 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     LogoutRequested event,
     Emitter<AuthState> emit,
   ) async {
-    await _repository.logout();
-    await _sessionResetService.clearSessionData();
-    emit(state.copyWith(status: AuthStatus.initial, clearError: true));
+    emit(
+      state.copyWith(
+        status: AuthStatus.loading,
+        requestType: AuthRequestType.none,
+        clearError: true,
+      ),
+    );
+    try {
+      // 1. Best-effort server logout (never block UI)
+      try {
+        await _repository.logout();
+      } catch (e) {
+        // ignore API failure intentionally
+        // optionally log to crashlytics
+      }
+      // 2. ALWAYS clear local session (critical path)
+      await _sessionResetService.clearSessionData();
+
+      // 3. Hard reset auth state
+      emit(
+        state.copyWith(
+          status: AuthStatus.initial,
+          requestType: AuthRequestType.none,
+          clearError: true,
+          clearData: true,
+        ),
+      );
+    } catch (e) {
+      // Even if something unexpected fails, still force logout state
+      await _sessionResetService.clearSessionData();
+      emit(
+        state.copyWith(
+          status: AuthStatus.initial,
+          requestType: AuthRequestType.none,
+          clearError: true,
+          clearData: true,
+        ),
+      );
+    }
   }
 }

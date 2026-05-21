@@ -6,6 +6,7 @@ import 'package:poochcare/core/theme/app_colors.dart';
 import 'package:poochcare/core/theme/app_font_size.dart';
 import 'package:poochcare/core/theme/app_icons.dart';
 import 'package:poochcare/core/theme/app_radius_size.dart';
+import 'package:poochcare/core/theme/app_size.dart';
 import 'package:poochcare/core/theme/app_spacing.dart';
 import 'package:poochcare/core/widgets/buttons/app_button.dart';
 import 'package:poochcare/core/widgets/images/app_icon.dart';
@@ -69,11 +70,11 @@ class MostPopularHlistItemCard extends StatelessWidget {
             ),
 
             Padding(
-              padding: EdgeInsets.only(top: 25.h, left: 29.w, right: 29.w),
+              // padding: EdgeInsets.only(top: 25.h, left: 29.w, right: 29.w),
+              padding: EdgeInsets.symmetric(horizontal: 29.w, vertical: 25.h),
               child: Column(
                 children: [
                   Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Expanded(
                         child: AppText.h2(
@@ -137,9 +138,9 @@ class MostPopularHlistItemCard extends StatelessWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 12),
+                  AppSpacing.s12.hBox,
                   Container(
-                    height: 200,
+                    height: AppSize.cs210.csh,
                     decoration: BoxDecoration(
                       color: const Color(0xFFFFCC03),
                       borderRadius: BorderRadius.circular(AppRadiusSize.r16),

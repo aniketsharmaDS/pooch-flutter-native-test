@@ -120,6 +120,28 @@ class OrderMapper {
       image: '',
 
       orderType: OrderType.vetSubscription,
+      subscriptionDetails: [
+        SubscriptionDetailsModel(
+          id: sub['id']?.toString() ?? '',
+          planName: ParserUtils.readString(sub['planName']),
+          planType: ParserUtils.readString(sub['planType']),
+          totalCallCredits: ParserUtils.readInt(sub['totalCallCredits']),
+          remainingCallCredits: ParserUtils.readInt(
+            sub['remainingCallCredits'],
+          ),
+          pricePaid: ParserUtils.readDouble(sub['pricePaid']),
+          currency: ParserUtils.readString(sub['currency'], def: 'INR'),
+          status: ParserUtils.readString(sub['status'], def: 'active'),
+          startDate: ParserUtils.readString(sub['startDate']),
+          endDate: ParserUtils.readNullableString(sub['endDate']),
+          clinic: sub['clinic'] is Map<String, dynamic>
+              ? ClinicModel.fromJson(sub['clinic'] as Map<String, dynamic>)
+              : null,
+          pet: sub['pet'] is Map<String, dynamic>
+              ? PetModel.fromJson(sub['pet'] as Map<String, dynamic>)
+              : null,
+        ),
+      ],
     );
   }
 

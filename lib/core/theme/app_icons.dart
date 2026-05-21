@@ -217,6 +217,8 @@ class _SvgGenericIcons {
   final String poochLogoWhite = 'assets/icons/svg/generic/pooch_logo_white.svg';
   final String sealPercent = 'assets/icons/svg/generic/seal_percent.svg';
   final String filterFillter = 'assets/icons/svg/generic/filter-filled.svg';
+  final String moreVerticleRing =
+      'assets/icons/svg/generic/more_vertical_ring.svg';
 }
 
 // --- Transition Icons
@@ -476,6 +478,8 @@ class _LottieAnimations {
   final String completeSuccessful = 'assets/lottie/complete_successful.json';
   final String petPawn = 'assets/lottie/pet_pawn.json';
   final String poochPetDog = 'assets/lottie/pooch_pet_dog.json';
+  final String appointmentConfirmed =
+      'assets/lottie/appointment_confirmed.json';
 }
 
 /// =============================

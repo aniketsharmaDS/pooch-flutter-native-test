@@ -71,9 +71,7 @@ class _YearlyExpenseTrackerViewState extends State<YearlyExpenseTrackerView> {
             expenseTracker.monthlyExpenses.every((e) => e.amount == 0);
 
         if (expenseTracker == null) {
-          return Center(
-            child: AppText.bodyM('No data available for the selected year.'),
-          );
+          return Center(child: AppText.bodyM('expense.noDataAvailable'.tr()));
         }
         return LayoutBuilder(
           builder: (context, constraints) {
@@ -177,7 +175,7 @@ class _YearlyExpenseTrackerViewState extends State<YearlyExpenseTrackerView> {
                                     ),
                                     child: Center(
                                       child: AppText.bodyM(
-                                        'No expenses found for this year.',
+                                        'expense.noExpensesForYear'.tr(),
                                       ),
                                     ),
                                   ),

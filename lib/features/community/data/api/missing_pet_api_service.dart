@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:dio/dio.dart';
 import 'package:poochcare/core/network/api_response.dart';
 import 'package:poochcare/features/community/domain/models/missing_pet_report_payload_model.dart';
@@ -24,9 +22,7 @@ class MissingPetApiService {
         'page': page,
         'pageSize': pageSize,
       };
-      log(
-        'queryParams in MissingPetApiService getMyMissingPets: $queryParams filters: $filters',
-      );
+
       if (filters != null && filters.isNotEmpty) {
         final updatedFilters = Map<String, dynamic>.from(filters);
 
@@ -105,9 +101,6 @@ class MissingPetApiService {
         }
         queryParams.addAll(updatedFilters);
       }
-      log(
-        'queryParams in MissingPetApiService getAllMissingPets: $queryParams filters: $filters',
-      );
       final Response<dynamic> response = await _dio.get<dynamic>(
         'missing-pooch/feed',
         queryParameters: queryParams,
@@ -148,12 +141,6 @@ class MissingPetApiService {
     required MissingPetReportPayloadModel payload,
   }) async {
     try {
-      log(
-        'selectedAddress in payload: ${payload.lastKnownLocation} lat: ${payload.latitude} long: ${payload.longitude}',
-      );
-      log(
-        'selectedAddress Updating missing pet report with ID: $reportId and payload: ${payload.toJson()}',
-      );
       final Response<dynamic> response = await _dio.put(
         '/missing-pooch/$reportId',
         data: payload.toJson(),

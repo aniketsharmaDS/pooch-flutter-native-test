@@ -1,5 +1,260 @@
 {
   "community": {
-    "title": "My Community"
+    "title": "My Community",
+    "myCommunityHome": {
+      "myPosts": "My Posts",
+      "postsUnderReview": "Posts Under Review",
+      "livePosts": "Live Posts"
+    },
+    "myPostTab": {
+      "allMyPosts": "All My Posts",
+      "myTipsAndGuide": "My Tips & Guide",
+      "myEvents": "My Events",
+      "myMissingPetReports": "My Missing Pet Reports",
+      "myFoundPets": "My Found Pets"
+    },
+    "myEventForm": {
+      "addEvent": "Add a new Event",
+      "editEvent": "Edit a Event",
+      "addEventTitle": "Add event title",
+      "addDescription": "Add Description",
+      "optional": "Optional",
+      "selectDate": "Select date",
+      "selectTime": "Select time",
+      "addAddress": "Add Address",
+      "addLocation": "Add location",
+      "selectCategory": "Select Category",
+      "noCategoriesFound": "No categories found",
+      "uploadImagesOrDocument": "Upload Images or Document",
+      "upload": "Upload",
+      "uploadSupport": "Upload medical reports, prescriptions and vaccination certificates.",
+      "maxSize": "Max 2MB",
+      "termsPrefix": "By submitting this event, you agree to our ",
+      "termsSuffix": "Terms & Conditions and Community Guidelines.",
+      "submit": "Submit",
+      "eventSavedAsDraft": "Event Saved as Draft",
+      "eventSubmittedSuccessfully": "Event Submitted Successfully!",
+      "eventDraftContent": "Your Event has been saved as a draft and will be reviewed when you choose to submit it.",
+      "eventSuccessContent": "Your Event will be reviewed by our team and published to the community once approved.",
+      "done": "Done",
+      "close": "Close",
+      "errorTitle": "Oops! There was an error.",
+      "eventRetryContent": "Your event was not saved successfully. Please retry posting again.",
+      "tryAgain": "Try Again",
+      "later": "Later"
+    },
+    "myTipGuideForm": {
+      "addTipInfo": "Add a new Tip/Info",
+      "editTipInfo": "Edit a Tip/Info",
+      "addTipInfoTitle": "Add Tip/Info title",
+      "addDescription": "Add Description",
+      "optional": "Optional",
+      "selectCategory": "Select Category",
+      "noCategoriesFound": "No categories found",
+      "uploadImagesOrDocument": "Upload Images or Document",
+      "upload": "Upload",
+      "uploadSupport": "Upload medical reports, prescriptions and vaccination certificates.",
+      "maxSize": "Max 2MB",
+      "termsPrefix": "By submitting this tip, you agree to our ",
+      "termsSuffix": "Terms & Conditions and Community Guidelines.",
+      "submit": "Submit",
+      "saveAsDraft": "Save as Draft",
+      "tipSavedAsDraft": "Tip Saved as Draft",
+      "tipSubmittedSuccessfully": "Tip Submitted Successfully!",
+      "tipDraftContent": "Your Tip has been saved as a draft and will be reviewed when you choose to submit it.",
+      "tipSuccessContent": "Your Tip will be reviewed by our team and published to the community once approved.",
+      "done": "Done",
+      "close": "Close",
+      "errorTitle": "Oops! There was an error.",
+      "tipRetryContent": "Your post was not saved successfully. Please retry posting again.",
+      "tryAgain": "Try Again",
+      "later": "Later"
+    },
+    "reportMissingPetForm": {
+      "addMissingPetReport": "Add a Missing pet report",
+      "editMissingPetReport": "Edit a Missing pet report",
+      "addMissingPet": "Add a Missing Pet",
+      "editMissingPet": "Edit a Missing Pet",
+      "addDescription": "Add Description",
+      "optional": "Optional",
+      "selectLastSeenDate": "Select Last Seen date",
+      "selectLastSeenTime": "Select Last Seen time",
+      "addLastSeenLocation": "Add Last Seen Location",
+      "addRewardAmount": "Add Reward Amount",
+      "uploadImagesOrDocument": "Upload Images or Document",
+      "upload": "Upload",
+      "uploadSupport": "Upload medical reports, prescriptions and vaccination certificates.",
+      "maxSize": "Max 2MB",
+      "termsPrefix": "By submitting this missing pet report, you agree to our ",
+      "termsSuffix": "Terms & Conditions and Community Guidelines.",
+      "submit": "Submit",
+      "update": "Update",
+      "errorTitle": "Oops! There was an error.",
+      "tryAgain": "Try Again",
+      "later": "Later"
+    },
+    "eventDetails": {
+      "failedToGetShareLinkData": "Failed to get share link data",
+      "sharedFrom": "Shared from PoochCare",
+      "dateLabel": "Date:",
+      "timeLabel": "Time:",
+      "locationLabel": "Location:",
+      "addressLabel": "Address:",
+      "attendingLabel": "Attending:",
+      "paidEvent": "Paid Event",
+      "freeEvent": "Free Event",
+      "somethingWentWrong": "Something went wrong",
+      "deletePost": "Delete Post",
+      "deletePostPrompt": "Delete Post?",
+      "deletePostContent": "This action cannot be undone. Are you sure you want to delete this post?",
+      "confirmAttendance": "Confirm Attendance",
+      "chatWithOrganizer": "Chat with Organizer",
+      "confirmCancellation": "Confirm cancellation",
+      "cancelationContent": "You’ll be removed from the attendee list.",
+      "cancellationContent": "You’ll be removed from the attendee list.",
+      "editPost": "Edit Post",
+      "leave": "Leave",
+      "eventNotFound": "Event not found"
+    },
+    "tipDetails": {
+      "failedToGetShareLinkData": "Failed to get share link data",
+      "sharedFrom": "Shared from PoochCare",
+      "somethingWentWrong": "Something went wrong",
+      "deletePost": "Delete Post",
+      "deletePostPrompt": "Delete Post?",
+      "deletePostContent": "This action cannot be undone. Are you sure you want to delete this post?",
+      "editPost": "Edit Post",
+      "tipNotFound": "Tip not found"
+    },
+    "missingPetDetails": {
+      "no": "No",
+      "yes": "Yes",
+      "deletePost": "Delete Post",
+      "deletePostPrompt": "Delete Post?",
+      "deletePostContent": "This action cannot be undone. Are you sure you want to delete this post?",
+      "editPost": "Edit Post",
+      "isPetHome": "Is {petName} Home?",
+      "notSureStillNotifyParent": "Not Sure, Still Notify Parent",
+      "contactPetOwner": "Contact Pet Owner",
+      "iFoundThisPooch": "I Found this Pooch",
+      "petNotFound": "Pet not found",
+      "selectLocationOfThePet": "Select location of the pet",
+      "addNoteAboutPet": "Please add a note about the pet’s condition or any other relevant info to share with the pet parent",
+      "selectAddressWherePetWasLocated": "Please select an address where the found pet was located"
+    },
+    "foundPetDetails": {
+      "contactPetParent": "Contact Pet Parent",
+      "petNotFound": "Pet not found",
+      "happyUpdate": "Happy Update!",
+      "petFoundMessage": "{petName} has been safely found by {finderName} and is now in loving care."
+    },
+    "missingVerifyBiometric": {
+      "title": "Verify via Biometrics",
+      "openCamera": "Open Camera",
+      "retake": "Retake",
+      "continue": "Continue",
+      "someErrorOccurred": "Some error occurred",
+      "errorPrefix": "Error:"
+    },
+    "addPetFound": {
+      "title": "Add a Manual Found Pet",
+      "selectPetType": "Select pet type",
+      "selectPetGender": "Select pet gender",
+      "submit": "Submit",
+      "dog": "Dog",
+      "cat": "Cat",
+      "male": "Male",
+      "female": "Female"
+    },
+    "communityTabTest": {
+      "title": "Community",
+      "discover": "Discover",
+      "tipsAndInfo": "Tips & Info",
+      "events": "Events",
+      "missingPooch": "Missing Pooch",
+      "foundPooch": "Found Pooch",
+      "myChats": "My Chats",
+      "petShelters": "Pet Shelters"
+    },
+    "communityTabScreen": {
+      "title": "Community",
+      "tipsAndGuides": "Tips & Guides",
+      "events": "Events",
+      "reportMissingPet": "Report Missing Pet",
+      "reportFoundPet": "Report Found Pet",
+      "chats": "Chats",
+      "reportALostPet": "Report a Lost Pet",
+      "reportNow": "Report Now",
+      "reportDescription": "Help the community spot your pooch and bring them home safely."
+    },
+    "allCommunityTipsGuideListScreen": {
+      "title": "All Tips & Guides"
+    },
+    "allMissingPoochListScreen": {
+      "title": "Missing pooch reports",
+      "matchingPetsFound": "The following missing pets match your selections",
+      "noMatchingPetsFound": "No matching missing pets found"
+    },
+    "allFoundPoochListScreen": {
+      "title": "Found Pets"
+    },
+    "allCommunityEventsListScreen": {
+      "title": "Event"
+    },
+    "poochPetShelterListScreen": {
+      "title": "Pet Shelters"
+    },
+    "poochParentChatListScreen": {
+      "title": "My Chats"
+    },
+    "poochParentChatScreen": {
+      "initialQuestion": "Hi! Can you tell me about the event you organized?",
+      "initialReply": "Sure! It was a pet social and adoption day.",
+      "startTyping": "Start typing..."
+    },
+    "myPostedAllScreen": {
+      "myTipsAndGuide": "My Tips and Guide",
+      "myEvents": "My Events",
+      "reportALostPet": "Report a Lost Pet",
+      "reportNow": "Report Now",
+      "reportDescription": "Help the community spot your pooch and bring them home safely."
+    },
+    "myPostTipsCard": {
+      "title": "Tips & Guides"
+    },
+    "myPostEventCard": {
+      "title": "Events"
+    },
+    "myPostedEventsScreen": {
+      "selectCategory": "Select Category"
+    },
+    "myPostedMissingPetsScreen": {
+      "selectCategory": "Select Category"
+    },
+    "myPostedFoundPetsScreen": {
+      "selectCategory": "Select Category"
+    },
+    "myPostedTipsGuideScreen": {
+      "selectCategory": "Select Category"
+    },
+    "communityHeaderCard": {
+      "happyUpdate": "Happy Update!"
+    },
+    "loadingDataError": "An error occurred while loading data.",
+    "missingBiometricPetFoundScreen": {
+      "contactPetParent": "Contact Pet Parent",
+      "title": "It’s Match",
+      "subtitle": "This pooch matches a missing pet profile. Identity verified using biometric markers."
+    },
+    "categorySelector": {
+      "all": "All"
+    },
+    "confirmActionCard": {
+      "disclaimerPrefix": "By submitting this tip, you agree to our ",
+      "termsAndConditions": "Terms & Conditions",
+      "and": " and ",
+      "communityGuidelines": "Community Guidelines",
+      "period": "."
+    }
   }
 }

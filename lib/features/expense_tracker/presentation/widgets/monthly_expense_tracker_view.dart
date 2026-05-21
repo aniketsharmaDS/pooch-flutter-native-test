@@ -32,22 +32,13 @@ class MonthlyExpenseTrackerView extends StatefulWidget {
 class _MonthlyExpenseTrackerViewState extends State<MonthlyExpenseTrackerView> {
   final ValueNotifier<String?> selectedPetNotifier = ValueNotifier(null);
 
-  static const List<String> months = [
-    'Jan',
-    'Feb',
-    'Mar',
-    'Apr',
-    'May',
-    'Jun',
-    'Jul',
-    'Aug',
-    'Sep',
-    'Oct',
-    'Nov',
-    'Dec',
-  ];
-
   late final DateTime profileCreatedAt;
+
+  String _formatMonthLabel(BuildContext context, int year, int month) {
+    final localeName = context.locale.toString();
+
+    return DateFormat.MMM(localeName).format(DateTime(year, month));
+  }
 
   @override
   void initState() {
@@ -92,9 +83,15 @@ class _MonthlyExpenseTrackerViewState extends State<MonthlyExpenseTrackerView> {
 
         if (expenseTracker == null) {
           return Center(
-            child: AppText.bodyM('No data available for the selected month.'),
+            child: AppText.bodyM('expense.noDataForSelectedMonth'.tr()),
           );
         }
+        final monthLabel = _formatMonthLabel(
+          context,
+          state.selectedYear,
+          state.selectedMonth,
+        );
+
         return SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.only(bottom: AppSpacing.s100),
@@ -123,9 +120,7 @@ class _MonthlyExpenseTrackerViewState extends State<MonthlyExpenseTrackerView> {
                             Align(
                               alignment: Alignment.centerLeft,
                               child: AppDateSelector(
-                                label:
-                                    '${months[state.selectedMonth - 1]} '
-                                    '${state.selectedYear}',
+                                label: '$monthLabel ${state.selectedYear}',
 
                                 onTap: () async {
                                   final result =
@@ -198,7 +193,7 @@ class _MonthlyExpenseTrackerViewState extends State<MonthlyExpenseTrackerView> {
                             ),
                             child: Center(
                               child: AppText.bodyM(
-                                'No expenses found for this month.',
+                                'expense.noExpensesForMonth'.tr(),
                               ),
                             ),
                           ),
@@ -282,7 +277,7 @@ class _MonthlyExpenseTrackerViewState extends State<MonthlyExpenseTrackerView> {
                 AppSpacing.s20.hBox,
 
                 ExpenseCalendarSection(
-                  month: months[state.selectedMonth - 1],
+                  monthIndex: state.selectedMonth,
                   year: state.selectedYear,
 
                   highlightedDates: expenseTracker.dailyExpenses

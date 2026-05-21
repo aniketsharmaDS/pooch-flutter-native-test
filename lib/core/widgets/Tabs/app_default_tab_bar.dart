@@ -16,9 +16,12 @@ class AppDefaultRouteTabs extends StatelessWidget {
 
   /// Use this when inside Card / Column (not full screen)
   final double? contentHeight;
+  final bool showContent;
 
-  /// New: initial tab index, defaults to 0
-  final int? initialIndex;
+  /// Initial selected tab index.
+  /// Works only in widget mode (`children`).
+  /// Route mode (`routes`) currently always starts from index 0.
+  final int initialIndex;
 
   const AppDefaultRouteTabs({
     super.key,
@@ -30,6 +33,7 @@ class AppDefaultRouteTabs extends StatelessWidget {
     this.isScrollable = false,
     this.labelPadding,
     this.initialIndex = 0,
+    this.showContent = true,
   }) : assert(
          (routes != null && children == null) ||
              (routes == null && children != null),
@@ -81,7 +85,7 @@ class AppDefaultRouteTabs extends StatelessWidget {
     // );
     return DefaultTabController(
       length: tabNames.length,
-      initialIndex: initialIndex!,
+      initialIndex: initialIndex,
       child: _TabChangeListener(
         onTabChanged: onTabChanged,
         child: Builder(
@@ -142,15 +146,17 @@ class AppDefaultRouteTabs extends StatelessWidget {
           ),
         ),
 
-        SizedBox(height: AppSpacing.s12.w),
+        // SizedBox(height: AppSpacing.s12.w),
+        if (showContent) SizedBox(height: AppSpacing.s12.w),
 
         /// =========================
         /// TAB CONTENT (UNCHANGED)
         /// =========================
-        if (contentHeight != null)
-          SizedBox(height: contentHeight, child: child)
-        else
-          Expanded(child: child),
+        if (showContent)
+          if (contentHeight != null)
+            SizedBox(height: contentHeight, child: child)
+          else
+            Expanded(child: child),
       ],
     );
   }
@@ -169,11 +175,14 @@ class _TabChangeListener extends StatefulWidget {
 class _TabChangeListenerState extends State<_TabChangeListener> {
   TabController? _controller;
 
+  int? _lastIndex;
+
   void _listener() {
     final controller = _controller;
     if (controller == null) return;
 
-    if (!controller.indexIsChanging) {
+    if (_lastIndex != controller.index) {
+      _lastIndex = controller.index;
       widget.onTabChanged?.call(controller.index);
     }
   }

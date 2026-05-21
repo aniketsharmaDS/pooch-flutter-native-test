@@ -9,7 +9,6 @@ import 'package:poochcare/features/auth/data/models/otp_send_api_result.dart';
 import 'package:poochcare/features/auth/data/models/otp_send_response.dart';
 import 'package:poochcare/features/auth/data/models/register_api_result.dart';
 import 'package:poochcare/features/auth/data/models/register_response.dart';
-import 'package:poochcare/features/auth/data/models/user_response.dart';
 import 'package:poochcare/features/auth/data/models/verify_otp_api_result.dart';
 import 'package:poochcare/features/auth/data/models/verify_otp_response.dart';
 
@@ -17,7 +16,7 @@ class AuthApiService {
   const AuthApiService(this._dio);
   final Dio _dio;
 
-  static const String _loginPath = '/auth/login';
+  // static const String _loginPath = '/auth/login';
   static const String _loginWithOtpPath = '/auth/login-with-otp';
   static const String _googleLoginPath = '/auth/google-login';
   static const String _facebookLoginPath = '/auth/facebook-login';
@@ -179,29 +178,6 @@ class AuthApiService {
     }
   }
 
-  Future<UserResponse> verifyOtp({
-    required String phone,
-    required String otp,
-  }) async {
-    try {
-      final Response<dynamic> response = await _dio.post<dynamic>(
-        _verifyOtpPath,
-        data: <String, dynamic>{'phone': phone.trim(), 'otp': otp.trim()},
-      );
-      final dynamic body = response.data;
-      if (body is! Map<String, dynamic>) {
-        throw const ApiException('Invalid server response', statusCode: 500);
-      }
-      final dynamic parsedUser = _extractPayload(body);
-      if (parsedUser is! Map<String, dynamic>) {
-        throw const ApiException('Invalid server response', statusCode: 500);
-      }
-      return UserResponseMapper.fromMap(parsedUser);
-    } on DioException catch (error) {
-      throw _mapDioError(error);
-    }
-  }
-
   Future<GoogleLoginApiResult> googleLogin({
     required String uid,
     required String fullName,
@@ -334,31 +310,6 @@ class AuthApiService {
     }
   }
 
-  Future<UserResponse> login({
-    required String email,
-    required String password,
-  }) async {
-    try {
-      final Response<dynamic> response = await _dio.post<dynamic>(
-        _loginPath,
-        data: <String, dynamic>{'email': email.trim(), 'password': password},
-      );
-
-      final dynamic body = response.data;
-      if (body is! Map<String, dynamic>) {
-        throw const ApiException('Invalid server response', statusCode: 500);
-      }
-
-      final dynamic parsedUser = _extractPayload(body);
-      if (parsedUser is! Map<String, dynamic>) {
-        throw const ApiException('Invalid server response', statusCode: 500);
-      }
-      return UserResponseMapper.fromMap(parsedUser);
-    } on DioException catch (error) {
-      throw _mapDioError(error);
-    }
-  }
-
   Future<RegisterApiResult> register({
     required String emailOrPhone,
     required String countryCode,
@@ -402,14 +353,14 @@ class AuthApiService {
     }
   }
 
-  dynamic _extractPayload(Map<String, dynamic> body) {
-    if (body.containsKey('success') && body.containsKey('data')) {
-      final ApiResponse envelope = ApiResponseMapper.fromMap(body);
-      return envelope.data;
-    }
+  // dynamic _extractPayload(Map<String, dynamic> body) {
+  //   if (body.containsKey('success') && body.containsKey('data')) {
+  //     final ApiResponse envelope = ApiResponseMapper.fromMap(body);
+  //     return envelope.data;
+  //   }
 
-    return body;
-  }
+  //   return body;
+  // }
 
   ApiException _mapDioError(DioException error) {
     final int statusCode = error.response?.statusCode ?? 0;

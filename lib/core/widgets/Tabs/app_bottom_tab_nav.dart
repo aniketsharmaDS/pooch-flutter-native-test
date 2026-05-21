@@ -84,7 +84,7 @@ class _AppBottomTabNavItemWidget extends StatelessWidget {
           duration: const Duration(milliseconds: 300),
           curve: Curves.easeInOut,
           padding: EdgeInsets.symmetric(
-            horizontal: isSelected ? 18.w : 16.w,
+            horizontal: isSelected ? 12.w : 14.w,
             vertical: 5.h,
           ),
           decoration: BoxDecoration(

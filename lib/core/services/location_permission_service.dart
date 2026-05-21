@@ -32,7 +32,13 @@ class LocationPermissionService {
     if (!context.mounted) return false;
 
     // 4. User denied in custom dialog
-    if (userChoice != true) return false;
+    if (userChoice != true) {
+      await _storage.writeBool(
+        SecureStorageKeys.locationPermissionGranted,
+        false,
+      );
+      return false;
+    }
 
     // 5. Request OS permission
     final result = await Permission.location.request();
@@ -44,6 +50,11 @@ class LocationPermissionService {
       );
       return true;
     }
+
+    await _storage.writeBool(
+      SecureStorageKeys.locationPermissionGranted,
+      false,
+    );
 
     // 6. Permanently denied → open settings
     if (result.isPermanentlyDenied) {

@@ -137,7 +137,7 @@ class AddressTile extends StatelessWidget {
                 child: Container(
                   padding: const EdgeInsets.all(AppSpacing.s7),
                   decoration: BoxDecoration(
-                    border: Border.all(),
+                    border: Border.all(width: 1.5),
                     shape: BoxShape.circle,
                   ),
                   child: AppIcon(AppIcons.svg.generic.moreVert),

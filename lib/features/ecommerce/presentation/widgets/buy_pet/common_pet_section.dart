@@ -67,7 +67,7 @@ class CommonPetSection extends StatelessWidget {
         } else if (shortestSide < 400) {
           aspectRatio = 170 / 265;
         } else if (shortestSide < 500) {
-          aspectRatio = 170 / 280;
+          aspectRatio = 170 / 270;
         } else {
           aspectRatio = 170 / 285;
         }

@@ -71,6 +71,7 @@ class NotificationService {
   static final NotificationService _instance = NotificationService._internal();
   factory NotificationService() => _instance;
   NotificationService._internal();
+  StreamSubscription<String>? _tokenRefreshSubscription;
 
   static String? currentEventId;
   static String? currentTipId;
@@ -162,8 +163,15 @@ class NotificationService {
     String deviceId = '';
 
     try {
+      // Prevent multiple listeners
+      if (_tokenRefreshSubscription != null) {
+        return;
+      }
+
       FirebaseMessaging messaging = FirebaseMessaging.instance;
-      messaging.onTokenRefresh.listen((newToken) async {
+      _tokenRefreshSubscription = messaging.onTokenRefresh.listen((
+        newToken,
+      ) async {
         // Whenever a new token is generated, update it on the server
         try {
           deviceId = await getDeviceId();
@@ -175,7 +183,8 @@ class NotificationService {
               'deviceType': Platform.isAndroid ? 'Android' : 'iOS',
             },
           );
-        } catch (e) {
+        } catch (e, s) {
+          CrashlyticsService.recordError(e, s);
           // final friendlyMessage = getFriendlyErrorMessage(e);
           // print(
           //   'Error updating refreshed notification token: $friendlyMessage',
@@ -235,11 +244,11 @@ class NotificationService {
     );
 
     // Create the channel on the device
-    await _flutterLocalNotificationsPlugin
-        .resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin
-        >()
-        ?.createNotificationChannel(channel);
+    // await _flutterLocalNotificationsPlugin
+    //     .resolvePlatformSpecificImplementation<
+    //       AndroidFlutterLocalNotificationsPlugin
+    //     >()
+    //     ?.createNotificationChannel(channel);
 
     await _flutterLocalNotificationsPlugin.initialize(
       initSettings,
@@ -694,6 +703,8 @@ class NotificationService {
   }
 
   void dispose() {
+    _tokenRefreshSubscription?.cancel();
     _refreshHomeController.close();
+    _appointmentEndedController.close();
   }
 }

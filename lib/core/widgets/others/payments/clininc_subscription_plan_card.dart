@@ -261,7 +261,6 @@ class _TopSection extends StatelessWidget {
                               ),
                             ),
                             if (isBestValue) ...[
-                              SizedBox(height: 2.h),
                               AppText.displayL(
                                 '(Best Value)',
                                 style: TextStyle(

@@ -235,6 +235,10 @@ class _BuyPetDetailScreenState extends State<BuyPetDetailScreen> {
 
     final DateTime now = DateTime.now();
 
+    if (dob.isAfter(now)) {
+      return '';
+    }
+
     int years = now.year - dob.year;
     int months = now.month - dob.month;
 

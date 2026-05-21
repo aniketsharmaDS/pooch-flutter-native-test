@@ -35,7 +35,7 @@ class User extends Equatable {
     bool? isOnboarded,
     String? countryCode,
     String? primaryIdentifier,
-    bool? hasBoughtPet
+    bool? hasBoughtPet,
   }) {
     return User(
       hasBoughtPet: hasBoughtPet ?? this.hasBoughtPet,
@@ -62,6 +62,6 @@ class User extends Equatable {
     isOnboarded,
     countryCode,
     primaryIdentifier,
-    hasBoughtPet
+    hasBoughtPet,
   ];
 }

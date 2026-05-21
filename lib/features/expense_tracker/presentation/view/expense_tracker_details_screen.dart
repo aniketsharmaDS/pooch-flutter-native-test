@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:poochcare/core/di/service_locator.dart';
@@ -92,14 +93,11 @@ class _ExpenseTrackerDetailsScreenState
                     PoochScreenAppBar(
                       title: widget.type == 'monthly'
                           ? monthlyDetails == null
-                                ? 'Expense Breakdown'
-                                : 'Expense Breakdown for '
-                                      '${monthlyDetails.month} '
-                                      '${monthlyDetails.year}'
+                                ? 'expense.expenseBreakdown'.tr()
+                                : '${'expense.expenseBreakdown'.tr()} for ${monthlyDetails.month} ${monthlyDetails.year}'
                           : yearlyDetails == null
-                          ? 'Expense Breakdown'
-                          : 'Expense Breakdown for '
-                                '${yearlyDetails.year}',
+                          ? 'expense.expenseBreakdown'.tr()
+                          : '${'expense.expenseBreakdown'.tr()} for ${yearlyDetails.year}',
                     ),
                     Expanded(
                       child: Builder(
@@ -119,8 +117,8 @@ class _ExpenseTrackerDetailsScreenState
                           }
 
                           if (transactions.isEmpty) {
-                            return const Center(
-                              child: Text('No transactions found'),
+                            return Center(
+                              child: Text('expense.noTransactions'.tr()),
                             );
                           }
                           return ListView.separated(

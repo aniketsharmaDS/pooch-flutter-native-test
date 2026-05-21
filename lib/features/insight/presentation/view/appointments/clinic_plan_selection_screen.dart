@@ -6,7 +6,7 @@ import 'package:poochcare/core/di/service_locator.dart';
 import 'package:poochcare/core/theme/app_colors.dart';
 import 'package:poochcare/core/theme/app_font_size.dart';
 import 'package:poochcare/core/theme/app_spacing.dart';
-import 'package:poochcare/core/utils/save_parser_service.dart';
+import 'package:poochcare/core/utils/safe_parser_service.dart';
 import 'package:poochcare/core/widgets/buttons/app_button.dart';
 import 'package:poochcare/core/widgets/dialogs/app_select_pet_dialog.dart';
 import 'package:poochcare/core/widgets/others/payments/clininc_subscription_plan_card.dart';
@@ -202,7 +202,7 @@ class _ClinicPlanSelectionScreenState extends State<ClinicPlanSelectionScreen> {
                         ? 'Free'
                         : isMonthly
                         ? 'Monthly'
-                        : 'Yearly';
+                        : 'Annual';
 
                     final variant = isFree
                         ? SubscriptionPlanVariants.free

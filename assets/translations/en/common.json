@@ -8,6 +8,19 @@
     "close": "Close",
     "delete": "Delete",
     "edit": "Edit",
-    "save": "Save"
+    "save": "Save",
+    "tabs": {
+      "explore": "Explore",
+      "insight": "Insight",
+      "home": "Home",
+      "serve": "Serve",
+      "community": "Community"
+    },
+    "bottomSheet": {
+    "title": "Search Address",
+    "hint": "Search for an address",
+    "searchAnAddress": "Search an address",
+    "noResults": "No results found"
+  }
   }
 }

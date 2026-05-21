@@ -99,7 +99,7 @@ class _CartScreenState extends State<CartScreen> {
           child: Column(
             children: [
               PoochScreenAppBar(title: 'cart.myCart'.tr()),
-              const SizedBox(height: AppSpacing.s20),
+              const SizedBox(height: AppSpacing.s10),
               cartItems(),
             ],
           ),
@@ -132,8 +132,8 @@ class _CartScreenState extends State<CartScreen> {
                       : 'cart.addItemsToCart'.tr(),
                   size: AppButtonSize.medium,
                   onPressed: () {
-                    if (selectedAddress != null) {
-                      if (itemAvailable) {
+                    if (itemAvailable) {
+                      if (selectedAddress != null) {
                         _showJourneyDialog(
                           context,
                           selectedAddress,
@@ -141,12 +141,12 @@ class _CartScreenState extends State<CartScreen> {
                           isBuyNow ? cartState.orderPreviewData : null,
                         );
                       } else {
-                        context.router.navigate(
-                          const HomeRoute(children: [BuyPetLandingRoute()]),
-                        );
+                        _showAddressBottomSheet();
                       }
                     } else {
-                      _showAddressBottomSheet();
+                      context.router.navigate(
+                        const HomeRoute(children: [BuyPetLandingRoute()]),
+                      );
                     }
                   },
                 );
@@ -178,7 +178,13 @@ class _CartScreenState extends State<CartScreen> {
         if (items.isEmpty) {
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: AppSpacing.s8),
-            child: PoochSuperOfferNudge(onAdd: () {}),
+            child: PoochSuperOfferNudge(
+              discountTitle: 'Get 10%',
+              discountSubText: 'On next 5 purchases.',
+              btnTitle: 'Add',
+              price: 'INR 500',
+              onAdd: () {},
+            ),
           );
         }
 
@@ -472,12 +478,23 @@ class _CartScreenState extends State<CartScreen> {
         authStoreBloc.add(const BuyPetJourneyCompleted());
         authStoreBloc.add(const PetOnboardingCompleted());
         authStoreBloc.add(const InviteSheetSkipped());
-        await authStoreBloc.stream.firstWhere(
-          (element) =>
-              element.user?.hasBoughtPet == true &&
-              element.user?.isPetOnboarded == true &&
-              element.inviteSheetSkipped == true,
-        );
+
+        final currentState = authStoreBloc.state;
+        final alreadyCompleted =
+            currentState.user?.hasBoughtPet == true &&
+            currentState.user?.isPetOnboarded == true &&
+            currentState.inviteSheetSkipped == true;
+
+        if (!alreadyCompleted) {
+          await authStoreBloc.stream
+              .firstWhere(
+                (element) =>
+                    element.user?.hasBoughtPet == true &&
+                    element.user?.isPetOnboarded == true &&
+                    element.inviteSheetSkipped == true,
+              )
+              .timeout(const Duration(seconds: 10));
+        }
       }
       if (widget.productId == null) {
         if (!context.mounted) return;

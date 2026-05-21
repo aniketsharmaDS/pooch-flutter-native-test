@@ -101,8 +101,10 @@ class OrderDetailsScreen extends StatelessWidget {
               // final isDelivered =
               //     requestedItem.status.toLowerCase() == 'delivered';
 
-              final isDelivered =
-                  requestedItem.rawStatus.toLowerCase() == 'delivered';
+              // final isDelivered =
+              //     requestedItem.rawStatus.toLowerCase() == 'delivered';
+
+              final isDelivered = requestedItem.isDelivered;
 
               final isAccessory =
                   requestedItem.orderType == OrderType.accessory;
@@ -139,8 +141,7 @@ class OrderDetailsScreen extends StatelessWidget {
                             OrderIdRow(orderId: order.orderNumber),
                             AppSpacing.s10.hBox,
 
-                            if (requestedItem.status.toLowerCase() ==
-                                'delivered') ...[
+                            if (isDelivered) ...[
                               _deliveredRow(),
                               AppSpacing.s10.hBox,
                             ],

@@ -158,99 +158,112 @@ class VideoDetailsScreen extends StatelessWidget {
 
                               AppSpacing.s24.hBox,
 
-                              /// Related Tabs
-                              RelatedContentTabsSection(
-                                leftTitle: 'Tips',
-                                rightTitle: 'Training Steps',
-                                onLeftTabTap: () {
-                                  context.read<TricksAndTrainingsBloc>().add(
-                                    LoadRelatedContent(
-                                      parentId: contentId,
+                              /// Related Tabs + Content
+                              Column(
+                                children: [
+                                  RelatedContentTabsSection(
+                                    leftTitle: 'Tips',
+                                    rightTitle: 'Training Steps',
 
-                                      contentType: 'tip',
+                                    onTabChanged: (value) {
+                                      if (value == 0) {
+                                        context
+                                            .read<TricksAndTrainingsBloc>()
+                                            .add(
+                                              LoadRelatedContent(
+                                                parentId: contentId,
+                                                contentType: 'tip',
+                                              ),
+                                            );
+                                      } else {
+                                        context
+                                            .read<TricksAndTrainingsBloc>()
+                                            .add(
+                                              LoadRelatedContent(
+                                                parentId: contentId,
+                                                contentType: 'training',
+                                              ),
+                                            );
+                                      }
+                                    },
+                                  ),
+
+                                  AppSpacing.s16.hBox,
+
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: AppSpacing.s16.w,
                                     ),
-                                  );
-                                },
+                                    child: SizedBox(
+                                      height: 420.h,
+                                      child: state.isRelatedContentLoading
+                                          /// LOADING
+                                          ? ListView.separated(
+                                              itemCount: 3,
+                                              separatorBuilder: (_, _) =>
+                                                  AppSpacing.s12.hBox,
+                                              itemBuilder: (_, _) =>
+                                                  const TipAndTrainingListItemCardShimmer(),
+                                            )
+                                          /// TRAININGS
+                                          : state.selectedRelatedTab ==
+                                                'training'
+                                          ? ListView.separated(
+                                              padding: EdgeInsets.zero,
+                                              itemCount:
+                                                  state.relatedContent.length,
+                                              separatorBuilder: (_, _) =>
+                                                  AppSpacing.s12.hBox,
+                                              itemBuilder: (_, index) {
+                                                final item =
+                                                    state.relatedContent[index];
 
-                                onRightTabTap: () {
-                                  context.read<TricksAndTrainingsBloc>().add(
-                                    LoadRelatedContent(
-                                      parentId: contentId,
+                                                return TrainingListItemCard(
+                                                  imageUrl: item.image,
+                                                  title: item.title,
+                                                  description:
+                                                      item.shortDescription,
+                                                  steps:
+                                                      '${item.sessionSteps.length} Step',
+                                                  onTap: () {
+                                                    context.router.push(
+                                                      TrainingDetailsRoute(
+                                                        contentId: item.id,
+                                                      ),
+                                                    );
+                                                  },
+                                                );
+                                              },
+                                            )
+                                          /// TIPS
+                                          : ListView.separated(
+                                              padding: EdgeInsets.zero,
+                                              itemCount:
+                                                  state.relatedContent.length,
+                                              separatorBuilder: (_, _) =>
+                                                  AppSpacing.s12.hBox,
+                                              itemBuilder: (_, index) {
+                                                final item =
+                                                    state.relatedContent[index];
 
-                                      contentType: 'training',
+                                                return TipListItemCard(
+                                                  imageUrl: item.image,
+                                                  title: item.title,
+                                                  description:
+                                                      item.shortDescription,
+                                                  onTap: () {
+                                                    context.router.push(
+                                                      TipDetailsRoute(
+                                                        contentId: item.id,
+                                                      ),
+                                                    );
+                                                  },
+                                                );
+                                              },
+                                            ),
                                     ),
-                                  );
-                                },
-
-                                /// Tips
-                                leftScreen: state.isRelatedContentLoading
-                                    ? ListView.separated(
-                                        itemCount: 3,
-                                        separatorBuilder: (_, _) =>
-                                            AppSpacing.s12.hBox,
-                                        itemBuilder: (_, _) =>
-                                            const TipAndTrainingListItemCardShimmer(),
-                                      )
-                                    : ListView.separated(
-                                        padding: EdgeInsets.zero,
-                                        itemCount: state.relatedContent.length,
-                                        separatorBuilder: (_, _) =>
-                                            AppSpacing.s12.hBox,
-                                        itemBuilder: (_, index) {
-                                          final item =
-                                              state.relatedContent[index];
-                                          return TipListItemCard(
-                                            imageUrl: item.image,
-
-                                            title: item.title,
-
-                                            description: item.shortDescription,
-                                            onTap: () {
-                                              context.router.push(
-                                                TipDetailsRoute(
-                                                  contentId: item.id,
-                                                ),
-                                              );
-                                            },
-                                          );
-                                        },
-                                      ),
-
-                                /// Trainings
-                                rightScreen: state.isRelatedContentLoading
-                                    ? ListView.separated(
-                                        itemCount: 3,
-                                        separatorBuilder: (_, _) =>
-                                            AppSpacing.s12.hBox,
-                                        itemBuilder: (_, _) =>
-                                            const TipAndTrainingListItemCardShimmer(),
-                                      )
-                                    : ListView.separated(
-                                        padding: EdgeInsets.zero,
-                                        itemCount: state.relatedContent.length,
-                                        separatorBuilder: (_, _) =>
-                                            AppSpacing.s12.hBox,
-                                        itemBuilder: (_, index) {
-                                          final item =
-                                              state.relatedContent[index];
-                                          return TrainingListItemCard(
-                                            imageUrl: item.image,
-
-                                            title: item.title,
-
-                                            description: item.shortDescription,
-                                            steps:
-                                                '${item.sessionSteps.length} Step',
-                                            onTap: () {
-                                              context.router.push(
-                                                TrainingDetailsRoute(
-                                                  contentId: item.id,
-                                                ),
-                                              );
-                                            },
-                                          );
-                                        },
-                                      ),
+                                  ),
+                                ],
                               ),
 
                               AppSpacing.s24.hBox,

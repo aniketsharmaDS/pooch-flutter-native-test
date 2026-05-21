@@ -1,5 +1,260 @@
 {
   "community": {
-    "title": "مجتمعي"
+    "title": "مجتمعي",
+    "myCommunityHome": {
+      "myPosts": "منشوراتي",
+      "postsUnderReview": "المنشورات قيد المراجعة",
+      "livePosts": "المنشورات المنشورة"
+    },
+    "myPostTab": {
+      "allMyPosts": "جميع منشوراتي",
+      "myTipsAndGuide": "نصائحي وإرشاداتي",
+      "myEvents": "فعالياتي",
+      "myMissingPetReports": "بلاغات حيواناتي الأليفة المفقودة",
+      "myFoundPets": "الحيوانات الأليفة التي وجدتها"
+    },
+    "myEventForm": {
+      "addEvent": "إضافة فعالية جديدة",
+      "editEvent": "تعديل فعالية",
+      "addEventTitle": "أضف عنوان الفعالية",
+      "addDescription": "أضف وصفًا",
+      "optional": "اختياري",
+      "selectDate": "اختر التاريخ",
+      "selectTime": "اختر الوقت",
+      "addAddress": "أضف العنوان",
+      "addLocation": "أضف الموقع",
+      "selectCategory": "اختر الفئة",
+      "noCategoriesFound": "لم يتم العثور على فئات",
+      "uploadImagesOrDocument": "رفع صور أو مستند",
+      "upload": "رفع",
+      "uploadSupport": "قم برفع التقارير الطبية والوصفات الطبية وشهادات التطعيم.",
+      "maxSize": "الحد الأقصى 2MB",
+      "termsPrefix": "بتقديم هذه الفعالية، فإنك توافق على ",
+      "termsSuffix": "الشروط والأحكام وإرشادات المجتمع.",
+      "submit": "إرسال",
+      "eventSavedAsDraft": "تم حفظ الفعالية كمسودة",
+      "eventSubmittedSuccessfully": "تم إرسال الفعالية بنجاح!",
+      "eventDraftContent": "تم حفظ فعاليتك كمسودة وسيتم مراجعتها عند اختيارك إرسالها.",
+      "eventSuccessContent": "سيتم مراجعة فعاليتك من قبل فريقنا ونشرها في المجتمع بعد الموافقة عليها.",
+      "done": "تم",
+      "close": "إغلاق",
+      "errorTitle": "عذرًا! حدث خطأ.",
+      "eventRetryContent": "لم يتم حفظ فعاليتك بنجاح. يرجى إعادة المحاولة مرة أخرى.",
+      "tryAgain": "حاول مرة أخرى",
+      "later": "لاحقًا"
+    },
+    "myTipGuideForm": {
+      "addTipInfo": "إضافة نصيحة/معلومة جديدة",
+      "editTipInfo": "تعديل نصيحة/معلومة",
+      "addTipInfoTitle": "أضف عنوان النصيحة/المعلومة",
+      "addDescription": "أضف وصفًا",
+      "optional": "اختياري",
+      "selectCategory": "اختر الفئة",
+      "noCategoriesFound": "لم يتم العثور على فئات",
+      "uploadImagesOrDocument": "رفع صور أو مستند",
+      "upload": "رفع",
+      "uploadSupport": "قم برفع التقارير الطبية والوصفات الطبية وشهادات التطعيم.",
+      "maxSize": "الحد الأقصى 2MB",
+      "termsPrefix": "بتقديم هذه النصيحة، فإنك توافق على ",
+      "termsSuffix": "الشروط والأحكام وإرشادات المجتمع.",
+      "submit": "إرسال",
+      "saveAsDraft": "حفظ كمسودة",
+      "tipSavedAsDraft": "تم حفظ النصيحة كمسودة",
+      "tipSubmittedSuccessfully": "تم إرسال النصيحة بنجاح!",
+      "tipDraftContent": "تم حفظ نصيحتك كمسودة وسيتم مراجعتها عند اختيارك إرسالها.",
+      "tipSuccessContent": "سيتم مراجعة نصيحتك من قبل فريقنا ونشرها في المجتمع بعد الموافقة عليها.",
+      "done": "تم",
+      "close": "إغلاق",
+      "errorTitle": "عذرًا! حدث خطأ.",
+      "tipRetryContent": "لم يتم حفظ منشورك بنجاح. يرجى إعادة المحاولة مرة أخرى.",
+      "tryAgain": "حاول مرة أخرى",
+      "later": "لاحقًا"
+    },
+    "reportMissingPetForm": {
+      "addMissingPetReport": "إضافة بلاغ عن حيوان أليف مفقود",
+      "editMissingPetReport": "تعديل بلاغ حيوان أليف مفقود",
+      "addMissingPet": "إضافة حيوان أليف مفقود",
+      "editMissingPet": "تعديل حيوان أليف مفقود",
+      "addDescription": "أضف وصفًا",
+      "optional": "اختياري",
+      "selectLastSeenDate": "اختر تاريخ آخر مشاهدة",
+      "selectLastSeenTime": "اختر وقت آخر مشاهدة",
+      "addLastSeenLocation": "أضف موقع آخر مشاهدة",
+      "addRewardAmount": "أضف مبلغ المكافأة",
+      "uploadImagesOrDocument": "رفع صور أو مستند",
+      "upload": "رفع",
+      "uploadSupport": "قم برفع التقارير الطبية والوصفات الطبية وشهادات التطعيم.",
+      "maxSize": "الحد الأقصى 2MB",
+      "termsPrefix": "بتقديم هذا البلاغ عن الحيوان الأليف المفقود، فإنك توافق على ",
+      "termsSuffix": "الشروط والأحكام وإرشادات المجتمع.",
+      "submit": "إرسال",
+      "update": "تحديث",
+      "errorTitle": "عذرًا! حدث خطأ.",
+      "tryAgain": "حاول مرة أخرى",
+      "later": "لاحقًا"
+    },
+    "eventDetails": {
+      "failedToGetShareLinkData": "فشل في الحصول على بيانات رابط المشاركة",
+      "sharedFrom": "تمت المشاركة من PoochCare",
+      "dateLabel": "التاريخ:",
+      "timeLabel": "الوقت:",
+      "locationLabel": "الموقع:",
+      "addressLabel": "العنوان:",
+      "attendingLabel": "الحضور:",
+      "paidEvent": "فعالية مدفوعة",
+      "freeEvent": "فعالية مجانية",
+      "somethingWentWrong": "حدث خطأ ما",
+      "deletePost": "حذف المنشور",
+      "deletePostPrompt": "حذف المنشور؟",
+      "deletePostContent": "لا يمكن التراجع عن هذا الإجراء. هل أنت متأكد أنك تريد حذف هذا المنشور؟",
+      "confirmAttendance": "تأكيد الحضور",
+      "chatWithOrganizer": "الدردشة مع المنظم",
+      "confirmCancellation": "تأكيد الإلغاء",
+      "cancelationContent": "ستتم إزالتك من قائمة الحضور.",
+      "cancellationContent": "ستتم إزالتك من قائمة الحضور.",
+      "editPost": "تعديل المنشور",
+      "leave": "مغادرة",
+      "eventNotFound": "لم يتم العثور على الفعالية"
+    },
+    "tipDetails": {
+      "failedToGetShareLinkData": "فشل في الحصول على بيانات رابط المشاركة",
+      "sharedFrom": "تمت المشاركة من PoochCare",
+      "somethingWentWrong": "حدث خطأ ما",
+      "deletePost": "حذف المنشور",
+      "deletePostPrompt": "حذف المنشور؟",
+      "deletePostContent": "لا يمكن التراجع عن هذا الإجراء. هل أنت متأكد أنك تريد حذف هذا المنشور؟",
+      "editPost": "تعديل المنشور",
+      "tipNotFound": "لم يتم العثور على النصيحة"
+    },
+    "missingPetDetails": {
+      "no": "لا",
+      "yes": "نعم",
+      "deletePost": "حذف المنشور",
+      "deletePostPrompt": "حذف المنشور؟",
+      "deletePostContent": "لا يمكن التراجع عن هذا الإجراء. هل أنت متأكد أنك تريد حذف هذا المنشور؟",
+      "editPost": "تعديل المنشور",
+      "isPetHome": "هل عاد {petName} إلى المنزل؟",
+      "notSureStillNotifyParent": "لست متأكدًا، ولكن أبلغ المالك",
+      "contactPetOwner": "التواصل مع مالك الحيوان الأليف",
+      "iFoundThisPooch": "لقد وجدت هذا الكلب",
+      "petNotFound": "لم يتم العثور على الحيوان الأليف",
+      "selectLocationOfThePet": "حدد موقع الحيوان الأليف",
+      "addNoteAboutPet": "يرجى إضافة ملاحظة حول حالة الحيوان الأليف أو أي معلومات أخرى ذات صلة لمشاركتها مع مالك الحيوان",
+      "selectAddressWherePetWasLocated": "يرجى تحديد العنوان الذي تم العثور فيه على الحيوان الأليف"
+    },
+    "foundPetDetails": {
+      "contactPetParent": "التواصل مع مالك الحيوان الأليف",
+      "petNotFound": "لم يتم العثور على الحيوان الأليف",
+      "happyUpdate": "تحديث سعيد!",
+      "petFoundMessage": "تم العثور على {petName} بأمان بواسطة {finderName} وهو الآن في رعاية محبة."
+    },
+    "missingVerifyBiometric": {
+      "title": "التحقق عبر القياسات الحيوية",
+      "openCamera": "فتح الكاميرا",
+      "retake": "إعادة الالتقاط",
+      "continue": "متابعة",
+      "someErrorOccurred": "حدث خطأ ما",
+      "errorPrefix": "خطأ:"
+    },
+    "addPetFound": {
+      "title": "إضافة حيوان أليف تم العثور عليه يدويًا",
+      "selectPetType": "اختر نوع الحيوان الأليف",
+      "selectPetGender": "اختر جنس الحيوان الأليف",
+      "submit": "إرسال",
+      "dog": "كلب",
+      "cat": "قطة",
+      "male": "ذكر",
+      "female": "أنثى"
+    },
+    "communityTabTest": {
+      "title": "المجتمع",
+      "discover": "اكتشف",
+      "tipsAndInfo": "النصائح والمعلومات",
+      "events": "الفعاليات",
+      "missingPooch": "كلب مفقود",
+      "foundPooch": "كلب تم العثور عليه",
+      "myChats": "دردشاتي",
+      "petShelters": "ملاجئ الحيوانات الأليفة"
+    },
+    "communityTabScreen": {
+      "title": "المجتمع",
+      "tipsAndGuides": "النصائح والإرشادات",
+      "events": "الفعاليات",
+      "reportMissingPet": "الإبلاغ عن حيوان أليف مفقود",
+      "reportFoundPet": "الإبلاغ عن حيوان أليف تم العثور عليه",
+      "chats": "الدردشات",
+      "reportALostPet": "الإبلاغ عن حيوان أليف مفقود",
+      "reportNow": "أبلغ الآن",
+      "reportDescription": "ساعد المجتمع في العثور على كلبك وإعادته إلى المنزل بأمان."
+    },
+    "allCommunityTipsGuideListScreen": {
+      "title": "جميع النصائح والإرشادات"
+    },
+    "allMissingPoochListScreen": {
+      "title": "بلاغات الكلاب المفقودة",
+      "matchingPetsFound": "الحيوانات الأليفة المفقودة التالية تطابق اختياراتك",
+      "noMatchingPetsFound": "لم يتم العثور على حيوانات أليفة مفقودة مطابقة"
+    },
+    "allFoundPoochListScreen": {
+      "title": "الحيوانات الأليفة التي تم العثور عليها"
+    },
+    "allCommunityEventsListScreen": {
+      "title": "الفعاليات"
+    },
+    "poochPetShelterListScreen": {
+      "title": "ملاجئ الحيوانات الأليفة"
+    },
+    "poochParentChatListScreen": {
+      "title": "دردشاتي"
+    },
+    "poochParentChatScreen": {
+      "initialQuestion": "مرحبًا! هل يمكنك إخباري عن الفعالية التي نظمتها؟",
+      "initialReply": "بالتأكيد! كانت فعالية اجتماعية وتبني للحيوانات الأليفة.",
+      "startTyping": "ابدأ الكتابة..."
+    },
+    "myPostedAllScreen": {
+      "myTipsAndGuide": "نصائحي وإرشاداتي",
+      "myEvents": "فعالياتي",
+      "reportALostPet": "الإبلاغ عن حيوان أليف مفقود",
+      "reportNow": "أبلغ الآن",
+      "reportDescription": "ساعد المجتمع في العثور على كلبك وإعادته إلى المنزل بأمان."
+    },
+    "myPostTipsCard": {
+      "title": "النصائح والإرشادات"
+    },
+    "myPostEventCard": {
+      "title": "الفعاليات"
+    },
+    "myPostedEventsScreen": {
+      "selectCategory": "اختر الفئة"
+    },
+    "myPostedMissingPetsScreen": {
+      "selectCategory": "اختر الفئة"
+    },
+    "myPostedFoundPetsScreen": {
+      "selectCategory": "اختر الفئة"
+    },
+    "myPostedTipsGuideScreen": {
+      "selectCategory": "اختر الفئة"
+    },
+    "communityHeaderCard": {
+      "happyUpdate": "تحديث سعيد!"
+    },
+    "loadingDataError": "حدث خطأ أثناء تحميل البيانات.",
+    "missingBiometricPetFoundScreen": {
+      "contactPetParent": "التواصل مع مالك الحيوان الأليف",
+      "title": "تطابق!",
+      "subtitle": "هذا الحيوان الأليف يطابق ملفًا لحيوان مفقود. تم التحقق من الهوية باستخدام القياسات الحيوية."
+    },
+    "categorySelector": {
+      "all": "الكل"
+    },
+    "confirmActionCard": {
+      "disclaimerPrefix": "بتقديم هذه النصيحة، فإنك توافق على ",
+      "termsAndConditions": "الشروط والأحكام",
+      "and": " و ",
+      "communityGuidelines": "إرشادات المجتمع",
+      "period": "."
+    }
   }
 }

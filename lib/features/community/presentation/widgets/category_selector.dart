@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:poochcare/core/theme/app_colors.dart';
 import 'package:poochcare/core/theme/app_size.dart';
@@ -44,7 +45,7 @@ class _CategorySelectorState extends State<CategorySelector> {
   void _initializeCategories() {
     // Add "All" at the beginning
     allCategories = [
-      const TipsCategoryModel(id: 'all', name: 'All'),
+      TipsCategoryModel(id: 'all', name: 'community.categorySelector.all'.tr()),
       ...widget.categories,
     ];
 

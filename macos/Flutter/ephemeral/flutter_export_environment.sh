@@ -1,7 +1,7 @@
 #!/bin/sh
 # This is a generated file; do not edit or check into version control.
-export "FLUTTER_ROOT=/Users/suryakant/fvm/versions/3.41.0"
-export "FLUTTER_APPLICATION_PATH=/Users/suryakant/Desktop/suryakant/Development/DigitalSalt/PoochPetCare/Code/PoochCare"
+export "FLUTTER_ROOT=C:\src\flutter_3.41.0"
+export "FLUTTER_APPLICATION_PATH=C:\Users\Digital Salt\Desktop\Projects\Flutter\pooch-flutter-native"
 export "COCOAPODS_PARALLEL_CODE_SIGN=true"
 export "FLUTTER_BUILD_DIR=build"
 export "FLUTTER_BUILD_NAME=1.0.0"

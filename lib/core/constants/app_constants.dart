@@ -1,0 +1,1 @@
+enum CommentCountStatus { increment, decrement }

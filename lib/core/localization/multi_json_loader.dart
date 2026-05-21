@@ -14,6 +14,7 @@ class MultiJsonLoader extends AssetLoader {
     'settings',
     'community',
     'cart',
+    'expense',
   ];
 
   @override

@@ -374,6 +374,7 @@ class _ClinicDetailsScreenState extends State<ClinicDetailsScreen> {
       return;
     }
 
+    // ignore: deprecated_member_use
     await Share.share(shareLines.join('\n'), subject: 'Clinic Details');
   }
 

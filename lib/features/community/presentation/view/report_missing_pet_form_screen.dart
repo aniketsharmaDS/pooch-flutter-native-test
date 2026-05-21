@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 import 'package:auto_route/auto_route.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -218,8 +219,8 @@ class _ReportMissingPetFormState extends State<ReportMissingPetFormScreen> {
   Widget build(BuildContext context) {
     return AppPrimaryScreenContainer(
       title: widget.type == ReportMissingPetFormType.create
-          ? 'Add a Missing pet report'
-          : 'Edit a Missing pet report',
+          ? 'community.reportMissingPetForm.addMissingPetReport'.tr()
+          : 'community.reportMissingPetForm.editMissingPetReport'.tr(),
       child: SafeArea(
         child: Column(
           children: [
@@ -256,16 +257,21 @@ class _ReportMissingPetFormState extends State<ReportMissingPetFormScreen> {
                           AppTextField(
                             floatingFontSize: AppFontSize.fs14,
                             isTextArea: true,
-                            label: 'Add Description',
+                            label:
+                                'community.reportMissingPetForm.addDescription'
+                                    .tr(),
                             controller: descController,
                             height: 160.h,
                             textInputAction: TextInputAction.newline,
-                            optionalText: 'Optional',
+                            optionalText:
+                                'community.reportMissingPetForm.optional'.tr(),
                             maxCount: 150,
                           ),
                           AppSpacing.s20.hBox,
                           AppTextField(
-                            label: 'Select Last Seen date',
+                            label:
+                                'community.reportMissingPetForm.selectLastSeenDate'
+                                    .tr(),
                             controller: _lastSceenDateController,
                             isReadOnly: true,
                             isMandatory: true,
@@ -286,7 +292,9 @@ class _ReportMissingPetFormState extends State<ReportMissingPetFormScreen> {
                           ),
                           AppSpacing.s20.hBox,
                           AppTextField(
-                            label: 'Select Last Seen time',
+                            label:
+                                'community.reportMissingPetForm.selectLastSeenTime'
+                                    .tr(),
                             enabled:
                                 missingDate !=
                                 null, // time can only be picked after date
@@ -312,7 +320,9 @@ class _ReportMissingPetFormState extends State<ReportMissingPetFormScreen> {
                           ),
                           AppSpacing.s20.hBox,
                           AppTextField(
-                            label: 'Add Last Seen Location',
+                            label:
+                                'community.reportMissingPetForm.addLastSeenLocation'
+                                    .tr(),
                             controller: addressController,
                             isReadOnly: true,
                             isMandatory: true,
@@ -324,7 +334,9 @@ class _ReportMissingPetFormState extends State<ReportMissingPetFormScreen> {
                           ),
                           AppSpacing.s20.hBox,
                           AppTextField(
-                            label: 'Add Reward Amount',
+                            label:
+                                'community.reportMissingPetForm.addRewardAmount'
+                                    .tr(),
                             controller: rewardController,
                             keyboardType: TextInputType.number,
                             inputFormatter: [
@@ -344,8 +356,10 @@ class _ReportMissingPetFormState extends State<ReportMissingPetFormScreen> {
                     AppSpacing.s20.hBox,
 
                     /// UPLOAD
-                    const PrimaryWidgetHeader(
-                      title: 'Upload Images or Document',
+                    PrimaryWidgetHeader(
+                      title:
+                          'community.reportMissingPetForm.uploadImagesOrDocument'
+                              .tr(),
                     ),
 
                     Padding(
@@ -353,10 +367,12 @@ class _ReportMissingPetFormState extends State<ReportMissingPetFormScreen> {
                         horizontal: AppSpacing.s16.w,
                       ),
                       child: UploadImageWidget(
-                        buttonText: 'Upload',
+                        buttonText: 'community.reportMissingPetForm.upload'
+                            .tr(),
                         customeSupport:
-                            'Upload medical reports, prescriptions and vaccination certificates.',
-                        maxSizeLabel: 'Max 2MB',
+                            'community.reportMissingPetForm.uploadSupport'.tr(),
+                        maxSizeLabel: 'community.reportMissingPetForm.maxSize'
+                            .tr(),
                         initialUrls: remoteFiles,
                         onFilesChanged: _onFilesChanged,
                         onRemoteChanged: _onRemoteChanged,
@@ -392,7 +408,8 @@ class _ReportMissingPetFormState extends State<ReportMissingPetFormScreen> {
                                 children: [
                                   TextSpan(
                                     text:
-                                        'By submitting this tip, you agree to our ',
+                                        'community.reportMissingPetForm.termsPrefix'
+                                            .tr(),
                                     style: AppTypography.support.copyWith(
                                       color: AppColors.black,
                                       fontSize: AppFontSize.fs10,
@@ -400,7 +417,8 @@ class _ReportMissingPetFormState extends State<ReportMissingPetFormScreen> {
                                   ),
                                   TextSpan(
                                     text:
-                                        'Terms & Conditions and Community Guidelines.',
+                                        'community.reportMissingPetForm.termsSuffix'
+                                            .tr(),
                                     style: AppTypography.support.copyWith(
                                       color: AppColors.black,
                                       decoration: TextDecoration.underline,
@@ -442,8 +460,8 @@ class _ReportMissingPetFormState extends State<ReportMissingPetFormScreen> {
                     AppButton(
                       isLoading: isSubmitting,
                       label: widget.type == ReportMissingPetFormType.edit
-                          ? 'Update'
-                          : 'Submit',
+                          ? 'community.reportMissingPetForm.update'.tr()
+                          : 'community.reportMissingPetForm.submit'.tr(),
                       onPressed: isSubmitEnabled
                           ? () => _createEvent(false)
                           : null,
@@ -640,10 +658,10 @@ class _ReportMissingPetFormState extends State<ReportMissingPetFormScreen> {
       AppDialog.show(
         icon: Lottie.asset(AppIcons.lottie.successful, repeat: false),
         context: context,
-        title: 'Oops! There was an error.',
+        title: 'community.myEventForm.errorTitle'.tr(),
         content: errorMessage,
-        primaryLabel: 'Try Again',
-        secondaryLabel: 'Later',
+        primaryLabel: 'community.reportMissingPetForm.tryAgain'.tr(),
+        secondaryLabel: 'community.reportMissingPetForm.later'.tr(),
         onPrimary: () async {
           // Navigator.of(context).pop();
           _createEvent(isDraft);

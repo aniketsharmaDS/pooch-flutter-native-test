@@ -263,7 +263,8 @@ class _PetMedicalHistoryScreenState extends State<PetMedicalHistoryScreen> {
       initialDateRange: _selectedDateRangeNotifier.value,
       // ignore: avoid_redundant_argument_values
       firstDate: DateTime(now.year - 100, 1, 1),
-      lastDate: DateTime(now.year, now.month, now.day),
+      // ignore: avoid_redundant_argument_values
+      lastDate: DateTime(now.year, now.month + 1, 1),
       currentDate: now,
       onDateConfirmed: (_, dateRange) {
         if (dateRange == null) {

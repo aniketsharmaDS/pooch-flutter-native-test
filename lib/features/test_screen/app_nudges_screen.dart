@@ -144,6 +144,10 @@ class _AppNudgesScreenState extends State<AppNudgesScreen> {
                 SizedBox(height: 12.h),
 
                 PoochSuperOfferNudge(
+                  discountTitle: 'Get 10%',
+                  discountSubText: 'On next 5 purchases.',
+                  price: 'INR 500',
+                  btnTitle: 'Add',
                   onAdd: () {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Pooch Super Add clicked')),

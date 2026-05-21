@@ -276,9 +276,7 @@ class _HomeTabScreenState extends State<HomeTabScreen> {
                                   // context.router.push(const GetHelpRoute());
                                 } else if (index == 1) {
                                   // context.router.push(const VetSearchRoute());
-                                  context.router.push(
-                                    const FindVetClinicsRoute(),
-                                  );
+                                  context.router.push(FindVetClinicsRoute());
                                 } else if (index == 2) {
                                   // context.router.push(const HelpAndSupportRoute());
                                 }

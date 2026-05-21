@@ -1,69 +1,37 @@
 reviews:
   request_changes: false
-  auto_review: true
+
+  auto_review:
+    enabled: true
+    drafts: false
+
   auto_approve_small_prs: false
-  review_status: auto
+  review_status: true
   auto_label: true
 
-language: en
-
-ignore_files:
-  # Build and dependency files
-  - build/
-  - .dart_tool/
-  - pubspec.lock
-  - .flutter-plugins-dependencies
-
-  # Generated files
-  - .metadata
-  - .DS_Store
-  - "**/*.freezed.dart"
-  - "**/*.g.dart"
-  - "**/*.config.dart"
-  - "**/*.part.dart"
-
-  # Platform-specific directories
-  - android/
-  - ios/
-  - macos/
-  - web/
-
-  # Assets and media
-  - assets/
-  - assets/fonts/
-  - assets/icons/
-  - assets/images/
-  - assets/lottie/
-  - assets/translations/
-  - assets/videos/
-
-  # Test files
-  - test/
-  - "**/*_test.dart"
-
-  # Documentation and config
-  - docs/
-  - "*.md"
-  - .env.example
-  - .fvmrc
-  - devtools_options.yaml
-  - analysis_options.yaml
-  - ".github/workflows/"
-
-  # IDE and system files
-  - ".vscode/"
-  - ".idea/"
-  - "*.iml"
-  - ".gradle/"
-
-  # Generated locale files
-  - "lib/core/localization/generated_*"
-  - "lib/l10n/"
-
-  # Less critical feature directories (reduce review scope)
-  - "lib/features/community/presentation/view/**"
-  - "lib/features/ecommerce/presentation/widgets/buy_pet/**"
-  - "lib/features/store_profile/**"
-  - "lib/features/my_pets/presentation/widgets/**"
-
-max_files_to_review: 150
+  path_filters:
+    - "!build/**"
+    - "!.dart_tool/**"
+    - "!pubspec.lock"
+    - "!.flutter-plugins-dependencies"
+    - "!.metadata"
+    - "!**/*.freezed.dart"
+    - "!**/*.g.dart"
+    - "!**/*.config.dart"
+    - "!**/*.part.dart"
+    - "!android/**"
+    - "!ios/**"
+    - "!macos/**"
+    - "!web/**"
+    - "!assets/**"
+    - "!test/**"
+    - "!**/*_test.dart"
+    - "!docs/**"
+    - "!**/*.md"
+    - "!.github/workflows/**"
+    - "!lib/l10n/**"
+    - "!lib/core/localization/generated_*"
+    - "!lib/features/community/presentation/view/**"
+    - "!lib/features/ecommerce/presentation/widgets/buy_pet/**"
+    - "!lib/features/store_profile/**"
+    - "!lib/features/my_pets/presentation/widgets/**"

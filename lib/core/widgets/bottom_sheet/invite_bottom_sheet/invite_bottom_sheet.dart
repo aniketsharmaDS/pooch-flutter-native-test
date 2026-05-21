@@ -5,8 +5,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:poochcare/core/di/service_locator.dart';
 import 'package:poochcare/core/services/toast_service.dart';
 import 'package:poochcare/core/store/auth/auth_store_bloc.dart';
-import 'package:poochcare/core/theme/app_colors.dart';
-import 'package:poochcare/core/theme/app_radius_size.dart';
 import 'package:poochcare/core/widgets/bottom_sheet/app_bottom_sheet.dart';
 import 'package:poochcare/core/widgets/buttons/app_button.dart';
 import 'package:poochcare/core/widgets/cards/app_notice_card.dart';
@@ -397,29 +395,9 @@ class InviteBottomSheet extends StatelessWidget {
               });
             }
 
-            return parentGroupsData.length == 1
-                ? Container(
-                    alignment: Alignment.centerLeft,
-                    height: 56.h,
-                    width: double.maxFinite,
-                    padding: EdgeInsets.only(left: 20.w),
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: AppColors.textFieldBorderDefault,
-                      ),
-                      borderRadius: BorderRadius.circular(AppRadiusSize.r16),
-                    ),
-                    child: AppText.h4(
-                      parentGroupsData.first.name,
-                      color: AppColors.p4_300,
-                    ),
-                  )
-                : AppDropdowns(
-                    hint: AppText.bodyM(
-                      groups.isEmpty
-                          ? 'No parent group available'
-                          : 'Select Parent Group',
-                    ),
+            return parentGroupsData.length > 1
+                ? AppDropdowns(
+                    hint: AppText.bodyM('Select Parent Group'),
                     disabledHint: AppText.bodyM('No parent group available'),
                     onChanged: (value) {
                       if (inviteType != InviteType.parent) {
@@ -436,7 +414,8 @@ class InviteBottomSheet extends StatelessWidget {
                           ),
                         )
                         .toList(),
-                  );
+                  )
+                : const SizedBox.shrink();
           },
         ),
         SizedBox(height: 18.h),

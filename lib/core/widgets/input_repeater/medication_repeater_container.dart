@@ -1,11 +1,12 @@
-// ignore_for_file: inference_failure_on_function_return_type
-
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:poochcare/core/theme/app_colors.dart';
 import 'package:poochcare/core/theme/app_icons.dart';
 import 'package:poochcare/core/theme/app_size.dart';
 import 'package:poochcare/core/theme/app_spacing.dart';
 import 'package:poochcare/core/widgets/buttons/app_circle_button.dart';
+import 'package:poochcare/core/widgets/dropdowns/app_dropdowns.dart';
+import 'package:poochcare/core/widgets/texts/app_text.dart';
 import 'package:poochcare/core/widgets/texts/app_text_field.dart';
 
 /// =======================
@@ -57,6 +58,8 @@ class _MedicationEntry {
   final TextEditingController instructionsController;
 
   String? form;
+  final ValueNotifier<String?> formNotifier = ValueNotifier<String?>(null);
+  final ValueNotifier<List<String>> timingNotifier = ValueNotifier([]);
   List<String> timing = [];
 
   _MedicationEntry({
@@ -74,6 +77,8 @@ class _MedicationEntry {
     strengthController.dispose();
     frequencyController.dispose();
     instructionsController.dispose();
+    formNotifier.dispose();
+    timingNotifier.dispose();
   }
 }
 
@@ -221,14 +226,16 @@ class _MedicationRow extends StatelessWidget {
           children: [
             Expanded(
               child: AppTextField(
+                isMandatory: true,
                 label: 'Medication Name',
                 controller: entry.nameController,
               ),
             ),
-            SizedBox(width: AppSize.cs8.csh),
+            SizedBox(width: AppSize.cs8.csw),
             SizedBox(
               width: AppSize.cs90.csw,
               child: AppTextField(
+                isMandatory: true,
                 label: 'Days',
                 controller: entry.daysController,
                 keyboardType: TextInputType.number,
@@ -243,11 +250,19 @@ class _MedicationRow extends StatelessWidget {
         Row(
           children: [
             Expanded(
-              child: _SimpleDropdown(
-                items: forms,
-                value: entry.form,
-                hint: 'Form',
+              child: AppDropdowns<String>(
+                isExpanded: true,
+                items: forms.map((e) {
+                  return DropdownItem<String>(value: e, child: Text(e));
+                }).toList(),
+                valueListenable: entry.formNotifier,
+                isMandatory: true,
+                hint: AppText.bodyM(
+                  'Form',
+                  color: AppColors.textFieldLabelDefault,
+                ),
                 onChanged: (v) {
+                  entry.formNotifier.value = v;
                   entry.form = v;
                   onChanged();
                 },
@@ -256,6 +271,7 @@ class _MedicationRow extends StatelessWidget {
             SizedBox(width: AppSize.cs8.csw),
             Expanded(
               child: AppTextField(
+                isMandatory: true,
                 label: 'Strength',
                 controller: entry.strengthController,
               ),
@@ -270,17 +286,77 @@ class _MedicationRow extends StatelessWidget {
           children: [
             Expanded(
               child: AppTextField(
+                isMandatory: true,
                 label: 'Frequency',
                 controller: entry.frequencyController,
               ),
             ),
             SizedBox(width: AppSize.cs8.csw),
             Expanded(
-              child: _SimpleMultiSelect(
-                items: timings,
-                selected: entry.timing,
-                onChanged: (v) {
-                  entry.timing = v;
+              child: AppDropdowns<String>(
+                isExpanded: true,
+
+                multiValueListenable: entry.timingNotifier,
+
+                items: timings.map((e) {
+                  return DropdownItem<String>(
+                    value: e,
+
+                    closeOnTap: false,
+
+                    child: ValueListenableBuilder<List<String>>(
+                      valueListenable: entry.timingNotifier,
+                      builder: (_, selected, _) {
+                        final isSelected = selected.contains(e);
+
+                        return Row(
+                          children: [
+                            Icon(
+                              isSelected
+                                  ? Icons.check_box
+                                  : Icons.check_box_outline_blank,
+                            ),
+
+                            const SizedBox(width: 8),
+
+                            Text(e),
+                          ],
+                        );
+                      },
+                    ),
+                  );
+                }).toList(),
+                isMandatory: true,
+                hint: AppText.bodyM(
+                  'Select Timing',
+                  color: AppColors.textFieldLabelDefault,
+                ),
+
+                selectedItemBuilder: (context) {
+                  return timings.map((e) {
+                    return ValueListenableBuilder<List<String>>(
+                      valueListenable: entry.timingNotifier,
+                      builder: (_, selected, _) {
+                        return Text(
+                          selected.isEmpty
+                              ? 'Select Timing'
+                              : selected.join(', '),
+                          overflow: TextOverflow.ellipsis,
+                        );
+                      },
+                    );
+                  }).toList();
+                },
+
+                onChanged: (value) {
+                  final current = List<String>.from(entry.timingNotifier.value);
+                  if (current.contains(value)) {
+                    current.remove(value);
+                  } else {
+                    current.add(value!);
+                  }
+                  entry.timingNotifier.value = current;
+                  entry.timing = current;
                   onChanged();
                 },
               ),
@@ -295,6 +371,7 @@ class _MedicationRow extends StatelessWidget {
           children: [
             Expanded(
               child: AppTextField(
+                isMandatory: true,
                 label: 'Instructions',
                 controller: entry.instructionsController,
               ),
@@ -311,171 +388,6 @@ class _MedicationRow extends StatelessWidget {
           ],
         ),
       ],
-    );
-  }
-}
-
-/// =======================
-/// SIMPLE SAFE DROPDOWN (NO CRASH)
-/// =======================
-class _SimpleDropdown extends StatelessWidget {
-  final List<String> items;
-  final String? value;
-  final String hint;
-
-  final Function(String?) onChanged;
-
-  const _SimpleDropdown({
-    required this.items,
-    required this.value,
-    required this.hint,
-    required this.onChanged,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return DropdownButtonFormField<String>(
-      // ignore: deprecated_member_use
-      value: value,
-      decoration: const InputDecoration(labelText: 'Form'),
-      items: items
-          .map((e) => DropdownMenuItem(value: e, child: Text(e)))
-          .toList(),
-      onChanged: onChanged,
-    );
-  }
-}
-
-/// =======================
-/// SIMPLE MULTI SELECT (SAFE PLACEHOLDER)
-/// =======================
-class _SimpleMultiSelect extends StatefulWidget {
-  final List<String> items;
-  final List<String> selected;
-  final Function(List<String>) onChanged;
-
-  const _SimpleMultiSelect({
-    // ignore: unused_element_parameter
-    super.key,
-    required this.items,
-    required this.selected,
-    required this.onChanged,
-  });
-
-  @override
-  State<_SimpleMultiSelect> createState() => _SimpleMultiSelectState();
-}
-
-class _SimpleMultiSelectState extends State<_SimpleMultiSelect> {
-  final LayerLink _layerLink = LayerLink();
-  OverlayEntry? _overlayEntry;
-  bool isOpen = false;
-
-  void _toggleItem(String value) {
-    final updated = List<String>.from(widget.selected);
-
-    if (updated.contains(value)) {
-      updated.remove(value);
-    } else {
-      updated.add(value);
-    }
-
-    widget.onChanged(updated);
-
-    /// 🔥 IMPORTANT FIX: force overlay rebuild
-    _overlayEntry?.markNeedsBuild();
-  }
-
-  void _openMenu() {
-    _overlayEntry = _createOverlay();
-    Overlay.of(context).insert(_overlayEntry!);
-    setState(() => isOpen = true);
-  }
-
-  void _closeMenu() {
-    _overlayEntry?.remove();
-    _overlayEntry = null;
-    setState(() => isOpen = false);
-  }
-
-  OverlayEntry _createOverlay() {
-    RenderBox box = context.findRenderObject() as RenderBox;
-    final size = box.size;
-    final offset = box.localToGlobal(Offset.zero);
-
-    return OverlayEntry(
-      builder: (context) {
-        return GestureDetector(
-          onTap: _closeMenu,
-          behavior: HitTestBehavior.translucent,
-          child: Stack(
-            children: [
-              Positioned(
-                left: offset.dx,
-                top: offset.dy + size.height + 5,
-                width: size.width,
-                child: Material(
-                  elevation: 5,
-                  borderRadius: BorderRadius.circular(12),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: widget.items.map((e) {
-                      final selected = widget.selected.contains(e);
-
-                      return ListTile(
-                        dense: true,
-                        onTap: () {
-                          _toggleItem(e);
-                        },
-                        leading: Icon(
-                          selected
-                              ? Icons.check_box
-                              : Icons.check_box_outline_blank,
-                        ),
-                        title: Text(e),
-                      );
-                    }).toList(),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return CompositedTransformTarget(
-      link: _layerLink,
-      child: GestureDetector(
-        onTap: isOpen ? _closeMenu : _openMenu,
-        child: Container(
-          height: 56,
-          padding: const EdgeInsets.symmetric(horizontal: 12),
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.grey),
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(12),
-          ),
-          alignment: Alignment.centerLeft,
-          child: Row(
-            children: [
-              Expanded(
-                child: Text(
-                  widget.selected.isEmpty
-                      ? 'Select Timing'
-                      : widget.selected.join(', '),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-              const Icon(Icons.arrow_drop_down),
-            ],
-          ),
-        ),
-      ),
     );
   }
 }

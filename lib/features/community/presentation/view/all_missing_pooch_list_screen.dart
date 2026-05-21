@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:auto_route/auto_route.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:poochcare/core/di/service_locator.dart';
@@ -180,7 +181,7 @@ class _AllMissingPoochListScreenState extends State<AllMissingPoochListScreen> {
         _handleBack();
       },
       child: AppPrimaryScreenContainer(
-        title: 'Missing pooch reports',
+        title: 'community.allMissingPoochListScreen.title'.tr(),
         onBack: _handleBack,
         actions: [
           AppCircleButton(
@@ -258,8 +259,10 @@ class _AllMissingPoochListScreenState extends State<AllMissingPoochListScreen> {
                       ),
                       child: AppText.h1(
                         state.items.isNotEmpty
-                            ? 'The following missing pets match your selections'
-                            : 'No matching missing pets found',
+                            ? 'community.allMissingPoochListScreen.matchingPetsFound'
+                                  .tr()
+                            : 'community.allMissingPoochListScreen.noMatchingPetsFound'
+                                  .tr(),
                         fontSize: AppFontSize.fs16,
                         style: const TextStyle(height: 1.2),
                         maxLines: 2,
@@ -281,7 +284,7 @@ class _AllMissingPoochListScreenState extends State<AllMissingPoochListScreen> {
                       hasError: state.errorMessage != null,
                       error:
                           state.errorMessage ??
-                          'An error occurred while loading data.',
+                          'community.loadingDataError'.tr(),
                       onLoadMore: _onLoadMore,
                       onRefresh: _onRefresh,
                       onRetry: () {

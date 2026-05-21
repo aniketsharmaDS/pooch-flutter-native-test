@@ -57,8 +57,9 @@ class WishlistBloc extends Bloc<WishlistEvent, WishlistState> {
         emit(
           state.copyWith(
             wishlistIds: updatedIds,
-            wishlistCount: (state.wishlistCount - 1), // ✅ restore
-            actionMessage: 'Failed to add to wishlist', // ✅ correct message
+            wishlistCount: (state.wishlistCount + 1), // ✅ restore
+            actionMessage:
+                'Failed to remove from wishlist', // ✅ correct message
             actionId: state.actionId + 1,
           ),
         );
@@ -83,9 +84,8 @@ class WishlistBloc extends Bloc<WishlistEvent, WishlistState> {
         emit(
           state.copyWith(
             wishlistIds: updatedIds,
-            wishlistCount: state.wishlistCount + 1, // ✅ restore
-            actionMessage:
-                'Failed to remove from wishlist', // ✅ correct message
+            wishlistCount: state.wishlistCount - 1, // ✅ restore
+            actionMessage: 'Failed to add to wishlist', // ✅ correct message
             actionId: state.actionId + 1,
           ),
         );

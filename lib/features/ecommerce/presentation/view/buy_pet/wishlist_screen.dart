@@ -66,7 +66,6 @@ class _WishlistScreenState extends State<WishlistScreen> {
                     return AppTextField(
                       label: 'Search in wishlist',
                       controller: _searchController,
-                      enabled: state.products.isNotEmpty,
                       onChanged: (value) {
                         if (_debounce?.isActive ?? false) _debounce!.cancel();
 

@@ -1,3 +1,5 @@
+import 'package:poochcare/core/utils/api_response_json_parser.dart';
+
 class ProductModel {
   final String id;
   final String name;
@@ -23,8 +25,8 @@ class ProductModel {
     return ProductModel(
       id: _readString(map['id']),
       name: _readString(map['name']),
-      price: _readDouble(map['price']),
-      finalDiscountedPrice: _readNullableDouble(
+      price: ApiResponseJsonParser.readDouble(map['price']),
+      finalDiscountedPrice: ApiResponseJsonParser.readNullableDouble(
         map['finalDiscountedPrice'] ?? map['final_discounted_price'],
       ),
       inWishlist: _readBool(map['inWishlist'] ?? map['in_wishlist']),
@@ -113,21 +115,6 @@ int _readInt(dynamic value) {
   if (value is num) return value.toInt();
   if (value is String) return int.tryParse(value.trim()) ?? 0;
   return 0;
-}
-
-double _readDouble(dynamic value) {
-  if (value is double) return value;
-  if (value is num) return value.toDouble();
-  if (value is String) return double.tryParse(value.trim()) ?? 0.0;
-  return 0.0;
-}
-
-double? _readNullableDouble(dynamic value) {
-  if (value == null) return null;
-  if (value is double) return value;
-  if (value is num) return value.toDouble();
-  if (value is String) return double.tryParse(value.trim());
-  return null;
 }
 
 bool _readBool(dynamic value) {

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:auto_route/auto_route.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -72,80 +73,81 @@ class _MissingVerifyBiometricScreenState
       //   // _handleBack();
       // },
       child: AppPrimaryScreenContainer(
-        title: 'Verify via Biometrics',
+        title: 'community.missingVerifyBiometric.title'.tr(),
         backgroundColor: AppColors.white,
         // onBack: _handleBack,
         child: SafeArea(
-          child:
-              BlocBuilder<MyMissingPetsBloc, PaginationState<MissingPetModel>>(
-                builder: (context, state) {
-                  return Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 7.w),
-                    child: Column(
-                      children: [
-                        Expanded(
-                          child: Stack(
-                            fit: StackFit.expand,
-                            children: [
-                              ClipRRect(
-                                borderRadius: BorderRadiusGeometry.circular(
-                                  16.r,
-                                ),
-                                child: localFile != null
-                                    ? Image.file(localFile!, fit: BoxFit.cover)
-                                    : AppIcon(
-                                        fit: BoxFit.cover,
-                                        AppIcons
-                                            .png
-                                            .verifyBiometrics
-                                            .verifyBiometricsPet,
-                                      ),
+          child: BlocBuilder<MyMissingPetsBloc, PaginationState<MissingPetModel>>(
+            builder: (context, state) {
+              return Padding(
+                padding: EdgeInsets.symmetric(horizontal: 7.w),
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: Stack(
+                        fit: StackFit.expand,
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadiusGeometry.circular(16.r),
+                            child: localFile != null
+                                ? Image.file(localFile!, fit: BoxFit.cover)
+                                : AppIcon(
+                                    fit: BoxFit.cover,
+                                    AppIcons
+                                        .png
+                                        .verifyBiometrics
+                                        .verifyBiometricsPet,
+                                  ),
+                          ),
+                          if (localFile == null)
+                            const Center(
+                              child: FractionallySizedBox(
+                                widthFactor: 0.75,
+                                heightFactor: 0.5,
+                                child: CaptureBox(),
                               ),
-                              if (localFile == null)
-                                const Center(
-                                  child: FractionallySizedBox(
-                                    widthFactor: 0.75,
-                                    heightFactor: 0.5,
-                                    child: CaptureBox(),
-                                  ),
-                                ),
-                            ],
-                          ),
-                        ),
-                        if (localFile == null)
-                          Padding(
-                            padding: const EdgeInsets.all(15.0),
-                            child: AppButton(
-                              label: 'Open Camera',
-                              onPressed: _pickImage,
                             ),
-                          )
-                        else
-                          Padding(
-                            padding: const EdgeInsets.all(15.0),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: AppButton(
-                                    label: 'Retake',
-                                    onPressed: _pickImage,
-                                  ),
-                                ),
-                                SizedBox(width: 12.w),
-                                Expanded(
-                                  child: AppButton(
-                                    label: 'Continue',
-                                    onPressed: verfiyBiometricAndContinue,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                      ],
+                        ],
+                      ),
                     ),
-                  );
-                },
-              ),
+                    if (localFile == null)
+                      Padding(
+                        padding: const EdgeInsets.all(15.0),
+                        child: AppButton(
+                          label: 'community.missingVerifyBiometric.openCamera'
+                              .tr(),
+                          onPressed: _pickImage,
+                        ),
+                      )
+                    else
+                      Padding(
+                        padding: const EdgeInsets.all(15.0),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: AppButton(
+                                label: 'community.missingVerifyBiometric.retake'
+                                    .tr(),
+                                onPressed: _pickImage,
+                              ),
+                            ),
+                            SizedBox(width: 12.w),
+                            Expanded(
+                              child: AppButton(
+                                label:
+                                    'community.missingVerifyBiometric.continue'
+                                        .tr(),
+                                onPressed: verfiyBiometricAndContinue,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                  ],
+                ),
+              );
+            },
+          ),
         ),
       ),
     );
@@ -181,17 +183,27 @@ class _MissingVerifyBiometricScreenState
             MissingBiometricPetNotFoundRoute(reportId: widget.reportId),
           );
         } else {
-          CustomSnackbar.show('Some error occurred', SnackbarType.error);
+          CustomSnackbar.show(
+            'community.missingVerifyBiometric.someErrorOccurred'.tr(),
+            SnackbarType.error,
+          );
         }
       } else {
-        CustomSnackbar.show('Some error occurred', SnackbarType.error);
+        CustomSnackbar.show(
+          'community.missingVerifyBiometric.someErrorOccurred'.tr(),
+          SnackbarType.error,
+        );
       }
     } catch (e) {
       if (!mounted) return;
       Navigator.pop(context);
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Error: $e')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            '${'community.missingVerifyBiometric.errorPrefix'.tr()} $e',
+          ),
+        ),
+      );
     }
   }
 }

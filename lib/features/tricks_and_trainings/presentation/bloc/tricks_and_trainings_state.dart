@@ -19,6 +19,8 @@ class TricksAndTrainingsState {
 
   final List<TricksAndTrainingUIModel> relatedContent;
 
+  final Map<String, List<TricksAndTrainingUIModel>> relatedContentCache;
+
   final bool isMoreLikeThisLoading;
 
   final bool isRelatedContentLoading;
@@ -58,6 +60,7 @@ class TricksAndTrainingsState {
     this.isDetailsLoading = false,
     this.moreLikeThis = const [],
     this.relatedContent = const [],
+    this.relatedContentCache = const {},
     this.isMoreLikeThisLoading = false,
     this.isRelatedContentLoading = false,
     this.selectedRelatedTab = '',
@@ -95,6 +98,8 @@ class TricksAndTrainingsState {
     List<TricksAndTrainingUIModel>? moreLikeThis,
 
     List<TricksAndTrainingUIModel>? relatedContent,
+
+    Map<String, List<TricksAndTrainingUIModel>>? relatedContentCache,
 
     bool? isMoreLikeThisLoading,
 
@@ -138,6 +143,8 @@ class TricksAndTrainingsState {
       moreLikeThis: moreLikeThis ?? this.moreLikeThis,
 
       relatedContent: relatedContent ?? this.relatedContent,
+
+      relatedContentCache: relatedContentCache ?? this.relatedContentCache,
 
       isMoreLikeThisLoading:
           isMoreLikeThisLoading ?? this.isMoreLikeThisLoading,

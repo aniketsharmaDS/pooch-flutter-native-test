@@ -33,7 +33,6 @@ import 'package:poochcare/features/insight/presentation/bloc/subscribed_clinics_
 import 'package:poochcare/features/medical_history/presentation/bloc/medical_history_bloc.dart';
 import 'package:poochcare/features/settings/presentation/bloc/settings_bloc.dart';
 import 'package:poochcare/features/settings/presentation/bloc/settings_event.dart';
-import 'package:poochcare/features/settings/presentation/bloc/settings_state.dart';
 import 'package:poochcare/features/user_profile/presentation/bloc/user_profile_bloc.dart';
 import 'package:poochcare/features/user_profile/presentation/bloc/user_profile_state.dart';
 import 'package:poochcare/main.dart';
@@ -84,6 +83,7 @@ class PoochCareApp extends StatelessWidget {
         BlocProvider<ProductsStoreBloc>.value(
           value: getIt<ProductsStoreBloc>(),
         ),
+
         // BlocProvider<CommunityStoreBloc>.value(
         //   value: getIt<CommunityStoreBloc>(),
         // ),
@@ -105,14 +105,14 @@ class PoochCareApp extends StatelessWidget {
               // Badge becomes correct
               // context.read<WishlistBloc>().add(FetchWishlistCountEvent());
 
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                final authState = context.read<AuthStoreBloc>().state;
+              // WidgetsBinding.instance.addPostFrameCallback((_) {
+              //   final authState = context.read<AuthStoreBloc>().state;
 
-                if (authState.isAuthenticated) {
-                  context.read<WishlistBloc>().add(FetchWishlistCountEvent());
-                  context.read<CartBloc>().add(const FetchCartCountEvent());
-                }
-              });
+              //   if (authState.isAuthenticated) {
+              //     context.read<WishlistBloc>().add(FetchWishlistCountEvent());
+              //     context.read<CartBloc>().add(const FetchCartCountEvent());
+              //   }
+              // });
               return MultiBlocListener(
                 listeners: [
                   BlocListener<AuthStoreBloc, AuthStoreState>(
@@ -132,12 +132,8 @@ class PoochCareApp extends StatelessWidget {
 
                         appRouter.replaceAll([const LoginRoute()]);
                       } else {
-                        // 🔥 NEW USER → FETCH COUNT
                         context.read<WishlistBloc>().add(
                           FetchWishlistCountEvent(),
-                        );
-                        context.read<CartBloc>().add(
-                          const FetchCartCountEvent(),
                         );
                       }
                     },
@@ -162,6 +158,7 @@ class PoochCareApp extends StatelessWidget {
                       }
 
                       await context.setLocale(Locale(language));
+                      Intl.defaultLocale = language; // ADD THIS
 
                       if (!context.mounted) {
                         return;
@@ -186,38 +183,35 @@ class PoochCareApp extends StatelessWidget {
                     },
                   ),
                 ],
-                child: BlocBuilder<SettingsBloc, SettingsState>(
-                  builder: (context, settingsState) {
-                    return MaterialApp.router(
-                      scaffoldMessengerKey: scaffoldMessengerKey,
-                      title: 'Pooch',
-                      debugShowCheckedModeBanner: false,
-                      theme: AppTheme.light(),
-                      darkTheme: AppTheme.dark(),
-                      themeMode: themeMode,
-                      locale: context.locale,
-                      supportedLocales: context.supportedLocales,
-                      localizationsDelegates: context.localizationDelegates,
-                      // home: const CouponsScreen(),
-                      routerConfig: appRouter.config(),
-                      // This is Old One before TextScaler
-                      // builder: (context, child) =>
-                      //     GlobalLoaderOverlay(child: child!),
-                      //
-                      // This is New One with TextScaler added to hadle the font scaling issue.
-                      // We are clamping the text scaler to a max of 1.2 to prevent the UI from breaking.
-                      builder: (context, child) {
-                        final mq = MediaQuery.of(context);
-                        final scaler = mq.textScaler;
-                        final clampedScaler = scaler.clamp(
-                          minScaleFactor: 0.95,
-                          maxScaleFactor: 1.2,
-                        );
-                        return MediaQuery(
-                          data: mq.copyWith(textScaler: clampedScaler),
-                          child: GlobalLoaderOverlay(child: child!),
-                        );
-                      },
+                child: MaterialApp.router(
+                  scaffoldMessengerKey: scaffoldMessengerKey,
+                  title: 'Pooch',
+                  debugShowCheckedModeBanner: false,
+                  theme: AppTheme.light(),
+                  darkTheme: AppTheme.dark(),
+                  themeMode: themeMode,
+                  locale: context.locale,
+                  supportedLocales: context.supportedLocales,
+                  localizationsDelegates: context.localizationDelegates,
+                  // home: const CouponsScreen(),
+                  routerConfig: appRouter.config(),
+                  // This is Old One before TextScaler
+                  // builder: (context, child) =>
+                  //     GlobalLoaderOverlay(child: child!),
+                  //
+                  // This is New One with TextScaler added to hadle the font scaling issue.
+                  // We are clamping the text scaler to a max of 1.2 to prevent the UI from breaking.
+                  builder: (context, child) {
+                    Intl.defaultLocale = context.locale.toString();
+                    final mq = MediaQuery.of(context);
+                    final scaler = mq.textScaler;
+                    final clampedScaler = scaler.clamp(
+                      minScaleFactor: 0.95,
+                      maxScaleFactor: 1.2,
+                    );
+                    return MediaQuery(
+                      data: mq.copyWith(textScaler: clampedScaler),
+                      child: GlobalLoaderOverlay(child: child!),
                     );
                   },
                 ),

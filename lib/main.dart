@@ -19,11 +19,18 @@ final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Firebase.initializeApp();
+  try {
+    await Firebase.initializeApp();
+  } catch (e, stack) {
+    debugPrint('Firebase init failed: $e');
+    debugPrintStack(stackTrace: stack);
+    // Optional: continue app without Firebase OR show fallback UI
+  }
   await NotificationService().init();
   await AppConfig.init();
   await Hive.initFlutter();
   await EasyLocalization.ensureInitialized();
+  Intl.defaultLocale = 'en';
 
   HydratedBloc.storage = await HydratedStorage.build(
     storageDirectory: kIsWeb

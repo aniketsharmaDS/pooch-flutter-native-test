@@ -39,7 +39,11 @@ class MyCommunityHomeScreen extends StatelessWidget
       // actions: [],
       child: AppDefaultRouteTabs(
         // isScrollable: true,
-        tabNames: const ['My Posts', 'Posts Under Review', 'Live Posts'],
+        tabNames: [
+          'community.myCommunityHome.myPosts'.tr(),
+          'community.myCommunityHome.postsUnderReview'.tr(),
+          'community.myCommunityHome.livePosts'.tr(),
+        ],
         routes: [
           MyPostTabRoute(initialIndex: initialTabIndex),
           const MyPostReviewTabRoute(),

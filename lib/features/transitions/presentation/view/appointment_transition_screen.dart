@@ -5,6 +5,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:lottie/lottie.dart';
 import 'package:poochcare/core/di/service_locator.dart';
 import 'package:poochcare/core/theme/app_icons.dart';
 import 'package:poochcare/core/widgets/buttons/app_button.dart';
@@ -283,9 +284,11 @@ class _AppointmentTransitionScreenState
                             title: 'One step closer\nto better health',
                             position: const Alignment(-1.0, 0.24),
                             delay: 400,
-                            customContent: const Icon(
-                              Icons.health_and_safety,
-                              color: Colors.orange,
+                            customContent: Lottie.asset(
+                              AppIcons.lottie.appointmentConfirmed,
+                              height: 54,
+                              width: 54,
+                              // repeat: false,
                             ),
                           ),
                           isActive: true,

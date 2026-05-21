@@ -222,7 +222,7 @@ class DrawerItemsWidget extends StatelessWidget {
                   ),
 
                   title: Text(
-                    item.title,
+                    item.title.tr(),
                     style: TextStyle(
                       fontFamily: fontFamily,
                       fontSize: AppFontSize.fs16,
@@ -302,7 +302,7 @@ class DrawerExpandableItem extends StatelessWidget {
       leading: SvgPicture.asset(item.iconPath, height: 24.h, width: 24.w),
 
       title: Text(
-        item.title,
+        item.title.tr(),
         style: TextStyle(
           fontFamily: fontFamily,
           fontSize: AppFontSize.fs16,

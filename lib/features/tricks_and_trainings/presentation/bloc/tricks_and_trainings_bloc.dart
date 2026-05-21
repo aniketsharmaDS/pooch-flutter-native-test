@@ -178,13 +178,22 @@ class TricksAndTrainingsBloc
     LoadRelatedContent event,
     Emitter<TricksAndTrainingsState> emit,
   ) async {
-    emit(
-      state.copyWith(
-        isRelatedContentLoading: true,
+    /// ALWAYS update selected tab first
+    emit(state.copyWith(selectedRelatedTab: event.contentType));
 
-        selectedRelatedTab: event.contentType,
-      ),
-    );
+    /// CHECK CACHE
+    final cached = state.relatedContentCache[event.contentType];
+
+    if (cached != null && cached.isNotEmpty) {
+      emit(
+        state.copyWith(relatedContent: cached, isRelatedContentLoading: false),
+      );
+
+      return;
+    }
+
+    /// FIRST TIME LOADING ONLY
+    emit(state.copyWith(isRelatedContentLoading: true, relatedContent: []));
 
     try {
       final response = await _repo.getContentListing(
@@ -193,10 +202,15 @@ class TricksAndTrainingsBloc
         contentType: event.contentType,
       );
 
+      final updatedCache = {
+        ...state.relatedContentCache,
+        event.contentType: response.items,
+      };
+
       emit(
         state.copyWith(
           relatedContent: response.items,
-
+          relatedContentCache: updatedCache,
           isRelatedContentLoading: false,
         ),
       );

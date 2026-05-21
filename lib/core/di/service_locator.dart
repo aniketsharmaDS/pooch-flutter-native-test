@@ -30,6 +30,7 @@ import 'package:poochcare/features/community/data/api/found_pet_api_service.dart
 import 'package:poochcare/features/community/data/api/missing_pet_api_service.dart';
 import 'package:poochcare/features/community/data/api/tips_and_guide_api_service.dart';
 import 'package:poochcare/features/community/presentation/bloc/categories/categories_bloc.dart';
+import 'package:poochcare/features/community/presentation/bloc/community/community_bloc.dart';
 import 'package:poochcare/features/community/presentation/bloc/events/events_bloc.dart';
 import 'package:poochcare/features/community/presentation/bloc/events/my_live_posts_bloc.dart';
 import 'package:poochcare/features/community/presentation/bloc/events/my_review_posts_bloc.dart';
@@ -79,11 +80,15 @@ import 'package:poochcare/features/fun/presentation/bloc/accessories_bloc/access
 import 'package:poochcare/features/fun/presentation/bloc/accessories_order_summary_bloc/accessories_order_summary_bloc.dart';
 import 'package:poochcare/features/fun/repository/accessories_repository.dart';
 import 'package:poochcare/features/home/data/api/home_api_service.dart';
+import 'package:poochcare/features/home/data/api/notifications_api_service.dart';
+import 'package:poochcare/features/home/data/repositories/notifications_repository.dart';
 import 'package:poochcare/features/home/presentation/bloc/home_bloc.dart';
+import 'package:poochcare/features/home/presentation/bloc/notifications_bloc.dart';
 import 'package:poochcare/features/home/repository/home_repository.dart';
 import 'package:poochcare/features/insight/data/api/clinics_api_service.dart';
 import 'package:poochcare/features/insight/data/cubit/appointment_request_cubit.dart';
 import 'package:poochcare/features/insight/presentation/bloc/clinic_bloc/clinic_bloc.dart';
+import 'package:poochcare/features/insight/presentation/bloc/report_symptoms_bloc/report_symptoms_bloc.dart';
 import 'package:poochcare/features/insight/presentation/bloc/subscribed_clinics_bloc/subscribed_clinics_bloc.dart';
 import 'package:poochcare/features/insight/repository/clinics_repository.dart';
 import 'package:poochcare/features/invites/data/api/invite_api_service.dart';
@@ -414,19 +419,16 @@ void setupDI() {
   getIt.registerFactory<SubscribedClinicsBloc>(
     () => SubscribedClinicsBloc(getIt<ClinicsRepository>()),
   );
-  // getIt.registerLazySingleton<CommunityBloc>(
-  //   () => CommunityBloc(
-  //     repository: getIt<CommunityRepository>(),
-  //     communityStore: getIt<CommunityStoreBloc>(),
-  //   ),
-  // );
+  getIt.registerFactory<CommunityBloc>(
+    () => CommunityBloc(getIt<CommunityRepository>()),
+  );
   // getIt.registerFactory<EventsBloc>(
   //   () => EventsBloc(
   //     repository: getIt<EventsRepository>(),
   //     eventsStore: getIt<EventsStoreBloc>(),
   //   ),
   // );
-  getIt.registerFactory<CartBloc>(
+  getIt.registerLazySingleton<CartBloc>(
     () => CartBloc(getIt<CartRepository>(), getIt<OrderRepository>()),
   );
   getIt.registerFactory<AddressBloc>(
@@ -541,6 +543,21 @@ void setupDI() {
 
   getIt.registerLazySingleton<LocationPermissionService>(
     () => LocationPermissionService(getIt<SecureStorageService>()),
+  );
+
+  getIt.registerLazySingleton<ReportSymptomsBloc>(
+    () => ReportSymptomsBloc(getIt<ClinicsRepository>()),
+  );
+
+  getIt.registerLazySingleton<NotificationApiService>(
+    () => NotificationApiService(getIt<DioClient>().dio),
+  );
+
+  getIt.registerLazySingleton<NotificationsRepository>(
+    () => NotificationsRepository(getIt<NotificationApiService>()),
+  );
+  getIt.registerLazySingleton<NotificationBloc>(
+    () => NotificationBloc(getIt<NotificationsRepository>()),
   );
 
   getIt.registerLazySingleton<SessionResetService>(
