@@ -45,7 +45,16 @@ class CartApiService {
       final response = await _dio.get<dynamic>(_cartCountPath);
       final payload = _unwrapEnvelope(response.data);
 
-      return Either.right((payload['count'] as int?) ?? 0);
+      // return Either.right((payload['count'] as int?) ?? 0);
+      if (payload is int) {
+        return Either.right(payload);
+      }
+
+      if (payload is Map<String, dynamic>) {
+        return Either.right((payload['count'] as int?) ?? 0);
+      }
+
+      return Either.right(0);
     } on DioException catch (e) {
       return Either.left(ErrorHandler.handleDioError(e));
     } catch (e) {

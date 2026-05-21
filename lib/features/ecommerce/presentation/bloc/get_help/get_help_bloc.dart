@@ -366,6 +366,7 @@ class GetHelpBloc extends Bloc<GetHelpEvent, GetHelpState> {
     OpenRecommendations event,
     Emitter<GetHelpState> emit,
   ) {
+    if (state.hasOpenedRecommendations) return;
     final updatedMessages = List<GetHelpMessageModel>.from(state.messages)
       ..removeWhere((m) => m.isCTA)
       ..add(

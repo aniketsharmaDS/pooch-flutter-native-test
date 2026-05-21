@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:poochcare/core/widgets/buttons/app_button.dart';
@@ -40,7 +41,7 @@ class _AddPetFoundScreenState extends State<AddPetFoundScreen> {
   @override
   Widget build(BuildContext context) {
     return AppPrimaryScreenContainer(
-      title: 'Add a Manual Found Pet',
+      title: 'community.addPetFound.title'.tr(),
       child: Column(
         children: [
           // CustomBackButtonWithTitle(
@@ -63,7 +64,9 @@ class _AddPetFoundScreenState extends State<AddPetFoundScreen> {
                       children: [
                         // Event Title
                         AppDropdowns(
-                          hint: AppText.bodyM('Select pet type'),
+                          hint: AppText.bodyM(
+                            'community.addPetFound.selectPetType'.tr(),
+                          ),
                           valueListenable: _selectedPetTypeNotifier,
                           onChanged: (value) {
                             _selectedPetTypeNotifier.value = value;
@@ -76,7 +79,10 @@ class _AddPetFoundScreenState extends State<AddPetFoundScreen> {
                               .map(
                                 (type) => DropdownItem<String>(
                                   value: type,
-                                  child: Text(type),
+                                  child: Text(
+                                    'community.addPetFound.${type.toLowerCase()}'
+                                        .tr(),
+                                  ),
                                 ),
                               )
                               .toList(growable: false),
@@ -84,7 +90,9 @@ class _AddPetFoundScreenState extends State<AddPetFoundScreen> {
 
                         SizedBox(height: 16.h),
                         AppDropdowns(
-                          hint: AppText.bodyM('Select pet gender'),
+                          hint: AppText.bodyM(
+                            'community.addPetFound.selectPetGender'.tr(),
+                          ),
                           valueListenable: _selectedPetGenderNotifier,
                           onChanged: (value) {
                             _selectedPetGenderNotifier.value = value;
@@ -97,7 +105,10 @@ class _AddPetFoundScreenState extends State<AddPetFoundScreen> {
                               .map(
                                 (type) => DropdownItem<String>(
                                   value: type,
-                                  child: Text(type),
+                                  child: Text(
+                                    'community.addPetFound.${type.toLowerCase()}'
+                                        .tr(),
+                                  ),
                                 ),
                               )
                               .toList(growable: false),
@@ -119,7 +130,7 @@ class _AddPetFoundScreenState extends State<AddPetFoundScreen> {
             child: SafeArea(
               top: false,
               child: AppButton(
-                label: 'Submit',
+                label: 'community.addPetFound.submit'.tr(),
                 onPressed: _handleSubmit,
                 isDisabled: !_isFormValid,
                 // enabled: _isFormValid,

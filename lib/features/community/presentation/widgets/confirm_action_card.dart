@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:poochcare/core/theme/app_colors.dart';
 import 'package:poochcare/core/theme/app_spacing.dart';
@@ -75,27 +76,29 @@ class _ConfirmActionCardState extends State<ConfirmActionCard> {
                     height: 1.4,
                   ),
                   children: [
-                    const TextSpan(
-                      text: 'By submitting this tip, you agree to our ',
+                    TextSpan(
+                      text: 'community.confirmActionCard.disclaimerPrefix'.tr(),
                     ),
                     TextSpan(
-                      text: 'Terms & Conditions',
+                      text: 'community.confirmActionCard.termsAndConditions'
+                          .tr(),
                       style: AppTypography.support.copyWith(
                         decoration: TextDecoration.underline,
                         decorationColor: AppColors.textSecondary,
                         decorationThickness: 1.5,
                       ),
                     ),
-                    const TextSpan(text: ' and '),
+                    TextSpan(text: 'community.confirmActionCard.and'.tr()),
                     TextSpan(
-                      text: 'Community Guidelines',
+                      text: 'community.confirmActionCard.communityGuidelines'
+                          .tr(),
                       style: AppTypography.support.copyWith(
                         decoration: TextDecoration.underline,
                         decorationColor: AppColors.textSecondary,
                         decorationThickness: 1.5,
                       ),
                     ),
-                    const TextSpan(text: '.'),
+                    TextSpan(text: 'community.confirmActionCard.period'.tr()),
                   ],
                 ),
               ),

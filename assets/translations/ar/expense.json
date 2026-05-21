@@ -1,0 +1,14 @@
+{
+  "expense": {
+    "monthly": "شهري",
+    "yearly": "سنوي",
+    "expenseBreakdown": "تفصيل المصروفات",
+    "noDataAvailable": "لا توجد بيانات متاحة",
+    "noTransactions": "لم يتم العثور على معاملات",
+    "noDataForSelectedMonth": "لا توجد بيانات متاحة للشهر المحدد.",
+    "noExpensesForMonth": "لم يتم العثور على مصروفات لهذا الشهر.",
+    "noExpensesForYear": "لم يتم العثور على مصروفات لهذه السنة.",
+    "dailyExpensesFor": "المصروفات اليومية لـ",
+    "monthlyExpensesFor": "المصروفات الشهرية لـ"
+  }
+}

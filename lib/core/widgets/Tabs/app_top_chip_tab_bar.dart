@@ -53,12 +53,22 @@ class _AppTopChipTabBarState extends State<AppTopChipTabBar> {
   void didUpdateWidget(covariant AppTopChipTabBar oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    if (oldWidget.selectedIndex != widget.selectedIndex) {
-      _selectedIndex = widget.selectedIndex;
+    // if (oldWidget.selectedIndex != widget.selectedIndex) {
+    //   _selectedIndex = widget.selectedIndex;
 
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        _scrollToIndex(_selectedIndex);
-      });
+    //   WidgetsBinding.instance.addPostFrameCallback((_) {
+    //     _scrollToIndex(_selectedIndex);
+    //   });
+    // }
+
+    if (oldWidget.tabs.length != widget.tabs.length) {
+      _tabKeys
+        ..clear()
+        ..addAll(List.generate(widget.tabs.length, (_) => GlobalKey()));
+
+      if (_selectedIndex >= widget.tabs.length) {
+        _selectedIndex = widget.tabs.isEmpty ? 0 : widget.tabs.length - 1;
+      }
     }
   }
 
@@ -71,6 +81,8 @@ class _AppTopChipTabBarState extends State<AppTopChipTabBar> {
   }
 
   void _scrollToIndex(int index) {
+    if (index < 0 || index >= _tabKeys.length) return;
+
     if (!_scrollController.hasClients) return;
 
     final keyContext = _tabKeys[index].currentContext;
@@ -96,6 +108,12 @@ class _AppTopChipTabBarState extends State<AppTopChipTabBar> {
       duration: const Duration(milliseconds: 300),
       curve: Curves.easeInOut,
     );
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 
   @override

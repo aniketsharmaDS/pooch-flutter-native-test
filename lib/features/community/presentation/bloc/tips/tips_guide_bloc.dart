@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:poochcare/core/constants/app_constants.dart';
 import 'package:poochcare/core/di/service_locator.dart';
 import 'package:poochcare/core/network/api_response.dart';
 import 'package:poochcare/core/pagination/pagination_bloc.dart';
@@ -78,15 +79,26 @@ class TipsGuideBloc extends PaginationBloc<TipsInfoItemModel> {
       if (event.source == _source) return;
       // final updatedItem = event.data;
       if (event.source == 'TipsCommentBloc') {
-        final String countStatus = event.data['countStatus'] as String;
+        // final String countStatus = event.data['countStatus'] as String;
 
-        if (countStatus == 'INCRIMENT' || countStatus == 'DECRIMENT') {
+        if (event.data is! Map<String, dynamic>) return;
+
+        final data = event.data as Map<String, dynamic>;
+
+        final countStatus = data['countStatus'];
+        final tipsId = data['id'];
+
+        if (countStatus is! String || tipsId is! String) return;
+
+        if (countStatus == CommentCountStatus.increment.name ||
+            countStatus == CommentCountStatus.decrement.name) {
           final String tipsId = event.data['id'] as String;
 
           updateItemEverywhere(
             test: (item) => item.id == tipsId,
             update: (item) {
-              final int updatedCommentsCount = countStatus == 'INCRIMENT'
+              final int updatedCommentsCount =
+                  countStatus == CommentCountStatus.increment.name
                   ? item.commentsCount + 1
                   : (item.commentsCount - 1).clamp(0, 1000000);
 
@@ -94,10 +106,6 @@ class TipsGuideBloc extends PaginationBloc<TipsInfoItemModel> {
             },
           );
         }
-
-        log('📡 Bus:- TipsGuideBloc received Status $countStatus');
-        log('📡 Bus:- TipsGuideBloc received Id ${event.data['id']}');
-
         return;
       }
 
@@ -111,9 +119,9 @@ class TipsGuideBloc extends PaginationBloc<TipsInfoItemModel> {
 
   /// ✅ VERY IMPORTANT (avoid memory leak)
   @override
-  Future<void> close() {
-    _busSub.cancel();
-    return super.close();
+  Future<void> close() async {
+    await _busSub.cancel();
+    await super.close();
   }
 
   void fetchInitialTips({

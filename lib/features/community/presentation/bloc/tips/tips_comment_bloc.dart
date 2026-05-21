@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:poochcare/core/constants/app_constants.dart';
 import 'package:poochcare/core/di/service_locator.dart';
 import 'package:poochcare/core/network/api_response.dart';
 import 'package:poochcare/core/pagination/pagination_bloc.dart';
@@ -161,7 +162,9 @@ class TipsCommentBloc extends PaginationBloc<TipsCommentInfoModel> {
           _bus.emit(
             data: {
               'id': payload.tipId,
-              'countStatus': 'INCRIMENT', // 👈 can be used for targeted updates
+              'countStatus': CommentCountStatus
+                  .increment
+                  .name, // 👈 can be used for targeted updates
             },
             source: _source,
             destination: [
@@ -305,7 +308,9 @@ class TipsCommentBloc extends PaginationBloc<TipsCommentInfoModel> {
           _bus.emit(
             data: {
               'id': payload.tipId,
-              'countStatus': 'INCRIMENT', // 👈 can be used for targeted updates
+              'countStatus': CommentCountStatus
+                  .increment
+                  .name, // 👈 can be used for targeted updates
             },
             source: _source,
             destination: [
@@ -368,7 +373,9 @@ class TipsCommentBloc extends PaginationBloc<TipsCommentInfoModel> {
         _bus.emit(
           data: {
             'id': tipId,
-            'countStatus': 'DECRIMENT', // 👈 can be used for targeted updates
+            'countStatus': CommentCountStatus
+                .decrement
+                .name, // 👈 can be used for targeted updates
           },
           source: _source,
           destination: [
@@ -439,7 +446,9 @@ class TipsCommentBloc extends PaginationBloc<TipsCommentInfoModel> {
         _bus.emit(
           data: {
             'id': tipId,
-            'countStatus': 'DECRIMENT', // 👈 can be used for targeted updates
+            'countStatus': CommentCountStatus
+                .decrement
+                .name, // 👈 can be used for targeted updates
           },
           source: _source,
           destination: [
@@ -489,8 +498,8 @@ class TipsCommentBloc extends PaginationBloc<TipsCommentInfoModel> {
   }
 
   @override
-  Future<void> close() {
-    _busSub.cancel();
-    return super.close();
+  Future<void> close() async {
+    await _busSub.cancel();
+    await super.close();
   }
 }

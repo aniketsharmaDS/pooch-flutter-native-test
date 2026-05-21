@@ -1,12 +1,11 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:poochcare/core/theme/app_icons.dart';
-import 'package:poochcare/core/widgets/buttons/app_button.dart';
+import 'package:poochcare/core/theme/app_size.dart';
+import 'package:poochcare/core/theme/app_spacing.dart';
+import 'package:poochcare/core/widgets/headers/primary_widget_header.dart';
 import 'package:poochcare/core/widgets/list_grid/app_error_view.dart';
 import 'package:poochcare/core/widgets/list_items/most_popular_hlist_item_card.dart';
-import 'package:poochcare/core/widgets/texts/app_text.dart';
 import 'package:poochcare/features/ecommerce/domain/models/product.dart';
 import 'package:poochcare/features/ecommerce/presentation/bloc/buy_pet_landing/buy_pet_landing_bloc.dart';
 import 'package:poochcare/features/ecommerce/presentation/view/buy_pet/common_pet_listing_screen.dart';
@@ -84,7 +83,7 @@ class MostPopularSection extends StatelessWidget {
   Widget build(BuildContext context) {
     if (!isLoading && (error == null) && products.isEmpty) {
       return SizedBox(
-        height: 374.h,
+        height: AppSize.cs374.csh,
         child: Center(
           child: Text(
             'No products found',
@@ -112,60 +111,39 @@ class MostPopularSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(
-          padding: EdgeInsets.symmetric(horizontal: 16.w),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                child: AppText.h2(title, color: const Color(0XFF3F3C36)),
-              ),
-              // Your Button
-              Builder(
-                builder: (innerContext) {
-                  return AppButton(
-                    width: null,
-                    label: 'View All',
-                    size: AppButtonSize.xSmall,
-                    onPressed: products.isNotEmpty
-                        ? () {
-                            innerContext.router.push(
-                              CommonPetListingRoute(
-                                title: title,
-                                type: ListingType.mostPopular,
-                                bloc: innerContext.read<BuyPetLandingBloc>(),
-                              ),
-                            );
-                          }
-                        : null,
-                    variant: AppButtonVariant.text,
-                    padding: EdgeInsets.only(
-                      top: 0.h,
-                      bottom: 0.h,
-                      right: 1.w,
-                      left: 10.w,
-                    ),
-                    trailingSvgAsset: AppIcons.svg.generic.chevronRight,
-                  );
-                },
-              ),
-            ],
-          ),
+        Builder(
+          builder: (innerContext) {
+            return PrimaryWidgetHeader(
+              title: title,
+              buttonTitle: 'View All',
+              onButtonTap: products.isNotEmpty
+                  ? () {
+                      innerContext.router.push(
+                        CommonPetListingRoute(
+                          title: title,
+                          type: ListingType.mostPopular,
+                          bloc: innerContext.read<BuyPetLandingBloc>(),
+                        ),
+                      );
+                    }
+                  : null,
+            );
+          },
         ),
-        SizedBox(height: 10.h),
+        AppSpacing.s10.hBox,
         if (isLoading && products.isEmpty)
           SizedBox(
-            height: 374.h,
+            height: AppSize.cs374.csh,
             child: ListView.separated(
-              padding: EdgeInsets.only(left: 16.w, right: 16.w),
+              padding: EdgeInsets.symmetric(horizontal: AppSize.cs16.csw),
               scrollDirection: Axis.horizontal,
               physics: const BouncingScrollPhysics(),
               itemCount: 2,
               separatorBuilder: (BuildContext context, int index) =>
-                  SizedBox(width: 12.w),
+                  SizedBox(width: AppSize.cs280.csw),
               itemBuilder: (BuildContext context, int index) {
                 return SizedBox(
-                  width: 280.w,
+                  width: AppSize.cs280.csw,
                   child: const ProductGridItemCardShimmer(),
                 );
               },
@@ -173,22 +151,25 @@ class MostPopularSection extends StatelessWidget {
           )
         else if (error != null && products.isEmpty)
           SizedBox(
-            height: 374.h,
+            height: AppSize.cs374.csh,
             child: AppErrorView(message: error!, onRetry: onRetry),
           )
         else
           SizedBox(
-            height: 374.h,
+            height: AppSize.cs374.csh,
             child: ListView.separated(
-              padding: EdgeInsets.only(left: 16.w, right: 16.w),
+              padding: EdgeInsets.symmetric(horizontal: AppSize.cs16.csw),
               scrollDirection: Axis.horizontal,
               physics: const BouncingScrollPhysics(),
               itemCount: popularPetsList.length,
               separatorBuilder: (BuildContext context, int index) =>
-                  SizedBox(width: 12.w),
+                  SizedBox(width: AppSize.cs12.csw),
               itemBuilder: (BuildContext context, int index) {
                 final item = popularPetsList[index];
-                return MostPopularHlistItemCard(item: item, onTap: handleTap);
+                return AspectRatio(
+                  aspectRatio: 280 / 374,
+                  child: MostPopularHlistItemCard(item: item, onTap: handleTap),
+                );
               },
             ),
           ),

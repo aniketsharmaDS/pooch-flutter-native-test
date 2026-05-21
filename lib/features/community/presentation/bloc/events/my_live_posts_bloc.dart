@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:poochcare/core/constants/app_constants.dart';
 import 'package:poochcare/core/di/service_locator.dart';
 import 'package:poochcare/core/pagination/pagination_bloc.dart';
 import 'package:poochcare/core/pagination/pagination_result.dart';
@@ -55,15 +56,23 @@ class MyLivePostsBloc extends PaginationBloc<MySubmittedPostsModel> {
       }
 
       if (event.source == 'TipsCommentBloc') {
-        final String countStatus = event.data['countStatus'] as String;
+        if (event.data is! Map<String, dynamic>) return;
 
-        if (countStatus == 'INCRIMENT' || countStatus == 'DECRIMENT') {
+        final data = event.data as Map<String, dynamic>;
+
+        final countStatus = data['countStatus'];
+        final tipsId = data['id'];
+        if (countStatus is! String || tipsId is! String) return;
+
+        if (countStatus == CommentCountStatus.increment.name ||
+            countStatus == CommentCountStatus.decrement.name) {
           final String tipsId = event.data['id'] as String;
 
           updateItemEverywhere(
             test: (item) => item.id == tipsId,
             update: (item) {
-              final int updatedCommentsCount = countStatus == 'INCRIMENT'
+              final int updatedCommentsCount =
+                  countStatus == CommentCountStatus.increment.name
                   ? item.commentsCount + 1
                   : (item.commentsCount - 1).clamp(0, 1000000);
 
@@ -71,10 +80,6 @@ class MyLivePostsBloc extends PaginationBloc<MySubmittedPostsModel> {
             },
           );
         }
-
-        log('📡 Bus:- MyLivePostsBloc received Status $countStatus');
-        log('📡 Bus:- MyLivePostsBloc received Id ${event.data['id']}');
-
         return;
       }
 
@@ -104,9 +109,9 @@ class MyLivePostsBloc extends PaginationBloc<MySubmittedPostsModel> {
 
   /// ✅ VERY IMPORTANT (avoid memory leak)
   @override
-  Future<void> close() {
-    _busSub.cancel();
-    return super.close();
+  Future<void> close() async {
+    await _busSub.cancel();
+    await super.close();
   }
 
   void fetchInitialPosts({

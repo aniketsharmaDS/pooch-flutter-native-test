@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
@@ -6,13 +8,13 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 /// This class manages all environment variables and provides
 /// centralized access to configuration throughout the app.
 class AppConfig {
-  static late final String apiBaseUrl;
-  static late final int apiTimeoutSeconds;
-  static late final bool enableLogging;
-  static late final String? apiKey;
-  static late final String? googlePlacesApiKey;
-  static late final bool debugMode;
-  static late final String? serverClientId;
+  static String apiBaseUrl = '';
+  static int apiTimeoutSeconds = 20;
+  static bool enableLogging = true;
+  static String? apiKey;
+  static String? googlePlacesApiKey;
+  static bool debugMode = true;
+  static String? serverClientId;
 
   /// Initialize configuration from .env file
   ///
@@ -32,19 +34,20 @@ class AppConfig {
 
       // Read and assign configuration values with defaults
       apiBaseUrl = dotenv.env['API_BASE_URL'] ?? 'https://dev-api.pooch.app';
+      log('apiBaseUrl: $apiBaseUrl'); // 🔴 LOGGING
       googlePlacesApiKey = dotenv.env['GOOGLE_PLACES_API_KEY'] ?? '';
       apiTimeoutSeconds =
           int.tryParse(dotenv.env['API_TIMEOUT_SECONDS'] ?? '20') ?? 20;
       enableLogging = dotenv.env['ENABLE_LOGGING']?.toLowerCase() == 'true';
       debugMode = dotenv.env['DEBUG_MODE']?.toLowerCase() == 'true';
       apiKey = dotenv.env['API_KEY'];
-      serverClientId =
-          dotenv.env['SERVER_CLIENT_ID'] ??
-          '811126899873-3talsukdajq84tsv18shac7j14rjo20r.apps.googleusercontent.com';
+      serverClientId = dotenv.env['GOOGLE_SERVER_CLIENT_ID'] ?? '';
       if (kDebugMode) {
         _printConfig();
       }
     } catch (e) {
+      log('apiBaseUrlCatch: $apiBaseUrl');
+      log('apiBaseUrlCatch: $e');
       if (kDebugMode) {
         debugPrint('Error loading .env file: $e');
         debugPrint('Using default configuration values');

@@ -12,6 +12,7 @@ import 'package:poochcare/features/insight/data/models/clinic_list_response_mode
 import 'package:poochcare/features/insight/data/models/clinic_subs_plans_response_model.dart';
 import 'package:poochcare/features/insight/data/models/clinic_subs_preview_response_model.dart';
 import 'package:poochcare/features/insight/data/models/subscribed_clinics_response_model.dart';
+import 'package:poochcare/features/insight/data/models/symptom_response.dart';
 
 class ClinicsApiService {
   const ClinicsApiService(this._dio);
@@ -26,6 +27,7 @@ class ClinicsApiService {
   static const String _filterOptionsPath = '/telemedicine/filter-options';
   static const String _appointmentsPath = '/vet-clinic/appointments';
   static const String _myAppointmentsPath = '/vet-clinic/appointments/users/me';
+  static const String _symptoms = '/medical-history/symptom-types';
 
   Future<ClinicListResponseModel> getAllClinics({
     required ClinicListRequestModel request,
@@ -505,6 +507,23 @@ class ClinicsApiService {
       }
 
       return AppointmentApiModel.fromMap(payload);
+    } on DioException catch (error) {
+      throw ErrorMapper.mapDioError(error);
+    }
+  }
+
+  /// Get all symptoms
+  Future<SymptomResponse> getSymptoms() async {
+    try {
+      final response = await _dio.get<dynamic>(_symptoms);
+
+      final dynamic body = response.data;
+
+      if (body is! Map<String, dynamic>) {
+        throw const ApiException('Invalid server response', statusCode: 500);
+      }
+
+      return SymptomResponse.fromJson(body);
     } on DioException catch (error) {
       throw ErrorMapper.mapDioError(error);
     }

@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:poochcare/core/di/service_locator.dart';
@@ -47,14 +48,9 @@ class MyPostedMissingPetsScreen extends StatefulWidget
 
 class _MyPostedMissingPetsScreenState extends State<MyPostedMissingPetsScreen> {
   bool wasHomeTabActive = false;
-  List<TipsCategoryModel> allPets = [
-    const TipsCategoryModel(id: 'All Pets', name: 'All Pets'),
-  ];
+  late List<TipsCategoryModel> allPets;
 
-  TipsCategoryModel _selectedCategory = const TipsCategoryModel(
-    id: 'All Pets',
-    name: 'All Pets',
-  );
+  late TipsCategoryModel _selectedCategory;
   String searchQuery = '';
   final TextEditingController _searchController = TextEditingController();
 
@@ -65,10 +61,14 @@ class _MyPostedMissingPetsScreenState extends State<MyPostedMissingPetsScreen> {
     final pets = context.read<UserProfileBloc>().state.pets;
 
     allPets = [
-      const TipsCategoryModel(id: 'All Pets', name: 'All Pets'),
+      TipsCategoryModel(
+        id: 'All Pets',
+        name: 'community.categorySelector.all'.tr(),
+      ),
       ...pets.map((pet) => TipsCategoryModel(id: pet.id, name: pet.name)),
     ];
 
+    _selectedCategory = allPets.first;
     _onCategorySelected(allPets.first);
   }
 
@@ -188,7 +188,9 @@ class _MyPostedMissingPetsScreenState extends State<MyPostedMissingPetsScreen> {
                       ),
                     ),
                     AppPopupMenu(
-                      headerTitle: 'Select Category',
+                      headerTitle:
+                          'community.myPostedMissingPetsScreen.selectCategory'
+                              .tr(),
                       showCloseIcon: true,
                       iconPath: AppIcons.svg.generic.sortDescending,
                       iconSize: AppIconSize.is16,
@@ -218,8 +220,7 @@ class _MyPostedMissingPetsScreenState extends State<MyPostedMissingPetsScreen> {
                   hasMore: state.hasMore,
                   hasError: state.errorMessage != null,
                   error:
-                      state.errorMessage ??
-                      'An error occurred while loading data.',
+                      state.errorMessage ?? 'community.loadingDataError'.tr(),
                   onLoadMore: _onLoadMore,
                   onRefresh: _onRefresh,
                   onRetry: () {

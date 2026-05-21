@@ -9,7 +9,6 @@ import 'package:poochcare/core/di/service_locator.dart';
 import 'package:poochcare/core/theme/app_colors.dart';
 import 'package:poochcare/core/theme/app_icons.dart';
 import 'package:poochcare/core/widgets/Tabs/app_bottom_tab_nav.dart';
-import 'package:poochcare/core/widgets/app_loader.dart';
 import 'package:poochcare/core/widgets/appbar/pooch_app_bar.dart';
 import 'package:poochcare/core/widgets/dialogs/app_dialog.dart';
 import 'package:poochcare/core/widgets/drawer/app_drawer.dart';
@@ -41,6 +40,7 @@ class HomeScreen extends StatefulWidget implements AutoRouteWrapper {
 
 class _HomeScreenState extends State<HomeScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  bool _hasShownServeTransition = false;
 
   @override
   void initState() {
@@ -65,295 +65,293 @@ class _HomeScreenState extends State<HomeScreen> {
     AppIcons.svg.social.youtube,
   ];
 
-  final List<DrawerItem> _drawerItem = [
-    DrawerItem(
-      onPressed: (context) {},
-      iconPath: AppIcons.svg.drawer.house,
-      title: 'drawer.dashboard'.tr(),
-      dropdownType: DrawerItemType.normal,
-      drawerItemChildren: [],
-    ),
-    DrawerItem(
-      onPressed: (context) {},
-      iconPath: AppIcons.svg.drawer.settings,
-      title: 'drawer.accountSettings'.tr(),
-      dropdownType: DrawerItemType.dropdown,
-      drawerItemChildren: [
-        DrawerItemChildren(
-          iconPath: AppIcons.svg.drawer.accounts,
-          title: 'drawer.manageMyAccounts'.tr(),
-          onPressed: (context) {
-            context.pushRoute(const UserProfileRoute());
-          },
-        ),
-        DrawerItemChildren(
-          iconPath: AppIcons.svg.drawer.accessories,
-          title: 'drawer.myVirtualAccessories'.tr(),
-          onPressed: (context) {
-            log('drawer.myVirtualAccessories'.tr());
-          },
-        ),
-        DrawerItemChildren(
-          iconPath: AppIcons.svg.drawer.orders,
-          title: 'drawer.myOrders'.tr(),
-          onPressed: (context) {
-            context.pushRoute(const OrdersListingRoute());
-          },
-        ),
-        DrawerItemChildren(
-          iconPath: AppIcons.svg.drawer.orders,
-          title: 'drawer.myWishList'.tr(),
-          onPressed: (context) {
-            context.pushRoute(const WishlistRoute());
-            // log('drawer.myWishList'.tr());
-          },
-        ),
-        DrawerItemChildren(
-          iconPath: AppIcons.svg.drawer.coupons,
-          title: 'drawer.myCouponsAndDiscounts'.tr(),
-          onPressed: (context) {
-            context.pushRoute(const CouponsRoute());
-          },
-        ),
-        DrawerItemChildren(
-          iconPath: AppIcons.svg.drawer.invites,
-          title: 'drawer.myInvites'.tr(),
-          onPressed: (context) {
-            context.pushRoute(const InvitesRoute());
-          },
-        ),
-        DrawerItemChildren(
-          iconPath: AppIcons.svg.drawer.subscription,
-          title: 'drawer.mySubscriptions'.tr(),
-          onPressed: (context) {
-            log('drawer.mySubscriptions'.tr());
-          },
-        ),
-        DrawerItemChildren(
-          iconPath: AppIcons.svg.drawer.accounts,
-          title: 'drawer.myRecentReportsAndHistory'.tr(),
-          onPressed: (context) {
-            log('drawer.myRecentReportsAndHistory'.tr());
-          },
-        ),
-        DrawerItemChildren(
-          iconPath: AppIcons.svg.drawer.subscription,
-          title: 'drawer.mySubscribedClinics'.tr(),
-          onPressed: (context) {
-            log('drawer.mySubscribedClinics'.tr());
-          },
-        ),
-        DrawerItemChildren(
-          iconPath: AppIcons.svg.drawer.notification,
-          title: 'drawer.myNotificationSettings'.tr(),
-          onPressed: (context) {
-            log('drawer.myNotificationSettings'.tr());
-          },
-        ),
-        DrawerItemChildren(
-          iconPath: AppIcons.svg.drawer.paymentMethod,
-          title: 'drawer.myPaymentMethods'.tr(),
-          onPressed: (context) {
-            log('drawer.myPaymentMethods'.tr());
-          },
-        ),
-        DrawerItemChildren(
-          iconPath: AppIcons.svg.drawer.delete,
-          title: 'drawer.deleteMyAccount'.tr(),
-          onPressed: (context) {
-            log('drawer.deleteMyAccount'.tr());
-          },
-        ),
-        DrawerItemChildren(
-          iconPath: AppIcons.svg.drawer.changeLang,
-          title: 'drawer.changeLanguage'.tr(),
-          onPressed: (context) {
-            context.pushRoute(const ChangeLanguageRoute());
-          },
-        ),
-      ],
-    ),
-    DrawerItem(
-      onPressed: (context) {},
-      iconPath: AppIcons.svg.drawer.helpSupport,
-      title: 'drawer.helpAndSupport'.tr(),
-      dropdownType: DrawerItemType.dropdown,
-      drawerItemChildren: [
-        DrawerItemChildren(
-          iconPath: AppIcons.svg.drawer.notePencil,
-          title: 'drawer.faqs'.tr(),
-          onPressed: (context) {
-            log('drawer.faqs'.tr());
-          },
-        ),
-        DrawerItemChildren(
-          iconPath: AppIcons.svg.drawer.userSound,
-          title: 'drawer.contactAndAssistance'.tr(),
-          onPressed: (context) {
-            log('drawer.contactAndAssistance'.tr());
-          },
-        ),
-        DrawerItemChildren(
-          iconPath: AppIcons.svg.drawer.minus,
-          title: 'drawer.reports'.tr(),
-          onPressed: (context) {
-            log('drawer.reports'.tr());
-          },
-        ),
-        DrawerItemChildren(
-          iconPath: AppIcons.svg.drawer.notePencil,
-          title: 'drawer.feedback'.tr(),
-          onPressed: (context) {
-            log('drawer.feedback'.tr());
-          },
-        ),
-      ],
-    ),
-    DrawerItem(
-      onPressed: (context) {},
-      iconPath: AppIcons.svg.drawer.about,
-      title: 'drawer.about'.tr(),
-      dropdownType: DrawerItemType.normal,
-      drawerItemChildren: [],
-    ),
-    DrawerItem(
-      onPressed: (context) {},
-      iconPath: AppIcons.svg.drawer.folder,
-      title: 'drawer.privacyPolicy'.tr(),
-      dropdownType: DrawerItemType.normal,
-      drawerItemChildren: [],
-    ),
-    DrawerItem(
-      onPressed: (context) {},
-      iconPath: AppIcons.svg.drawer.folder,
-      title: 'drawer.termsAndConditions'.tr(),
-      dropdownType: DrawerItemType.normal,
-      drawerItemChildren: [],
-    ),
-    DrawerItem(
-      onPressed: (context) {},
-      iconPath: AppIcons.svg.drawer.folder,
-      title: 'Component\'s',
-      dropdownType: DrawerItemType.normal,
-      drawerItemChildren: [
-        DrawerItemChildren(
-          iconPath: AppIcons.svg.drawer.notePencil,
-          title: 'Test Design Screen',
-          onPressed: (context) {
-            log('Buttons Clicked');
-            context.pushRoute(const TestDesignRoute());
-          },
-        ),
-        DrawerItemChildren(
-          iconPath: AppIcons.svg.drawer.notePencil,
-          title: 'App Default Components Design',
-          onPressed: (context) {
-            log('Buttons Clicked');
-            context.pushRoute(const AppDesignRoute());
-          },
-        ),
-        DrawerItemChildren(
-          iconPath: AppIcons.svg.drawer.notePencil,
-          title: 'Splash Screen',
-          onPressed: (context) {
-            log('Buttons Clicked');
-            context.pushRoute(const SplashRoute());
-          },
-        ),
-        DrawerItemChildren(
-          iconPath: AppIcons.svg.drawer.notePencil,
-          title: 'Select Pet Option Screen',
-          onPressed: (context) {
-            log('Buttons Clicked');
-            context.pushRoute(SelectPetOptionRoute());
-          },
-        ),
-        DrawerItemChildren(
-          iconPath: AppIcons.svg.drawer.notePencil,
-          title: 'App Top Tab Bar',
-          onPressed: (context) {
-            log('Buttons Clicked');
-            context.pushRoute(const AppTopTabBarRoute());
-          },
-        ),
-        DrawerItemChildren(
-          iconPath: AppIcons.svg.drawer.notePencil,
-          title: 'App Top chip Tab Bar',
-          onPressed: (context) {
-            log('Buttons Clicked');
-            context.pushRoute(const AppTopChipTabBarRoute());
-          },
-        ),
-        DrawerItemChildren(
-          iconPath: AppIcons.svg.drawer.notePencil,
-          title: 'Buttons & Dialogs',
-          onPressed: (context) {
-            log('Buttons Clicked');
-            context.pushRoute(const AppButtonRoute());
-          },
-        ),
-        DrawerItemChildren(
-          iconPath: AppIcons.svg.drawer.notePencil,
-          title: 'Text Inputs',
-          onPressed: (context) {
-            context.pushRoute(const AppTextInputRoute());
-          },
-        ),
-        DrawerItemChildren(
-          iconPath: AppIcons.svg.drawer.notePencil,
-          title: 'Display & Feedback',
-          onPressed: (context) {
-            context.pushRoute(const AppDisplayRoute());
-          },
-        ),
-        DrawerItemChildren(
-          iconPath: AppIcons.svg.drawer.notePencil,
-          title: 'Nudges',
-          onPressed: (context) {
-            context.pushRoute(const AppNudgesRoute());
-          },
-        ),
-        DrawerItemChildren(
-          iconPath: AppIcons.svg.drawer.notePencil,
-          title: 'List Screen',
-          onPressed: (context) {
-            context.pushRoute(const AppListRoute());
-          },
-        ),
-        DrawerItemChildren(
-          iconPath: AppIcons.svg.drawer.notePencil,
-          title: 'Grid Screen',
-          onPressed: (context) {
-            context.pushRoute(const AppGridRoute());
-          },
-        ),
-        DrawerItemChildren(
-          iconPath: AppIcons.svg.drawer.notePencil,
-          title: 'List Item Screen',
-          onPressed: (context) {
-            context.pushRoute(const AppListItemRoute());
-          },
-        ),
-        DrawerItemChildren(
-          iconPath: AppIcons.svg.drawer.notePencil,
-          title: 'Form Screen',
-          onPressed: (context) {
-            context.pushRoute(const AppFormRoute());
-          },
-        ),
-        DrawerItemChildren(
-          iconPath: AppIcons.svg.drawer.notePencil,
-          title: 'Intro Transition Screen',
-          onPressed: (context) {
-            context.pushRoute(const IntroTransitionRoute());
-          },
-        ),
-      ],
-    ),
-  ];
+  List<DrawerItem> _buildDrawerItems(BuildContext context) {
+    return [
+      DrawerItem(
+        onPressed: (context) {},
+        iconPath: AppIcons.svg.drawer.house,
+        title: 'drawer.dashboard'.tr(),
+        dropdownType: DrawerItemType.normal,
+        drawerItemChildren: [],
+      ),
+      DrawerItem(
+        onPressed: (context) {},
+        iconPath: AppIcons.svg.drawer.settings,
+        title: 'drawer.accountSettings'.tr(),
+        dropdownType: DrawerItemType.dropdown,
+        drawerItemChildren: [
+          DrawerItemChildren(
+            iconPath: AppIcons.svg.drawer.accounts,
+            title: 'drawer.manageMyAccounts'.tr(),
+            onPressed: (context) {
+              context.pushRoute(const UserProfileRoute());
+            },
+          ),
+          DrawerItemChildren(
+            iconPath: AppIcons.svg.drawer.accessories,
+            title: 'drawer.myVirtualAccessories'.tr(),
+            onPressed: (context) {
+              log('drawer.myVirtualAccessories'.tr());
+            },
+          ),
+          DrawerItemChildren(
+            iconPath: AppIcons.svg.drawer.orders,
+            title: 'drawer.myOrders'.tr(),
+            onPressed: (context) {
+              context.pushRoute(const OrdersListingRoute());
+            },
+          ),
+          DrawerItemChildren(
+            iconPath: AppIcons.svg.drawer.orders,
+            title: 'drawer.myWishList'.tr(),
+            onPressed: (context) {
+              context.pushRoute(const WishlistRoute());
+              // log('drawer.myWishList'.tr());
+            },
+          ),
+          DrawerItemChildren(
+            iconPath: AppIcons.svg.drawer.coupons,
+            title: 'drawer.myCouponsAndDiscounts'.tr(),
+            onPressed: (context) {
+              context.pushRoute(const CouponsRoute());
+            },
+          ),
+          DrawerItemChildren(
+            iconPath: AppIcons.svg.drawer.invites,
+            title: 'drawer.myInvites'.tr(),
+            onPressed: (context) {
+              context.pushRoute(const InvitesRoute());
+            },
+          ),
+          DrawerItemChildren(
+            iconPath: AppIcons.svg.drawer.subscription,
+            title: 'drawer.mySubscriptions'.tr(),
+            onPressed: (context) {
+              log('drawer.mySubscriptions'.tr());
+            },
+          ),
+          DrawerItemChildren(
+            iconPath: AppIcons.svg.drawer.accounts,
+            title: 'drawer.myRecentReportsAndHistory'.tr(),
+            onPressed: (context) {
+              log('drawer.myRecentReportsAndHistory'.tr());
+            },
+          ),
+          DrawerItemChildren(
+            iconPath: AppIcons.svg.drawer.subscription,
+            title: 'drawer.mySubscribedClinics'.tr(),
+            onPressed: (context) {
+              log('drawer.mySubscribedClinics'.tr());
+            },
+          ),
+          DrawerItemChildren(
+            iconPath: AppIcons.svg.drawer.notification,
+            title: 'drawer.myNotificationSettings'.tr(),
+            onPressed: (context) {
+              log('drawer.myNotificationSettings'.tr());
+            },
+          ),
+          DrawerItemChildren(
+            iconPath: AppIcons.svg.drawer.paymentMethod,
+            title: 'drawer.myPaymentMethods'.tr(),
+            onPressed: (context) {
+              log('drawer.myPaymentMethods'.tr());
+            },
+          ),
+          DrawerItemChildren(
+            iconPath: AppIcons.svg.drawer.delete,
+            title: 'drawer.deleteMyAccount'.tr(),
+            onPressed: (context) {
+              log('drawer.deleteMyAccount'.tr());
+            },
+          ),
+          DrawerItemChildren(
+            iconPath: AppIcons.svg.drawer.changeLang,
+            title: 'drawer.changeLanguage'.tr(),
+            onPressed: (context) {
+              context.pushRoute(const ChangeLanguageRoute());
+            },
+          ),
+        ],
+      ),
+      DrawerItem(
+        onPressed: (context) {},
+        iconPath: AppIcons.svg.drawer.helpSupport,
+        title: 'drawer.helpAndSupport'.tr(),
+        dropdownType: DrawerItemType.dropdown,
+        drawerItemChildren: [
+          DrawerItemChildren(
+            iconPath: AppIcons.svg.drawer.notePencil,
+            title: 'drawer.faqs'.tr(),
+            onPressed: (context) {
+              log('drawer.faqs'.tr());
+            },
+          ),
+          DrawerItemChildren(
+            iconPath: AppIcons.svg.drawer.userSound,
+            title: 'drawer.contactAndAssistance'.tr(),
+            onPressed: (context) {
+              log('drawer.contactAndAssistance'.tr());
+            },
+          ),
+          DrawerItemChildren(
+            iconPath: AppIcons.svg.drawer.minus,
+            title: 'drawer.reports'.tr(),
+            onPressed: (context) {
+              log('drawer.reports'.tr());
+            },
+          ),
+          DrawerItemChildren(
+            iconPath: AppIcons.svg.drawer.notePencil,
+            title: 'drawer.feedback'.tr(),
+            onPressed: (context) {
+              log('drawer.feedback'.tr());
+            },
+          ),
+        ],
+      ),
+      DrawerItem(
+        onPressed: (context) {},
+        iconPath: AppIcons.svg.drawer.about,
+        title: 'drawer.about'.tr(),
+        dropdownType: DrawerItemType.normal,
+        drawerItemChildren: [],
+      ),
+      DrawerItem(
+        onPressed: (context) {},
+        iconPath: AppIcons.svg.drawer.folder,
+        title: 'drawer.privacyPolicy'.tr(),
+        dropdownType: DrawerItemType.normal,
+        drawerItemChildren: [],
+      ),
+      DrawerItem(
+        onPressed: (context) {},
+        iconPath: AppIcons.svg.drawer.folder,
+        title: 'drawer.termsAndConditions'.tr(),
+        dropdownType: DrawerItemType.normal,
+        drawerItemChildren: [],
+      ),
+      DrawerItem(
+        onPressed: (context) {},
+        iconPath: AppIcons.svg.drawer.folder,
+        title: 'Component\'s',
+        dropdownType: DrawerItemType.normal,
+        drawerItemChildren: [
+          DrawerItemChildren(
+            iconPath: AppIcons.svg.drawer.notePencil,
+            title: 'Test Design Screen',
+            onPressed: (context) {
+              context.pushRoute(const TestDesignRoute());
+            },
+          ),
+          DrawerItemChildren(
+            iconPath: AppIcons.svg.drawer.notePencil,
+            title: 'App Default Components Design',
+            onPressed: (context) {
+              context.pushRoute(const AppDesignRoute());
+            },
+          ),
+          DrawerItemChildren(
+            iconPath: AppIcons.svg.drawer.notePencil,
+            title: 'Splash Screen',
+            onPressed: (context) {
+              context.pushRoute(const SplashRoute());
+            },
+          ),
+          DrawerItemChildren(
+            iconPath: AppIcons.svg.drawer.notePencil,
+            title: 'Select Pet Option Screen',
+            onPressed: (context) {
+              context.pushRoute(SelectPetOptionRoute());
+            },
+          ),
+          DrawerItemChildren(
+            iconPath: AppIcons.svg.drawer.notePencil,
+            title: 'App Top Tab Bar',
+            onPressed: (context) {
+              context.pushRoute(const AppTopTabBarRoute());
+            },
+          ),
+          DrawerItemChildren(
+            iconPath: AppIcons.svg.drawer.notePencil,
+            title: 'App Top chip Tab Bar',
+            onPressed: (context) {
+              log('Buttons Clicked');
+              context.pushRoute(const AppTopChipTabBarRoute());
+            },
+          ),
+          DrawerItemChildren(
+            iconPath: AppIcons.svg.drawer.notePencil,
+            title: 'Buttons & Dialogs',
+            onPressed: (context) {
+              context.pushRoute(const AppButtonRoute());
+            },
+          ),
+          DrawerItemChildren(
+            iconPath: AppIcons.svg.drawer.notePencil,
+            title: 'Text Inputs',
+            onPressed: (context) {
+              context.pushRoute(const AppTextInputRoute());
+            },
+          ),
+          DrawerItemChildren(
+            iconPath: AppIcons.svg.drawer.notePencil,
+            title: 'Display & Feedback',
+            onPressed: (context) {
+              context.pushRoute(const AppDisplayRoute());
+            },
+          ),
+          DrawerItemChildren(
+            iconPath: AppIcons.svg.drawer.notePencil,
+            title: 'Nudges',
+            onPressed: (context) {
+              context.pushRoute(const AppNudgesRoute());
+            },
+          ),
+          DrawerItemChildren(
+            iconPath: AppIcons.svg.drawer.notePencil,
+            title: 'List Screen',
+            onPressed: (context) {
+              context.pushRoute(const AppListRoute());
+            },
+          ),
+          DrawerItemChildren(
+            iconPath: AppIcons.svg.drawer.notePencil,
+            title: 'Grid Screen',
+            onPressed: (context) {
+              context.pushRoute(const AppGridRoute());
+            },
+          ),
+          DrawerItemChildren(
+            iconPath: AppIcons.svg.drawer.notePencil,
+            title: 'List Item Screen',
+            onPressed: (context) {
+              context.pushRoute(const AppListItemRoute());
+            },
+          ),
+          DrawerItemChildren(
+            iconPath: AppIcons.svg.drawer.notePencil,
+            title: 'Form Screen',
+            onPressed: (context) {
+              context.pushRoute(const AppFormRoute());
+            },
+          ),
+          DrawerItemChildren(
+            iconPath: AppIcons.svg.drawer.notePencil,
+            title: 'Intro Transition Screen',
+            onPressed: (context) {
+              context.pushRoute(const IntroTransitionRoute());
+            },
+          ),
+        ],
+      ),
+    ];
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final isKeyboardOpen = MediaQuery.of(context).viewInsets.bottom > 0;
     return AutoTabsRouter(
       routes: const [
         ProductsTabRoute(),
@@ -407,8 +405,14 @@ class _HomeScreenState extends State<HomeScreen> {
               key: _scaffoldKey, // 👈
               backgroundColor: AppColors.transparent, // ✅ IMPORTANT
               appBar: PoochAppBar(
+                onNotificationTap: () {
+                  context.router.push(const NotificationListingRoute());
+                },
                 onMenuTap: () {
                   _scaffoldKey.currentState?.openDrawer(); //  👈
+                },
+                onDateTap: () {
+                  context.router.push(const ScheduleRoute());
                 },
                 userName: userName,
                 welcomeText: 'Welcome 👋🏻',
@@ -456,7 +460,7 @@ class _HomeScreenState extends State<HomeScreen> {
               // ),
               drawer: AppDrawer(
                 theme: theme,
-                drawerItems: _drawerItem,
+                drawerItems: _buildDrawerItems(context),
                 socialMediaIcons: socialMediaIcons,
               ),
 
@@ -473,17 +477,17 @@ class _HomeScreenState extends State<HomeScreen> {
                         : RefreshIndicator(
                             onRefresh: _onPullToRefresh,
                             notificationPredicate: (_) => true,
-                            child:
-                                BlocSelector<HomeBloc, HomeState, HomeStatus>(
-                                  selector: (state) => state.status,
-                                  builder: (context, status) {
-                                    if (status == HomeStatus.loading ||
-                                        status == HomeStatus.initial) {
-                                      return const AppLoader();
-                                    }
-                                    return child;
-                                  },
-                                ),
+                            child: BlocSelector<HomeBloc, HomeState, HomeStatus>(
+                              selector: (state) => state.status,
+                              builder: (context, status) {
+                                //  Not requried as the data is alredy loaded.
+                                // if (status == HomeStatus.loading ||
+                                //     status == HomeStatus.initial) {
+                                //   return const AppLoader();
+                                // }
+                                return child;
+                              },
+                            ),
                           ),
                     // : RefreshIndicator(
                     //     onRefresh: _onPullToRefresh,
@@ -521,52 +525,60 @@ class _HomeScreenState extends State<HomeScreen> {
                   //   ),
 
                   /// 🔥 FLOATING BOTTOM TAB
-                  Positioned(
-                    left: 10.h,
-                    right: 10.h,
-                    bottom: 10.h,
-                    child: AppBottomTabNav(
-                      onChanged: (index) {
-                        if (index == 3) {
-                          // Serve tab - set active index first, then show full screen transition
-                          tabsRouter.setActiveIndex(index);
-                          context.router.push(const EcommerceTransitionRoute());
-                        } else {
-                          tabsRouter.setActiveIndex(index);
-                        }
-                      },
-                      currentIndex: tabsRouter.activeIndex,
-                      items: [
-                        // Explore Tab
-                        AppBottomTabNavItem(
-                          iconPath: AppIcons.svg.tabs.verify,
-                          title: 'Explore',
-                        ),
-                        //Insight Tab
-                        AppBottomTabNavItem(
-                          iconPath: AppIcons.svg.tabs.pentagon,
-                          title: 'Insight',
-                        ),
-                        // Home Tab
-                        AppBottomTabNavItem(
-                          iconPath: AppIcons.svg.tabs.paw,
-                          title: 'Home',
-                        ),
-                        //Serve Tab
-                        AppBottomTabNavItem(
-                          // iconPath: 'assets/icons/svg/tabs/clipboard.svg',
-                          iconPath: AppIcons.svg.tabs.clipboard,
-                          title: 'Serve',
-                        ),
+                  if (!isKeyboardOpen)
+                    Positioned(
+                      left: 10.h,
+                      right: 10.h,
+                      bottom: 10.h,
+                      child: AppBottomTabNav(
+                        onChanged: (index) {
+                          if (index == 3 && tabsRouter.activeIndex != 3) {
+                            // Serve tab - set active index first, then show full screen transition
+                            tabsRouter.setActiveIndex(index);
 
-                        // Groups Tab
-                        AppBottomTabNavItem(
-                          iconPath: AppIcons.svg.tabs.group,
-                          title: 'Groups',
-                        ),
-                      ],
+                            if (!_hasShownServeTransition) {
+                              _hasShownServeTransition = true;
+
+                              context.router.push(
+                                const EcommerceTransitionRoute(),
+                              );
+                            }
+                          } else {
+                            tabsRouter.setActiveIndex(index);
+                          }
+                        },
+                        currentIndex: tabsRouter.activeIndex,
+                        items: [
+                          // Explore Tab
+                          AppBottomTabNavItem(
+                            iconPath: AppIcons.svg.tabs.verify,
+                            title: 'common.tabs.explore'.tr(),
+                          ),
+                          //Insight Tab
+                          AppBottomTabNavItem(
+                            iconPath: AppIcons.svg.tabs.pentagon,
+                            title: 'common.tabs.insight'.tr(),
+                          ),
+                          // Home Tab
+                          AppBottomTabNavItem(
+                            iconPath: AppIcons.svg.tabs.paw,
+                            title: 'common.tabs.home'.tr(),
+                          ),
+                          //Serve Tab
+                          AppBottomTabNavItem(
+                            // iconPath: 'assets/icons/svg/tabs/clipboard.svg',
+                            iconPath: AppIcons.svg.tabs.clipboard,
+                            title: 'common.tabs.serve'.tr(),
+                          ),
+
+                          // Groups Tab
+                          AppBottomTabNavItem(
+                            iconPath: AppIcons.svg.tabs.group,
+                            title: 'common.tabs.community'.tr(),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
                 ],
               ),
             ),

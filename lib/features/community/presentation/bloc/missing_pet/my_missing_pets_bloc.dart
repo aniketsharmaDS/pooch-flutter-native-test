@@ -235,7 +235,7 @@ class MyMissingPetsBloc extends PaginationBloc<MissingPetModel> {
         }
       }
     } catch (e) {
-      CustomSnackbar.show('some thing went wrong', SnackbarType.error);
+      // CustomSnackbar.show('some thing went wrong', SnackbarType.error);
       rethrow;
     }
   }
@@ -271,7 +271,7 @@ class MyMissingPetsBloc extends PaginationBloc<MissingPetModel> {
         }
       }
     } catch (e) {
-      CustomSnackbar.show('some thing went wrong', SnackbarType.error);
+      // CustomSnackbar.show('some thing went wrong', SnackbarType.error);
       rethrow;
     }
   }
@@ -298,7 +298,7 @@ class MyMissingPetsBloc extends PaginationBloc<MissingPetModel> {
         }
       }
     } catch (e) {
-      CustomSnackbar.show('some thing went wrong', SnackbarType.error);
+      // CustomSnackbar.show('some thing went wrong', SnackbarType.error);
       rethrow;
     }
   }

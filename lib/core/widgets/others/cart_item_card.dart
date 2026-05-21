@@ -188,7 +188,6 @@ class CartItemCard extends StatelessWidget {
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           Flexible(
                             child: AppText.bodyM(

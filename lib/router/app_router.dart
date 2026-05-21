@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:poochcare/core/di/service_locator.dart';
 import 'package:poochcare/core/enums/medical_history_record_type_filter.dart';
 import 'package:poochcare/core/store/auth/auth_store_bloc.dart';
-// import 'package:poochcare/core/widgets/list_items/product_list_item_card.dart';
 import 'package:poochcare/core/widgets/others/image_crop_screen.dart';
 import 'package:poochcare/features/appointments/data/models/appointments_response_model.dart';
 import 'package:poochcare/features/appointments/presentation/view/appointments_tab_screen.dart';
@@ -43,6 +42,8 @@ import 'package:poochcare/features/community/presentation/view/pooch_parent_chat
 import 'package:poochcare/features/community/presentation/view/pooch_parent_chat_screen.dart';
 import 'package:poochcare/features/community/presentation/view/pooch_pet_shelter_list_screen.dart';
 import 'package:poochcare/features/community/presentation/view/report_missing_pet_form_screen.dart';
+import 'package:poochcare/features/community/presentation/view/transitions/pet_is_home_transition_screen.dart';
+import 'package:poochcare/features/community/presentation/view/transitions/pet_still_missing_transition_screen.dart';
 import 'package:poochcare/features/community/presentation/view/transitions/report_missing_pet_transition_screen.dart';
 import 'package:poochcare/features/coupons/presentation/view/coupons_screen.dart';
 import 'package:poochcare/features/ecommerce/data/models/address/address_model.dart';
@@ -77,6 +78,8 @@ import 'package:poochcare/features/fun/presentation/widgets/accessory_order_summ
 // import 'package:poochcare/features/ecommerce/presentation/widgets/buy_pet/product_grid_item_card.dart' hide ProductItem;
 import 'package:poochcare/features/home/presentation/view/home_screen.dart';
 import 'package:poochcare/features/home/presentation/view/home_tab_screen.dart';
+import 'package:poochcare/features/home/presentation/view/notifications_listing_screen.dart';
+import 'package:poochcare/features/insight/data/models/symptom_response.dart';
 import 'package:poochcare/features/insight/presentation/bloc/clinic_bloc/clinic_event.dart';
 import 'package:poochcare/features/insight/presentation/view/appointments/appointment_booking_summary_screen.dart';
 import 'package:poochcare/features/insight/presentation/view/appointments/appointment_payment_summary_screen.dart';
@@ -268,6 +271,7 @@ class AppRouter extends RootStackRouter {
         ),
       ],
     ),
+    AutoRoute(page: NotificationListingRoute.page),
     AutoRoute(page: VirtualPetGamingRoute.page),
     AutoRoute(page: PurchaseSuccessRoute.page),
     AutoRoute(page: AccessoryOrderSummaryRoute.page),
@@ -318,7 +322,6 @@ class AppRouter extends RootStackRouter {
     AutoRoute(page: EditParentProfileRoute.page),
     AutoRoute(page: UserProfileRoute.page),
     AutoRoute(page: AddPetMedicalRecordsTabRoute.page),
-    AutoRoute(page: BuyPetLandingRoute.page),
     AutoRoute(page: BuyPetListingRoute.page),
     AutoRoute(page: BuyPetDetailRoute.page),
     AutoRoute(page: CommonPetListingRoute.page),
@@ -369,6 +372,8 @@ class AppRouter extends RootStackRouter {
     AutoRoute(page: MissingVerifyBiometricRoute.page),
     AutoRoute(page: MissingBiometricPetFoundRoute.page),
     AutoRoute(page: MissingBiometricPetNotFoundRoute.page),
+    AutoRoute(page: PetStillMissingTransitionRoute.page),
+    AutoRoute(page: PetIsHomeTransitionRoute.page),
     AutoRoute(page: PoochPetShelterListRoute.page),
     AutoRoute(page: PoochParentChatListRoute.page),
     AutoRoute(page: PoochParentChatRoute.page),
@@ -438,7 +443,13 @@ class AppFlowGuard extends AutoRouteGuard {
       final bool isOnboarded = user.isOnboarded;
       log('isPetOnboarded - $isPetOnboarded and isOnboarded - $isOnboarded');
 
-      if (!isPetOnboarded) {
+      // final journeyType = getIt<OnboardingJourneyStoreBloc>().state.journeyType;
+      // final isBuyPetJourney = journeyType == OnboardingJourneyType.buyPet;
+
+      if (user.hasBoughtPet) {
+        resolver.next();
+        return;
+      } else if (!isPetOnboarded) {
         if (petCount > 0) {
           router.replaceAll([
             OnboardingSuccessfulTransitionRoute(

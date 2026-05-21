@@ -8,6 +8,19 @@
     "close": "إغلاق",
     "delete": "حذف",
     "edit": "تعديل",
-    "save": "حفظ"
+    "save": "حفظ",
+    "tabs": {
+      "explore": "استكشاف",
+      "insight": "نظرة عامة",
+      "home": "الرئيسية",
+      "serve": "خدمة",
+      "community": "المجتمع"
+    },
+    "bottomSheet": {
+      "title": "البحث عن عنوان",
+      "hint": "ابحث عن عنوان",
+      "searchAnAddress": "ابحث عن عنوان",
+      "noResults": "لم يتم العثور على نتائج"
+    }
   }
 }

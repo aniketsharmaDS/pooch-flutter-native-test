@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:ui';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:poochcare/core/config/app_config.dart';
@@ -27,13 +28,8 @@ class AddressResult {
 
 class AddressSearchBottomSheet {
   static final String _apiKey = AppConfig.googlePlacesApiKey ?? '';
-
   static String getCountryCode() {
     final userProfile = getIt<UserProfileBloc>().state.profile;
-    log(
-      'User profile in AddressSearchBottomSheet: '
-      '${userProfile?.country} | ${userProfile?.countryCode}',
-    );
     if (userProfile != null) {
       final countryCode = (userProfile.countryCode).trim().toLowerCase();
 
@@ -95,9 +91,24 @@ class AddressSearchBottomSheet {
     }
   }
 
+  static String mapGoogleError(String status) {
+    switch (status) {
+      case 'OVER_QUERY_LIMIT':
+        return 'Too many requests. Please try again later.';
+      case 'REQUEST_DENIED':
+        return 'Invalid API key or access denied.';
+      case 'INVALID_REQUEST':
+        return 'Invalid request.';
+      case 'ZERO_RESULTS':
+        return 'No results found.';
+      default:
+        return 'Something went wrong.';
+    }
+  }
+
   static Future<AddressResult?> show({
     required BuildContext context,
-    String title = 'Search Address',
+    String title = '',
     Future<void> Function(AddressResult result)? onSelectedApiCall,
   }) {
     final controller = TextEditingController();
@@ -105,18 +116,26 @@ class AddressSearchBottomSheet {
     // final focusNode = FocusNode();
 
     final resultsNotifier = ValueNotifier<List<AddressResult>>([]);
+    final errorNotifier = ValueNotifier<String?>(null);
 
     final loadingNotifier = ValueNotifier<bool>(false);
 
     Timer? debounce;
 
+    int searchEpoch = 0;
+
     Future<void> search(String query) async {
+      final currentEpoch = ++searchEpoch;
+
       if (query.trim().isEmpty) {
         resultsNotifier.value = [];
+        errorNotifier.value = null;
+        loadingNotifier.value = false; // ADD THIS
         return;
       }
 
       loadingNotifier.value = true;
+      errorNotifier.value = null; // ADD THIS
 
       final countryCode = getCountryCode();
 
@@ -126,14 +145,22 @@ class AddressSearchBottomSheet {
           '&key=$_apiKey'
           '&components=country:$countryCode';
 
-      log('Google Places API URL: $url');
-
       try {
         final res = await http.get(Uri.parse(url));
 
-        final data = json.decode(res.body);
+        if (currentEpoch != searchEpoch) return;
 
-        if (data['status'] != 'OK' && data['status'] != 'ZERO_RESULTS') {
+        final data = json.decode(res.body);
+        final status = data['status'];
+        if (status == 'ZERO_RESULTS') {
+          resultsNotifier.value = [];
+          loadingNotifier.value = false;
+          errorNotifier.value = null;
+          return;
+        }
+
+        if (status != 'OK') {
+          errorNotifier.value = mapGoogleError(status?.toString() ?? '');
           resultsNotifier.value = [];
           loadingNotifier.value = false;
           return;
@@ -153,10 +180,16 @@ class AddressSearchBottomSheet {
             .toList();
       } catch (e) {
         log('Autocomplete error: $e');
+        errorNotifier.value = 'Something went wrong. Please try again.';
         resultsNotifier.value = [];
+        loadingNotifier.value = false; // ADD THIS
       }
 
       loadingNotifier.value = false;
+    }
+
+    if (title.trim().isEmpty) {
+      title = 'common.bottomSheet.title'.tr();
     }
 
     return AppBottomSheet.show<AddressResult>(
@@ -168,7 +201,7 @@ class AddressSearchBottomSheet {
         children: [
           /// SEARCH FIELD
           AppSearchField(
-            hintText: 'Search location',
+            hintText: 'common.bottomSheet.hint'.tr(),
             controller: controller,
             // focusNode: focusNode,
             onChanged: (value) {
@@ -186,6 +219,20 @@ class AddressSearchBottomSheet {
 
           const SizedBox(height: 16),
 
+          ValueListenableBuilder<String?>(
+            valueListenable: errorNotifier,
+            builder: (_, error, _) {
+              if (error == null || error.isEmpty) {
+                return const SizedBox.shrink();
+              }
+
+              return Padding(
+                padding: const EdgeInsets.all(12),
+                child: Text(error, style: const TextStyle(color: Colors.red)),
+              );
+            },
+          ),
+
           /// RESULTS
           ValueListenableBuilder<bool>(
             valueListenable: loadingNotifier,
@@ -201,9 +248,9 @@ class AddressSearchBottomSheet {
                 valueListenable: resultsNotifier,
                 builder: (_, results, _) {
                   if (results.isEmpty) {
-                    return const Padding(
-                      padding: EdgeInsets.all(24),
-                      child: Text('No results'),
+                    return Padding(
+                      padding: const EdgeInsets.all(24),
+                      child: Text('common.bottomSheet.noResults'.tr()),
                     );
                   }
 

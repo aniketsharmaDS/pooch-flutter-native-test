@@ -26,12 +26,7 @@ class OnboardingSuccessfulTransitionScreen extends StatelessWidget {
       variant: TransitionScreenVariant.onBoardingSuccess,
       onPrimaryPressed: () {
         context.router.replaceAll([
-          SaveHouseDetailsRoute(
-            isMultiplePet: isMultiplePet,
-            initialPhoneNumber: initialPhoneNumber,
-            initialEmail: initialEmail,
-            initialCountryCode: initialCountryCode,
-          ),
+          SaveHouseDetailsRoute(isMultiplePet: isMultiplePet),
         ]);
       },
       onSecondaryPressed: () {

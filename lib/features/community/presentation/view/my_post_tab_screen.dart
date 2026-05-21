@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:auto_route/auto_route.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 import 'package:poochcare/core/theme/app_colors.dart';
@@ -51,23 +52,23 @@ class _MyPostTabScreenState extends State<MyPostTabScreen> {
                   AppTopChipTabBar(
                     tabs: [
                       ChipTabItem(
-                        title: 'All My Posts',
+                        title: 'community.myPostTab.allMyPosts'.tr(),
                         icon: AppIcons.svg.community.petPost,
                       ),
                       ChipTabItem(
-                        title: 'My Tips & Guide',
+                        title: 'community.myPostTab.myTipsAndGuide'.tr(),
                         icon: AppIcons.svg.community.petTipsGuide,
                       ),
                       ChipTabItem(
-                        title: 'My Events',
+                        title: 'community.myPostTab.myEvents'.tr(),
                         icon: AppIcons.svg.community.petEvents,
                       ),
                       ChipTabItem(
-                        title: 'My Missing Pet Reports',
+                        title: 'community.myPostTab.myMissingPetReports'.tr(),
                         icon: AppIcons.svg.community.petSearch,
                       ),
                       ChipTabItem(
-                        title: 'My Found Pets',
+                        title: 'community.myPostTab.myFoundPets'.tr(),
                         icon: AppIcons.svg.community.petHouse,
                       ),
                     ],

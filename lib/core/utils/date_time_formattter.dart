@@ -210,8 +210,7 @@ String formatDateAndTime({
 
     // 2. If both date & time exist
     if (hasDate && hasTime) {
-      // ignore: unnecessary_non_null_assertion
-      final combined = '${missingDate!.trim()} ${missingTime!.trim()}';
+      final combined = '${missingDate.trim()} ${missingTime.trim()}';
 
       // Try multiple formats safely
       final formats = [
@@ -230,8 +229,7 @@ String formatDateAndTime({
     // 3. If only date exists OR parsing failed
     if (dateTime == null && hasDate) {
       try {
-        // ignore: unnecessary_non_null_assertion
-        dateTime = DateFormat('yyyy-MM-dd').parseStrict(missingDate!.trim());
+        dateTime = DateFormat('yyyy-MM-dd').parseStrict(missingDate.trim());
       } catch (_) {
         return '-';
       }
@@ -243,8 +241,7 @@ String formatDateAndTime({
     dateTime = dateTime.toLocal();
 
     // 5. Format output
-    // ignore: unnecessary_non_null_assertion
-    if (hasTime && missingTime!.trim().isNotEmpty && dateTime.hour != 0) {
+    if (hasTime && missingTime.trim().isNotEmpty && dateTime.hour != 0) {
       return DateFormat('d MMM, h:mm a').format(dateTime);
     } else {
       return DateFormat('d MMM').format(dateTime);

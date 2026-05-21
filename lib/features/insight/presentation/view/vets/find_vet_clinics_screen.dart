@@ -23,9 +23,12 @@ import 'package:poochcare/core/widgets/texts/app_search_field.dart';
 import 'package:poochcare/core/widgets/texts/app_text.dart';
 import 'package:poochcare/core/widgets/texts/app_text_field.dart';
 import 'package:poochcare/features/insight/data/models/find_vet_form.dart';
+import 'package:poochcare/features/insight/data/models/symptom_response.dart';
 import 'package:poochcare/features/insight/presentation/bloc/clinic_bloc/clinic_bloc.dart';
 import 'package:poochcare/features/insight/presentation/bloc/clinic_bloc/clinic_event.dart';
 import 'package:poochcare/features/insight/presentation/bloc/clinic_bloc/clinic_state.dart';
+import 'package:poochcare/features/insight/presentation/bloc/report_symptoms_bloc/report_symptoms_bloc.dart';
+import 'package:poochcare/features/insight/presentation/bloc/report_symptoms_bloc/report_symptoms_state.dart';
 import 'package:poochcare/router/app_router.dart';
 
 class Specialist extends Equatable {
@@ -40,7 +43,9 @@ class Specialist extends Equatable {
 
 @RoutePage()
 class FindVetClinicsScreen extends StatefulWidget {
-  const FindVetClinicsScreen({super.key});
+  final SymptomType? initialSymptoms;
+
+  const FindVetClinicsScreen({super.key, this.initialSymptoms});
 
   @override
   State<FindVetClinicsScreen> createState() => _FindVetClinicsScreenState();
@@ -52,13 +57,6 @@ class _FindVetClinicsScreenState extends State<FindVetClinicsScreen> {
   final TextEditingController _currentMedication = TextEditingController();
 
   final TextEditingController _additionalNotes = TextEditingController();
-  final List<String> symptoms = [
-    'Pain',
-    'Coughing',
-    'Fever',
-    'Loss of appetite',
-    'Vomiting',
-  ];
 
   final List<String> _symptomDurations = [
     'Less than a week',
@@ -67,7 +65,7 @@ class _FindVetClinicsScreenState extends State<FindVetClinicsScreen> {
     'More than a month',
   ];
   String? _selectedSpecialist;
-  late ValueNotifier<List<String>> _selectedSymptoms;
+  late ValueNotifier<List<SymptomType>> _selectedSymptoms;
   late ValueNotifier<String?> _selectedDuration;
   List<File?> _uploadedPhotos = [];
   List<File?> _uploadedDocuments = [];
@@ -77,7 +75,9 @@ class _FindVetClinicsScreenState extends State<FindVetClinicsScreen> {
   void initState() {
     super.initState();
     getIt<ClinicBloc>().add(const ResetFindVetForm());
-    _selectedSymptoms = ValueNotifier<List<String>>([]);
+    _selectedSymptoms = widget.initialSymptoms != null
+        ? ValueNotifier<List<SymptomType>>([widget.initialSymptoms!])
+        : ValueNotifier<List<SymptomType>>([]);
     _selectedDuration = ValueNotifier<String?>(null);
     context.read<ClinicBloc>().add(const FetchFilterOptions());
   }
@@ -216,94 +216,120 @@ class _FindVetClinicsScreenState extends State<FindVetClinicsScreen> {
                             fontSize: AppFontSize.fs16,
                           ),
                           const SizedBox(height: AppSpacing.s10),
-                          AppDropdowns(
-                            selectedItemBuilder: (context) {
-                              return symptoms.map((item) {
-                                return ValueListenableBuilder<List<String>>(
-                                  valueListenable: _selectedSymptoms,
-                                  builder: (context, multiValue, _) {
-                                    return Container(
-                                      alignment:
-                                          AlignmentDirectional.centerStart,
-                                      child: Text(
-                                        multiValue
-                                            .where((item) => item != 'All')
-                                            .join(', '),
-                                        style: const TextStyle(
-                                          fontSize: 14,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                        maxLines: 1,
-                                      ),
-                                    );
-                                  },
-                                );
-                              }).toList();
-                            },
-                            onChanged: (value) {
-                              if (value != null) {
-                                final multiValue = _selectedSymptoms.value;
-                                final isSelected = multiValue.contains(value);
-                                if (value == 'All') {
-                                  isSelected
-                                      ? _selectedSymptoms.value = []
-                                      : _selectedSymptoms.value = List.from(
-                                          symptoms,
-                                        );
-                                } else {
-                                  _selectedSymptoms.value = isSelected
-                                      ? ([...multiValue]..remove(value))
-                                      : [...multiValue, value];
-                                }
-                              }
-                            },
-                            multiValueListenable: _selectedSymptoms,
-
-                            isExpanded: true,
-                            hint: AppText.bodyS('Primary Symptom'),
-                            items: List.generate(symptoms.length, (index) {
-                              final symptom = symptoms[index];
-                              return DropdownItem(
-                                value: symptom,
-                                height: 40,
-                                closeOnTap: false,
-
-                                child: ValueListenableBuilder<List<String>>(
-                                  valueListenable: _selectedSymptoms,
-                                  builder: (context, multiValue, _) {
-                                    final isSelected = multiValue.contains(
-                                      symptom,
-                                    );
-                                    return Container(
-                                      height: double.infinity,
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 16.0,
-                                      ),
-                                      child: Row(
-                                        children: [
-                                          Expanded(
-                                            child: AppText.bodyS(
-                                              symptom,
+                          BlocProvider.value(
+                            value: getIt<ReportSymptomsBloc>(),
+                            child: BlocBuilder<ReportSymptomsBloc, ReportSymptomsState>(
+                              builder: (context, state) {
+                                final symptoms =
+                                    state.symptomResponse?.data?.symptomTypes ??
+                                    [];
+                                return AppDropdowns(
+                                  selectedItemBuilder: (context) {
+                                    return symptoms.map((item) {
+                                      return ValueListenableBuilder<
+                                        List<SymptomType>
+                                      >(
+                                        valueListenable: _selectedSymptoms,
+                                        builder: (context, multiValue, _) {
+                                          return Container(
+                                            alignment: AlignmentDirectional
+                                                .centerStart,
+                                            child: Text(
+                                              multiValue
+                                                  .where(
+                                                    (item) =>
+                                                        item.title != 'All',
+                                                  )
+                                                  .map((e) => e.title)
+                                                  .join(', '),
                                               style: const TextStyle(
                                                 fontSize: 14,
+                                                overflow: TextOverflow.ellipsis,
                                               ),
+                                              maxLines: 1,
                                             ),
-                                          ),
-                                          const SizedBox(width: 16),
-
-                                          if (isSelected)
-                                            const Icon(Icons.check_box_outlined)
-                                          else
-                                            const Icon(
-                                              Icons.check_box_outline_blank,
-                                            ),
-                                        ],
-                                      ),
-                                    );
+                                          );
+                                        },
+                                      );
+                                    }).toList();
                                   },
-                                ),
-                              );
-                            }),
+                                  onChanged: (value) {
+                                    if (value != null) {
+                                      final multiValue =
+                                          _selectedSymptoms.value;
+                                      final isSelected = multiValue.contains(
+                                        value,
+                                      );
+                                      // if (value == 'All') {
+                                      //   isSelected
+                                      //       ? _selectedSymptoms.value = []
+                                      //       : _selectedSymptoms.value =
+                                      //             List.from(symptoms);
+                                      // } else {
+                                      _selectedSymptoms.value = isSelected
+                                          ? ([...multiValue]..remove(value))
+                                          : [...multiValue, value];
+                                      // }
+                                    }
+                                  },
+                                  multiValueListenable: _selectedSymptoms,
+
+                                  isExpanded: true,
+                                  hint: AppText.bodyS('Primary Symptom'),
+                                  items: List.generate(symptoms.length, (
+                                    index,
+                                  ) {
+                                    final symptom = symptoms[index];
+                                    return DropdownItem(
+                                      value: symptom,
+                                      height: 40,
+                                      closeOnTap: false,
+
+                                      child:
+                                          ValueListenableBuilder<
+                                            List<SymptomType>
+                                          >(
+                                            valueListenable: _selectedSymptoms,
+                                            builder: (context, multiValue, _) {
+                                              final isSelected = multiValue
+                                                  .contains(symptom);
+                                              return Container(
+                                                height: double.infinity,
+                                                padding: const EdgeInsets.only(
+                                                  right: 16.0,
+                                                ),
+                                                child: Row(
+                                                  children: [
+                                                    Expanded(
+                                                      child: AppText.bodyS(
+                                                        symptom.title,
+                                                        style: const TextStyle(
+                                                          fontSize: 14,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    const SizedBox(width: 16),
+
+                                                    if (isSelected)
+                                                      const Icon(
+                                                        Icons
+                                                            .check_box_outlined,
+                                                      )
+                                                    else
+                                                      const Icon(
+                                                        Icons
+                                                            .check_box_outline_blank,
+                                                      ),
+                                                  ],
+                                                ),
+                                              );
+                                            },
+                                          ),
+                                    );
+                                  }),
+                                );
+                              },
+                            ),
                           ),
                           const SizedBox(height: AppSpacing.s15),
 
@@ -383,7 +409,9 @@ class _FindVetClinicsScreenState extends State<FindVetClinicsScreen> {
                                   currentMedication: _currentMedication.text
                                       .trim(),
                                   duration: _selectedDuration.value ?? '',
-                                  symptoms: _selectedSymptoms.value,
+                                  symptoms: _selectedSymptoms.value
+                                      .map((e) => e.title)
+                                      .toList(),
                                   uploadedDocuments: uploadedDocuments,
                                 );
                                 // 3. Submit to bloc

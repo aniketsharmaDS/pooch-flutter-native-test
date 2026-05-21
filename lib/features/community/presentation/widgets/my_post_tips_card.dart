@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:poochcare/core/theme/app_colors.dart';
 import 'package:poochcare/core/theme/app_spacing.dart';
@@ -87,7 +88,7 @@ class MyPostTipsCard extends StatelessWidget {
             child: Align(
               alignment: Alignment.centerLeft,
               child: AppText.bodyS(
-                'Tips and Information',
+                'community.myPostTipsCard.title'.tr(),
                 color: AppColors.white,
               ),
             ),

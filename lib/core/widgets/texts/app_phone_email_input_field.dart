@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:poochcare/core/theme/app_colors.dart';
-import 'package:poochcare/core/theme/app_font_size.dart';
 import 'package:poochcare/core/theme/app_icons.dart';
 import 'package:poochcare/core/theme/app_spacing.dart';
 import 'package:poochcare/core/theme/app_typography.dart';
@@ -551,10 +550,9 @@ class _AppPhoneEmailInputFieldState extends State<AppPhoneEmailInputField> {
                       cursorColor: const Color(0xFF8D6356),
                       cursorHeight: 16,
                       cursorWidth: 1.4,
-                      style: const TextStyle(
-                        color: Color(0xFF2B1B14),
+                      style: AppTypography.h4.copyWith(
+                        color: const Color(0xFF2B1B14),
                         fontSize: 14,
-                        fontFamily: 'Gilroy500',
                         height: 1.15,
                       ),
                       decoration: InputDecoration(
@@ -567,10 +565,10 @@ class _AppPhoneEmailInputFieldState extends State<AppPhoneEmailInputField> {
                         isDense: true,
                         // hintText: null,
                         prefixText: _isPhone ? '+$_dialCode ' : null,
-                        prefixStyle: AppTypography.bodyS.copyWith(
-                          height: 1.2,
-                          fontSize: AppFontSize.fs14,
-                          color: const Color(0xFF5D3A2E),
+                        prefixStyle: AppTypography.h4.copyWith(
+                          color: const Color(0xFF2B1B14),
+                          fontSize: 14,
+                          height: 1.15,
                         ),
                         hintStyle: AppTypography.bodyM.copyWith(
                           color: const Color(0xFFB5A9A4),
@@ -598,7 +596,7 @@ class _AppPhoneEmailInputFieldState extends State<AppPhoneEmailInputField> {
                           opacity: _isPhone ? 1 : 0,
                           child: _CountrySelectorView(
                             countries: _countries,
-                            selectedDialCode: _dialCode,
+                            selectedDialCode: '_dialCode',
                             selectedCountryListenable: _selectedCountryNotifier,
                             isOpen: _isCountryMenuOpen,
                             enabled: widget.enableCountrySelection,

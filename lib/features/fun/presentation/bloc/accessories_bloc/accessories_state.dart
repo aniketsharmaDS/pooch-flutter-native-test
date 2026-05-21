@@ -17,6 +17,14 @@ class AccessoriesState extends Equatable {
   final List<Accessory> accessories;
   final List<Accessory> myAccessories;
   final MyAccessoriesResponseModel? myAccessoriesData;
+  final int currentPage;
+  final int totalPages;
+  final bool hasReachedMax;
+  final int yourAccessoriesCurrentPage;
+  final int yourAccessoriesTotalPages;
+  final bool yourAccessoriesHasReachedMax;
+  final String? selectedAccessoryId;
+
   const AccessoriesState({
     this.status = AccessoriesStatus.initial,
     this.errorMessage = '',
@@ -26,6 +34,13 @@ class AccessoriesState extends Equatable {
     this.myAccessoriesStatus = MyAccessoriesStatus.initial,
     this.accessories = const [],
     this.myAccessories = const [],
+    this.currentPage = 1,
+    this.totalPages = 1,
+    this.hasReachedMax = false,
+    this.selectedAccessoryId,
+    this.yourAccessoriesCurrentPage = 1,
+    this.yourAccessoriesHasReachedMax = false,
+    this.yourAccessoriesTotalPages = 1,
   });
 
   AccessoriesState copyWith({
@@ -40,8 +55,19 @@ class AccessoriesState extends Equatable {
     MyAccessoriesResponseModel? myAccessoriesData,
     List<Accessory>? accessories,
     List<Accessory>? myAccessories,
+    int? totalPages,
+    String? selectedAccessoryId,
+    int? yourAccessoriesCurrentPage,
+    int? yourAccessoriesTotalPages,
+    bool? yourAccessoriesHasReachedMax,
   }) {
     return AccessoriesState(
+      yourAccessoriesCurrentPage:
+          yourAccessoriesCurrentPage ?? this.yourAccessoriesCurrentPage,
+      yourAccessoriesHasReachedMax:
+          yourAccessoriesHasReachedMax ?? this.yourAccessoriesHasReachedMax,
+      yourAccessoriesTotalPages:
+          yourAccessoriesTotalPages ?? this.yourAccessoriesTotalPages,
       myAccessories: myAccessories ?? this.myAccessories,
       accessories: accessories ?? this.accessories,
       myAccessoriesStatus: myAccessoriesStatus ?? this.myAccessoriesStatus,
@@ -50,6 +76,10 @@ class AccessoriesState extends Equatable {
       status: status ?? this.status,
       errorMessage: errorMessage,
       successMessage: successMessage,
+      totalPages: totalPages ?? this.totalPages,
+      hasReachedMax: hasReachedMax ?? this.hasReachedMax,
+      currentPage: currentPage ?? this.currentPage,
+      selectedAccessoryId: selectedAccessoryId,
     );
   }
 
@@ -63,5 +93,9 @@ class AccessoriesState extends Equatable {
     myAccessoriesStatus,
     accessories,
     myAccessories,
+    currentPage,
+    totalPages,
+    hasReachedMax,
+    selectedAccessoryId,
   ];
 }

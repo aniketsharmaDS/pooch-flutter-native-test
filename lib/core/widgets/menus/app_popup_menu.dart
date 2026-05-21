@@ -30,8 +30,8 @@ class AppPopupMenu extends StatefulWidget {
 
   final List<AppPopupMenuItem> items;
   final bool showCloseIcon;
-  final bool? showBadge;
-  final int? badgeCount;
+  final bool showBadge;
+  final int badgeCount;
   final VoidCallback? onClose;
   final AppCircleButtonSize size;
   final double? iconSize;

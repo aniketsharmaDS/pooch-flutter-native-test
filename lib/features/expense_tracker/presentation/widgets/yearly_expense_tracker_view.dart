@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:poochcare/core/theme/app_font_size.dart';
@@ -70,9 +71,7 @@ class _YearlyExpenseTrackerViewState extends State<YearlyExpenseTrackerView> {
             expenseTracker.monthlyExpenses.every((e) => e.amount == 0);
 
         if (expenseTracker == null) {
-          return Center(
-            child: AppText.bodyM('No data available for the selected year.'),
-          );
+          return Center(child: AppText.bodyM('expense.noDataAvailable'.tr()));
         }
         return LayoutBuilder(
           builder: (context, constraints) {
@@ -176,7 +175,7 @@ class _YearlyExpenseTrackerViewState extends State<YearlyExpenseTrackerView> {
                                     ),
                                     child: Center(
                                       child: AppText.bodyM(
-                                        'No expenses found for this year.',
+                                        'expense.noExpensesForYear'.tr(),
                                       ),
                                     ),
                                   ),
@@ -236,7 +235,7 @@ class _YearlyExpenseTrackerViewState extends State<YearlyExpenseTrackerView> {
 
                                 /// VIEW REPORT BUTTON
                                 AppButton(
-                                  label: 'View Details',
+                                  label: 'common.viewDetails'.tr(),
                                   padding: const EdgeInsets.symmetric(
                                     horizontal: AppSpacing.s16,
                                   ),

@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:poochcare/core/di/service_locator.dart';
 import 'package:poochcare/core/services/secure_storage_service.dart';
@@ -33,12 +34,12 @@ class _PoochParentChatScreenState extends State<PoochParentChatScreen> {
 
   final List<Map<String, dynamic>> messages = [
     {
-      'text': 'Hi! Can you tell me about the event you organized?',
+      'text': 'community.poochParentChatScreen.initialQuestion'.tr(),
       'isMe': true,
       'time': '14:55',
     },
     {
-      'text': 'Sure! It was a pet social and adoption day.',
+      'text': 'community.poochParentChatScreen.initialReply'.tr(),
       'isMe': false,
       'time': '14:55',
     },
@@ -179,8 +180,9 @@ class _PoochParentChatScreenState extends State<PoochParentChatScreen> {
                   Expanded(
                     child: TextField(
                       controller: _controller,
-                      decoration: const InputDecoration(
-                        hintText: 'Start typing...',
+                      decoration: InputDecoration(
+                        hintText: 'community.poochParentChatScreen.startTyping'
+                            .tr(),
                         border: InputBorder.none,
                       ),
                     ),

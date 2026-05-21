@@ -36,6 +36,7 @@ class ScheduleScreen extends StatefulWidget {
 
 class _ScheduleScreenState extends State<ScheduleScreen> {
   ScheduleViewType selectedView = ScheduleViewType.monthly;
+  late final TextEditingController _searchController;
 
   late final DateTime profileCreatedAt;
 
@@ -52,11 +53,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
 
     final normalizedToday = DateTime(today.year, today.month, today.day);
 
-    final startOfWeek = DateTime(
-      date.year,
-      date.month,
-      date.day,
-    ).subtract(Duration(days: date.weekday - 1));
+    final startOfWeek = date.subtract(Duration(days: date.weekday % 7));
 
     final endOfWeek = startOfWeek.add(const Duration(days: 6));
 
@@ -79,27 +76,60 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
     );
   }
 
-  List<CalendarEventData<Object?>> buildCalendarEvents(ScheduleState state) {
+  // List<CalendarEventData<Object?>> buildCalendarEvents(ScheduleState state) {
+  //   final monthlySchedule = state.monthlySchedule;
+
+  //   if (monthlySchedule == null) {
+  //     return [];
+  //   }
+
+  //   return monthlySchedule.schedules
+  //       .expand((day) => day.items)
+  //       .map(
+  //         (item) => CalendarEventData<Object?>(
+  //           date: item.startDateTime,
+
+  //           startTime: item.startDateTime,
+
+  //           endTime: item.startDateTime.add(const Duration(hours: 1)),
+
+  //           title: item.title,
+
+  //           color: item.indicatorColor,
+
+  //           event: item,
+  //         ),
+  //       )
+  //       .toList();
+  // }
+
+  List<CalendarEventData<Object?>> buildFilteredCalendarEvents(
+    ScheduleState state,
+  ) {
     final monthlySchedule = state.monthlySchedule;
 
     if (monthlySchedule == null) {
       return [];
     }
 
-    return monthlySchedule.schedules
-        .expand((day) => day.items)
+    final query = _searchController.text.trim().toLowerCase();
+
+    final allItems = monthlySchedule.schedules.expand((day) => day.items).where(
+      (item) {
+        if (query.isEmpty) return true;
+
+        return item.title.toLowerCase().contains(query);
+      },
+    ).toList();
+
+    return allItems
         .map(
           (item) => CalendarEventData<Object?>(
             date: item.startDateTime,
-
             startTime: item.startDateTime,
-
             endTime: item.startDateTime.add(const Duration(hours: 1)),
-
             title: item.title,
-
             color: item.indicatorColor,
-
             event: item,
           ),
         )
@@ -127,27 +157,49 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
 
     final createdAt = context.read<UserProfileBloc>().state.profile!.createdAt;
 
+    _searchController = TextEditingController();
+
     profileCreatedAt = DateTime.parse(createdAt);
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => getIt<ScheduleBloc>()
-        ..add(
-          LoadMonthlySchedule(
-            month: DateTime.now().month,
-            year: DateTime.now().year,
-          ),
-        ),
+      create: (_) => getIt<ScheduleBloc>(),
+      // ..add(
+      //   LoadMonthlySchedule(
+      //     month: DateTime.now().month,
+      //     year: DateTime.now().year,
+      //   ),
+      // ),
       child: Builder(
         builder: (context) {
           return BlocBuilder<ScheduleBloc, ScheduleState>(
             builder: (context, state) {
               final bloc = context.read<ScheduleBloc>();
-              final isPastSelectedDate = selectedView == ScheduleViewType.weekly
-                  ? _isPastWeek(state.selectedDate)
-                  : _isPastDate(state.selectedDate);
+              final now = DateTime.now();
+
+              final focusedDate = state.focusedDate;
+
+              final isPastSelectedDate =
+                  selectedView == ScheduleViewType.monthly
+                  ? focusedDate.year == now.year &&
+                            focusedDate.month == now.month
+                        ? _isPastDate(focusedDate)
+                        : DateTime(
+                            focusedDate.year,
+                            focusedDate.month,
+                          ).isBefore(DateTime(now.year, now.month))
+                  : selectedView == ScheduleViewType.weekly
+                  ? _isPastWeek(focusedDate)
+                  : _isPastDate(focusedDate);
               return SafeArea(
                 child: Stack(
                   children: [
@@ -161,9 +213,9 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                               horizontal: 16.0,
                             ),
                             child: AppSearchField(
-                              controller: TextEditingController(),
+                              controller: _searchController,
                               onChanged: (value) {
-                                // _onSearch(value);
+                                setState(() {});
                               },
                               onSubmitted: (value) {},
                             ),
@@ -172,9 +224,11 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                           AppSpacing.s25.hBox,
 
                           ScheduleHeader(
-                            selectedDate: state.selectedDate,
-                            selectedYear: state.selectedYear,
+                            selectedDate: state.focusedDate,
+                            selectedYear: state.focusedDate.year,
+                            // selectedYear: state.selectedYear,
                             selectedView: selectedView,
+                            isLoading: state.isLoading,
 
                             onViewChanged: (v) {
                               setState(() {
@@ -186,17 +240,22 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                               final bloc = context.read<ScheduleBloc>();
                               final year = await AppYearPickerSheet.show(
                                 context: context,
-                                initialYear: state.selectedYear,
+                                initialYear: state.focusedDate.year,
                                 accountCreatedAt: profileCreatedAt,
                                 futureYearsCount: 10,
                               );
 
                               if (!mounted) return;
                               if (year != null) {
-                                // setState(() {
-                                //   selectedYear = year;
-                                // });
-                                bloc.add(ChangeScheduleYear(year));
+                                bloc.add(
+                                  ChangeFocusedDate(
+                                    DateTime(
+                                      year,
+                                      state.focusedDate.month,
+                                      state.focusedDate.day,
+                                    ),
+                                  ),
+                                );
                               }
                             },
                           ),
@@ -245,7 +304,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                                         BlocProvider.value(
                                           value: bloc,
                                           child: AddScheduleScreen(
-                                            initialDate: state.selectedDate,
+                                            initialDate: state.focusedDate,
                                           ),
                                         ),
                                       );
@@ -269,7 +328,8 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
     switch (selectedView) {
       case ScheduleViewType.monthly:
         return ScheduleMonthView(
-          events: buildCalendarEvents(state),
+          events: buildFilteredCalendarEvents(state),
+          selectedDate: state.focusedDate,
 
           onDayEventsTap: (date, events) {
             if (events.isEmpty) return;
@@ -296,35 +356,48 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
           },
 
           onDateSelected: (date) {
-            bloc.add(ChangeSelectedDate(date));
+            //  bloc.add(ChangeSelectedDate(date));
+            bloc.add(ChangeFocusedDate(date));
           },
 
           onPageChanged: (date) {
-            /// update selected date
-            bloc.add(ChangeSelectedDate(date));
+            // /// update selected date
+            // bloc.add(ChangeSelectedDate(date));
 
-            /// reload api
-            bloc.add(LoadMonthlySchedule(month: date.month, year: date.year));
+            // /// reload api
+            // bloc.add(LoadMonthlySchedule(month: date.month, year: date.year));
+
+            //  bloc.add(
+            //   ChangeVisibleMonthYear(month: date.month, year: date.year),
+            // );
+
+            // bloc.add(LoadMonthlySchedule(month: date.month, year: date.year));
+
+            bloc.add(ChangeFocusedDate(DateTime(date.year, date.month)));
           },
         );
 
       case ScheduleViewType.daily:
         final controller = EventController<Object?>();
 
-        controller.addAll(buildCalendarEvents(state));
+        controller.addAll(buildFilteredCalendarEvents(state));
 
         return ScheduleDayView(
           controller: controller,
 
-          selectedDate: state.selectedDate,
+          selectedDate: state.focusedDate,
 
           onPageChange: (date) {
-            bloc.add(ChangeSelectedDate(date));
+            // bloc.add(ChangeSelectedDate(date));
 
-            if (date.month != state.selectedMonth ||
-                date.year != state.selectedYear) {
-              bloc.add(LoadMonthlySchedule(month: date.month, year: date.year));
-            }
+            // bloc.add(ChangeFocusedDate(date));
+
+            // if (date.month != state.selectedMonth ||
+            //     date.year != state.selectedYear) {
+            //   bloc.add(LoadMonthlySchedule(month: date.month, year: date.year));
+            // }
+
+            bloc.add(ChangeFocusedDate(date));
           },
           onEdit: (item) {
             context.router.pushWidget(
@@ -340,7 +413,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
         );
       case ScheduleViewType.weekly:
         return ScheduleWeekView(
-          events: buildCalendarEvents(state),
+          events: buildFilteredCalendarEvents(state),
 
           onEventTap: (event) {
             ScheduleDetailsBottomSheet.show(
@@ -364,15 +437,24 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
             );
           },
 
-          selectedDate: state.selectedDate,
+          selectedDate: state.focusedDate,
 
           onPageChange: (date) {
-            bloc.add(ChangeSelectedDate(date));
+            // bloc.add(ChangeSelectedDate(date));
 
-            if (date.month != state.selectedMonth ||
-                date.year != state.selectedYear) {
-              bloc.add(LoadMonthlySchedule(month: date.month, year: date.year));
-            }
+            // if (date.month != state.selectedMonth ||
+            //     date.year != state.selectedYear) {
+            //   bloc.add(LoadMonthlySchedule(month: date.month, year: date.year));
+            // }
+
+            // bloc.add(ChangeVisibleWeekDate(date));
+
+            // if (date.month != state.selectedMonth ||
+            //     date.year != state.selectedYear) {
+            //   bloc.add(LoadMonthlySchedule(month: date.month, year: date.year));
+            // }
+
+            bloc.add(ChangeFocusedDate(date));
           },
           onEdit: (item) {
             context.router.pushWidget(

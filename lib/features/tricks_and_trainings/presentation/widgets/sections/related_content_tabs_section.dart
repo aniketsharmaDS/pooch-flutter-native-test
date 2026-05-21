@@ -6,41 +6,28 @@ class RelatedContentTabsSection extends StatelessWidget {
   final String leftTitle;
   final String rightTitle;
 
-  final Widget leftScreen;
-  final Widget rightScreen;
-
-  final VoidCallback? onLeftTabTap;
-
-  final VoidCallback? onRightTabTap;
+  final ValueChanged<int>? onTabChanged;
 
   const RelatedContentTabsSection({
     super.key,
     required this.leftTitle,
     required this.rightTitle,
-    required this.leftScreen,
-    required this.rightScreen,
-    this.onLeftTabTap,
-    this.onRightTabTap,
+    this.onTabChanged,
   });
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 500.h,
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: AppSpacing.s16.w),
-        child: AppDefaultRouteTabs(
-          tabNames: [leftTitle, rightTitle],
-          isScrollable: true,
-          children: [leftScreen, rightScreen],
-          onTabChanged: (value) {
-            if (value == 0) {
-              onLeftTabTap?.call();
-            } else {
-              onRightTabTap?.call();
-            }
-          },
-        ),
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: AppSpacing.s16.w),
+      child: AppDefaultRouteTabs(
+        tabNames: [leftTitle, rightTitle],
+        isScrollable: true,
+        showContent: false,
+
+        onTabChanged: onTabChanged,
+
+        /// Dummy children
+        children: const [SizedBox.shrink(), SizedBox.shrink()],
       ),
     );
   }

@@ -39,6 +39,8 @@ class OrderItemModel extends Equatable {
 
   final List<ItemDeliveryHistoryModel>? itemDeliveryHistory;
 
+  final List<SubscriptionDetailsModel> subscriptionDetails;
+
   const OrderItemModel({
     required this.orderId,
     required this.orderNumber,
@@ -63,6 +65,7 @@ class OrderItemModel extends Equatable {
     this.cancellationReason,
     this.orderType = OrderType.product,
     this.itemDeliveryHistory,
+    this.subscriptionDetails = const [],
   });
 
   /// 🔥 Correct & safe copyWith
@@ -80,6 +83,7 @@ class OrderItemModel extends Equatable {
     int? taxAmount,
     String? deliveryOtp,
     List<ItemDeliveryHistoryModel>? itemDeliveryHistory,
+    List<SubscriptionDetailsModel>? subscriptionDetails,
   }) {
     return OrderItemModel(
       orderId: orderId,
@@ -105,6 +109,7 @@ class OrderItemModel extends Equatable {
       cancellationReason: cancellationReason ?? this.cancellationReason,
       orderType: orderType,
       itemDeliveryHistory: itemDeliveryHistory ?? this.itemDeliveryHistory,
+      subscriptionDetails: subscriptionDetails ?? this.subscriptionDetails,
     );
   }
 
@@ -152,6 +157,12 @@ class OrderItemModel extends Equatable {
             (e) => ItemDeliveryHistoryModel.fromJson(e as Map<String, dynamic>),
           )
           .toList(),
+      subscriptionDetails: json['subscriptionDetails'] is List
+          ? (json['subscriptionDetails'] as List)
+                .whereType<Map<String, dynamic>>()
+                .map((e) => SubscriptionDetailsModel.fromJson(e))
+                .toList()
+          : [],
     );
   }
 
@@ -203,4 +214,116 @@ class ItemDeliveryHistoryModel extends Equatable {
 
   @override
   List<Object?> get props => [toStatus, createdAt, notes];
+}
+
+class SubscriptionDetailsModel {
+  final String id;
+  final String planName;
+  final String planType;
+
+  final int totalCallCredits;
+  final int remainingCallCredits;
+
+  final double pricePaid;
+
+  final String currency;
+  final String status;
+
+  final String startDate;
+  final String? endDate;
+
+  final ClinicModel? clinic;
+  final PetModel? pet;
+
+  const SubscriptionDetailsModel({
+    required this.id,
+    required this.planName,
+    required this.planType,
+    required this.totalCallCredits,
+    required this.remainingCallCredits,
+    required this.pricePaid,
+    required this.currency,
+    required this.status,
+    required this.startDate,
+    this.endDate,
+    this.clinic,
+    this.pet,
+  });
+
+  factory SubscriptionDetailsModel.fromJson(Map<String, dynamic>? json) {
+    if (json == null) {
+      return const SubscriptionDetailsModel(
+        id: '',
+        planName: '',
+        planType: '',
+        totalCallCredits: 0,
+        remainingCallCredits: 0,
+        pricePaid: 0,
+        currency: '',
+        status: '',
+        startDate: '',
+      );
+    }
+
+    return SubscriptionDetailsModel(
+      id: json['id']?.toString() ?? '',
+      planName: json['planName']?.toString() ?? '',
+      planType: json['planType']?.toString() ?? '',
+
+      totalCallCredits: (json['totalCallCredits'] ?? 0) as int,
+      remainingCallCredits: (json['remainingCallCredits'] ?? 0) as int,
+
+      pricePaid: double.tryParse(json['pricePaid']?.toString() ?? '0') ?? 0,
+
+      currency: json['currency']?.toString() ?? '',
+      status: json['status']?.toString() ?? '',
+
+      startDate: json['startDate']?.toString() ?? '',
+      endDate: json['endDate']?.toString(),
+
+      clinic: json['clinic'] is Map<String, dynamic>
+          ? ClinicModel.fromJson(json['clinic'] as Map<String, dynamic>)
+          : null,
+
+      pet: json['pet'] is Map<String, dynamic>
+          ? PetModel.fromJson(json['pet'] as Map<String, dynamic>)
+          : null,
+    );
+  }
+}
+
+class ClinicModel {
+  final String id;
+  final String name;
+
+  const ClinicModel({required this.id, required this.name});
+
+  factory ClinicModel.fromJson(Map<String, dynamic>? json) {
+    if (json == null) {
+      return const ClinicModel(id: '', name: '');
+    }
+
+    return ClinicModel(
+      id: json['id']?.toString() ?? '',
+      name: json['name']?.toString() ?? '',
+    );
+  }
+}
+
+class PetModel {
+  final String id;
+  final String name;
+
+  const PetModel({required this.id, required this.name});
+
+  factory PetModel.fromJson(Map<String, dynamic>? json) {
+    if (json == null) {
+      return const PetModel(id: '', name: '');
+    }
+
+    return PetModel(
+      id: json['id']?.toString() ?? '',
+      name: json['name']?.toString() ?? '',
+    );
+  }
 }

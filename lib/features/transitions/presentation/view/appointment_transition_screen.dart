@@ -5,6 +5,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:lottie/lottie.dart';
 import 'package:poochcare/core/di/service_locator.dart';
 import 'package:poochcare/core/theme/app_icons.dart';
 import 'package:poochcare/core/widgets/buttons/app_button.dart';
@@ -22,7 +23,8 @@ import 'package:poochcare/router/app_router.dart';
 
 @RoutePage()
 class AppointmentTransitionScreen extends StatefulWidget {
-  const AppointmentTransitionScreen({super.key});
+  final String planStatus; // e.g., 'NEW_SUBS', 'UPGRADE_SUBS', 'BOOK_SLOT'.
+  const AppointmentTransitionScreen({required this.planStatus, super.key});
 
   @override
   State<AppointmentTransitionScreen> createState() =>
@@ -50,6 +52,23 @@ class _AppointmentTransitionScreenState
     _imageOpacity = Tween<double>(begin: 0, end: 1).animate(
       CurvedAnimation(parent: _animationController, curve: Curves.easeOut),
     );
+
+    if (widget.planStatus != 'BOOK_SLOT') {
+      _hasScheduledSuccess = true;
+      Future.delayed(const Duration(seconds: 2), () {
+        if (mounted) {
+          setState(() {
+            _isSetupComplete = true;
+          });
+          try {
+            getIt<ClinicBloc>().add(const ResetFindVetForm());
+          } catch (e) {
+            log('Error resetting find vet form: $e');
+          }
+        }
+      });
+      return;
+    }
 
     final bookingData = getIt<AppointmentCubit>().bookingData;
     final FindVetForm? form = context.read<ClinicBloc>().state.findVetForm;
@@ -265,9 +284,11 @@ class _AppointmentTransitionScreenState
                             title: 'One step closer\nto better health',
                             position: const Alignment(-1.0, 0.24),
                             delay: 400,
-                            customContent: const Icon(
-                              Icons.health_and_safety,
-                              color: Colors.orange,
+                            customContent: Lottie.asset(
+                              AppIcons.lottie.appointmentConfirmed,
+                              height: 54,
+                              width: 54,
+                              // repeat: false,
                             ),
                           ),
                           isActive: true,

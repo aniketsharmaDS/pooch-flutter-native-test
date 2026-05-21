@@ -77,9 +77,9 @@ class MyReviewPostsBloc extends PaginationBloc<MySubmittedPostsModel> {
 
   /// ✅ VERY IMPORTANT (avoid memory leak)
   @override
-  Future<void> close() {
-    _busSub.cancel();
-    return super.close();
+  Future<void> close() async {
+    await _busSub.cancel();
+    await super.close();
   }
 
   void fetchInitialPosts({

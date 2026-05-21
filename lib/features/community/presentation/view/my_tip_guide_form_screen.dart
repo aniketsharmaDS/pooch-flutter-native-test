@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:auto_route/auto_route.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -147,8 +148,8 @@ class _MyTipGuideFormScreenState extends State<MyTipGuideFormScreen> {
   Widget build(BuildContext context) {
     return AppPrimaryScreenContainer(
       title: widget.type == MyTipFormType.create
-          ? 'Add a new Tip/Info'
-          : 'Edit a Tip/Info',
+          ? 'community.myTipGuideForm.addTipInfo'.tr()
+          : 'community.myTipGuideForm.editTipInfo'.tr(),
       child: SafeArea(
         child: Column(
           children: [
@@ -175,7 +176,8 @@ class _MyTipGuideFormScreenState extends State<MyTipGuideFormScreen> {
                       child: Column(
                         children: [
                           AppTextField(
-                            label: 'Add Tip/Info title',
+                            label: 'community.myTipGuideForm.addTipInfoTitle'
+                                .tr(),
                             controller: titleController,
                             isMandatory: true,
                             textInputAction: TextInputAction.next,
@@ -185,11 +187,13 @@ class _MyTipGuideFormScreenState extends State<MyTipGuideFormScreen> {
                           AppTextField(
                             floatingFontSize: AppFontSize.fs14,
                             isTextArea: true,
-                            label: 'Add Description',
+                            label: 'community.myTipGuideForm.addDescription'
+                                .tr(),
                             controller: descController,
                             height: 160.h,
                             textInputAction: TextInputAction.newline,
-                            optionalText: 'Optional',
+                            optionalText: 'community.myTipGuideForm.optional'
+                                .tr(),
                             maxCount: 150,
                           ),
                         ],
@@ -199,7 +203,9 @@ class _MyTipGuideFormScreenState extends State<MyTipGuideFormScreen> {
                     AppSpacing.s40.hBox,
 
                     /// CATEGORY
-                    const PrimaryWidgetHeader(title: 'Select Category'),
+                    PrimaryWidgetHeader(
+                      title: 'community.myTipGuideForm.selectCategory'.tr(),
+                    ),
 
                     BlocBuilder<CategoriesBloc, CategoriesState>(
                       builder: (context, state) {
@@ -228,7 +234,9 @@ class _MyTipGuideFormScreenState extends State<MyTipGuideFormScreen> {
                             if (categories.isEmpty) {
                               return const Padding(
                                 padding: EdgeInsets.all(16),
-                                child: Text('No categories found'),
+                                child: Text(
+                                  'community.myTipGuideForm.noCategoriesFound',
+                                ),
                               );
                             }
 
@@ -268,8 +276,9 @@ class _MyTipGuideFormScreenState extends State<MyTipGuideFormScreen> {
                     AppSpacing.s30.hBox,
 
                     /// UPLOAD
-                    const PrimaryWidgetHeader(
-                      title: 'Upload Images or Document',
+                    PrimaryWidgetHeader(
+                      title: 'community.myTipGuideForm.uploadImagesOrDocument'
+                          .tr(),
                     ),
 
                     Padding(
@@ -277,10 +286,10 @@ class _MyTipGuideFormScreenState extends State<MyTipGuideFormScreen> {
                         horizontal: AppSpacing.s16.w,
                       ),
                       child: UploadImageWidget(
-                        buttonText: 'Upload',
-                        customeSupport:
-                            'Upload medical reports, prescriptions and vaccination certificates.',
-                        maxSizeLabel: 'Max 2MB',
+                        buttonText: 'community.myTipGuideForm.upload'.tr(),
+                        customeSupport: 'community.myTipGuideForm.uploadSupport'
+                            .tr(),
+                        maxSizeLabel: 'community.myTipGuideForm.maxSize'.tr(),
                         initialUrls: remoteFiles,
                         onFilesChanged: _onFilesChanged,
                         onRemoteChanged: _onRemoteChanged,
@@ -318,7 +327,8 @@ class _MyTipGuideFormScreenState extends State<MyTipGuideFormScreen> {
                                   children: [
                                     TextSpan(
                                       text:
-                                          'By submitting this tip, you agree to our ',
+                                          'community.myTipGuideForm.termsPrefix'
+                                              .tr(),
                                       style: AppTypography.support.copyWith(
                                         color: AppColors.black,
                                         fontSize: AppFontSize.fs10,
@@ -326,7 +336,8 @@ class _MyTipGuideFormScreenState extends State<MyTipGuideFormScreen> {
                                     ),
                                     TextSpan(
                                       text:
-                                          'Terms & Conditions and Community Guidelines.',
+                                          'community.myTipGuideForm.termsSuffix'
+                                              .tr(),
                                       style: AppTypography.support.copyWith(
                                         color: AppColors.black,
                                         decoration: TextDecoration.underline,
@@ -369,7 +380,7 @@ class _MyTipGuideFormScreenState extends State<MyTipGuideFormScreen> {
                       isLoading: isSubmitting,
                       isDisabled:
                           (!isSubmitEnabled || isDrafting || isSubmitting),
-                      label: 'Submit',
+                      label: 'community.myTipGuideForm.submit'.tr(),
                       onPressed: isSubmitEnabled
                           ? () => _createTip(false)
                           : null,
@@ -383,7 +394,7 @@ class _MyTipGuideFormScreenState extends State<MyTipGuideFormScreen> {
                       isDisabled:
                           (!isDraftEnabled || isSubmitting || isDrafting),
                       variant: AppButtonVariant.outlined,
-                      label: 'Save as Draft',
+                      label: 'community.myTipGuideForm.saveAsDraft'.tr(),
                       onPressed: isDraftEnabled ? () => _createTip(true) : null,
                     ),
                   ],
@@ -488,12 +499,14 @@ class _MyTipGuideFormScreenState extends State<MyTipGuideFormScreen> {
       AppDialog.show(
         icon: Lottie.asset(AppIcons.lottie.successful, repeat: false),
         context: context,
-        title: isDraft ? 'Tip Saved as Draft' : 'Tip Submitted Successfully!',
+        title: isDraft
+            ? 'community.myTipGuideForm.tipSavedAsDraft'.tr()
+            : 'community.myTipGuideForm.tipSubmittedSuccessfully'.tr(),
         content: isDraft
-            ? 'Your Tip has been saved as a draft and will be reviewed when you choose to submit it.'
-            : 'Your Tip will be reviewed by our team and published to the community once approved.',
-        primaryLabel: 'Done',
-        secondaryLabel: 'Close',
+            ? 'community.myTipGuideForm.tipDraftContent'.tr()
+            : 'community.myTipGuideForm.tipSuccessContent'.tr(),
+        primaryLabel: 'community.myTipGuideForm.done'.tr(),
+        secondaryLabel: 'community.myTipGuideForm.close'.tr(),
         onPrimary: () async {
           Navigator.of(context).pop();
           return true;
@@ -508,11 +521,10 @@ class _MyTipGuideFormScreenState extends State<MyTipGuideFormScreen> {
       AppDialog.show(
         icon: Lottie.asset(AppIcons.lottie.successful, repeat: false),
         context: context,
-        title: 'Oops! There was an error.',
-        content:
-            'Your post was not saved successfully. Please retry posting again.',
-        primaryLabel: 'Try Again',
-        secondaryLabel: 'Later',
+        title: 'community.myTipGuideForm.errorTitle'.tr(),
+        content: 'community.myTipGuideForm.tipRetryContent'.tr(),
+        primaryLabel: 'community.myTipGuideForm.tryAgain'.tr(),
+        secondaryLabel: 'community.myTipGuideForm.later'.tr(),
         onPrimary: () async {
           // Navigator.of(context).pop();
           _createTip(isDraft);

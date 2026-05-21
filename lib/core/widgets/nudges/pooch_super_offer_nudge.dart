@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:poochcare/core/theme/app_colors.dart';
+import 'package:poochcare/core/theme/app_font_size.dart';
 import 'package:poochcare/core/theme/app_icons.dart';
 import 'package:poochcare/core/widgets/buttons/app_button.dart';
 import 'package:poochcare/core/widgets/images/app_icon.dart';
@@ -7,8 +9,19 @@ import 'package:poochcare/core/widgets/texts/app_text.dart';
 
 class PoochSuperOfferNudge extends StatelessWidget {
   final VoidCallback? onAdd;
+  final String? discountTitle;
+  final String? discountSubText;
+  final String? price;
+  final String? btnTitle;
 
-  const PoochSuperOfferNudge({super.key, this.onAdd});
+  const PoochSuperOfferNudge({
+    super.key,
+    this.onAdd,
+    this.discountTitle,
+    this.discountSubText,
+    this.price,
+    this.btnTitle,
+  });
 
   @override
   // Widget build(BuildContext context) {
@@ -63,9 +76,12 @@ class PoochSuperOfferNudge extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12.r),
         gradient: const LinearGradient(
-          colors: [Color(0xFFFFBC20), Color(0xFFFFDB88)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            AppColors.gradientPrimaryLightStart,
+            AppColors.gradientPrimaryLightEnd,
+          ],
         ),
       ),
       child: SizedBox(
@@ -123,7 +139,7 @@ class PoochSuperOfferNudge extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   AppText.h1(
-                    'Get 10%',
+                    discountTitle ?? 'Get 10%',
                     style: TextStyle(
                       fontSize: 18.sp,
                       color: const Color(0xFFE7B123),
@@ -132,7 +148,7 @@ class PoochSuperOfferNudge extends StatelessWidget {
                   ),
 
                   AppText.h3(
-                    'On next 5 purchase',
+                    discountSubText ?? 'On next 5 purchases.',
                     style: TextStyle(
                       fontSize: 12.sp,
                       color: const Color(0xFF8C6B15),
@@ -155,16 +171,20 @@ class PoochSuperOfferNudge extends StatelessWidget {
         FittedBox(
           fit: BoxFit.scaleDown,
           child: AppText.h1(
-            'INR 500',
-            style: TextStyle(fontSize: 14.sp, color: const Color(0xFF1B1B1B)),
+            price ?? 'INR 500',
+            style: TextStyle(
+              fontSize: AppFontSize.fs14,
+              color: AppColors.textSecondary,
+            ),
           ),
         ),
         SizedBox(height: 10.h),
         AppButton(
-          label: 'Add',
+          label: btnTitle ?? 'Add',
           onPressed: onAdd,
           size: AppButtonSize.xSmall,
           borderRadius: 8.r,
+          isPill: false,
           padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
         ),
       ],

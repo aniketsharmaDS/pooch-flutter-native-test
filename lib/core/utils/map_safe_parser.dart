@@ -1,4 +1,4 @@
-import 'package:poochcare/core/utils/save_parser_service.dart';
+import 'package:poochcare/core/utils/safe_parser_service.dart';
 
 extension MapSafeParser on Map<String, dynamic>? {
   /// Safely get a String, defaults to empty string

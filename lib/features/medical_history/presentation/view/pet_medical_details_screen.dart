@@ -167,6 +167,9 @@ class _PetMedicalDetailsScreenState extends State<PetMedicalDetailsScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             MedicalHistoryListItemCard(
+              onItemClick: () {
+                // No action on tap in details screen as of now
+              },
               item: MedicalHistoryItem(
                 title: _labelForRecordType(widget.recordType.apiValue),
                 type: _itemTypeForRecordType(widget.recordType.apiValue),

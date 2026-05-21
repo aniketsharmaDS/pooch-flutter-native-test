@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:poochcare/core/theme/app_colors.dart';
+import 'package:poochcare/core/theme/app_font_size.dart';
+import 'package:poochcare/core/theme/app_radius_size.dart';
+import 'package:poochcare/core/theme/app_size.dart';
+import 'package:poochcare/core/theme/app_spacing.dart';
 import 'package:poochcare/core/widgets/texts/app_text.dart';
 
 enum AppInfoTileVariant { text, listing }
@@ -41,10 +46,13 @@ class _AppInfoTileState extends State<AppInfoTile> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 16.h),
+      padding: EdgeInsets.symmetric(
+        horizontal: AppSize.cs14.csw,
+        vertical: AppSize.cs8.csh,
+      ),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(12.r),
+        borderRadius: BorderRadius.circular(AppRadiusSize.r12.rr),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -52,11 +60,10 @@ class _AppInfoTileState extends State<AppInfoTile> {
           /// TITLE
           AppText.h1(
             widget.model.title,
-            color: const Color(0xFF260B01),
-            fontSize: 14.sp,
-            style: const TextStyle(fontWeight: FontWeight.w600),
+            color: AppColors.p4_900,
+            fontSize: AppFontSize.fs16,
           ),
-          SizedBox(height: 12.h),
+          AppSpacing.s6.hBox,
 
           /// DESCRIPTION
           if (widget.model.variant == AppInfoTileVariant.listing)
@@ -67,12 +74,15 @@ class _AppInfoTileState extends State<AppInfoTile> {
                   .where((line) => line.trim().isNotEmpty)
                   .map(
                     (line) => Padding(
-                      padding: EdgeInsets.only(left: 8.h),
+                      padding: EdgeInsets.only(left: AppSize.cs8.csh),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Padding(
-                            padding: EdgeInsets.only(right: 8.w, top: 2.h),
+                            padding: EdgeInsets.only(
+                              right: AppSize.cs8.csw,
+                              top: AppSize.cs2.csh,
+                            ),
                             child: AppText.bodyS(
                               '•',
                               color: const Color(0xFF666667),
@@ -122,7 +132,7 @@ class _AppInfoTileState extends State<AppInfoTile> {
                     height: 1.5,
                   ),
                 ),
-                SizedBox(height: 8.h),
+                AppSpacing.s8.hBox,
                 GestureDetector(
                   onTap: () {
                     setState(() {

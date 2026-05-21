@@ -7,6 +7,7 @@ import 'package:poochcare/features/community/data/models/my_submitted_posts_mode
 import 'package:poochcare/features/community/data/models/paginated_info.dart';
 import 'package:poochcare/features/community/data/models/pet_shelter_api_response.dart';
 import 'package:poochcare/features/community/data/models/pet_shelter_model.dart';
+import 'package:poochcare/features/community/data/models/share_link_response_model.dart';
 import 'package:poochcare/features/community/data/models/tips_category_model.dart';
 
 class CommunityRepository {
@@ -194,6 +195,36 @@ class CommunityRepository {
       }
 
       return PetShelterApiResponse(shelters: shelters, pagination: pagination);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  ///////////////////////
+  // All the Api Repository Related to Category
+  ///////////////////////
+
+  Future<ShareLinkResponseData> getShareLink({
+    required String contentId,
+    required String contentType,
+  }) async {
+    try {
+      final ApiResponse apiResponse = await _api.getShareLink(
+        contentId: contentId,
+        contentType: contentType,
+      );
+      // ✅ Handle API failure
+      if (!apiResponse.success) {
+        throw Exception(apiResponse.message);
+      }
+      // ✅ Ensure correct type
+      if (apiResponse.data is! Map<String, dynamic>) {
+        return const ShareLinkResponseData();
+      }
+      final Map<String, dynamic> data =
+          apiResponse.data as Map<String, dynamic>;
+
+      return ShareLinkResponseDataMapper.fromMap(data);
     } catch (e) {
       rethrow;
     }

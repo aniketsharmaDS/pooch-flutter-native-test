@@ -137,6 +137,7 @@ class AuthStoreBloc extends HydratedBloc<AuthStoreEvent, AuthStoreState> {
       return AuthStoreState(
         user: json['user'] != null
             ? User(
+                hasBoughtPet: json['user']['hasBoughtPet'] as bool,
                 id: json['user']['id'] as String,
                 name: json['user']['name'] as String,
                 email: json['user']['email'] as String?,
@@ -169,6 +170,7 @@ class AuthStoreBloc extends HydratedBloc<AuthStoreEvent, AuthStoreState> {
     return {
       'user': state.user != null
           ? {
+              'hasBoughtPet': state.user?.hasBoughtPet ?? false,
               'id': state.user!.id,
               'name': state.user!.name,
               'email': state.user!.email,

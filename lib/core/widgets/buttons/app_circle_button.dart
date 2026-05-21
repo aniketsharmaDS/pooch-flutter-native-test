@@ -178,7 +178,9 @@ class _AppCircleButtonState extends State<AppCircleButton> {
         ? Colors.grey.shade400
         : widget.iconColor ?? Colors.black;
 
-    final bgColor = isDisabled
+    final bgColor = widget.isLoading
+        ? _getBackgroundColor()
+        : isDisabled
         ? _getBackgroundColor().withValues(alpha: 0.5)
         : _getBackgroundColor();
 

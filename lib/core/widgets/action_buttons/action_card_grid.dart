@@ -75,13 +75,10 @@ class _ActionCardWidgetState extends State<_ActionCardWidget> {
     return AnimatedScale(
       duration: const Duration(milliseconds: 140),
       scale: isPressed ? 0.97 : 1,
-      child: InkWell(
-        onTap: widget.item.onTap,
-        onHighlightChanged: (value) {
-          setState(() => isPressed = value);
-        },
+      child: Material(
+        color: Colors.transparent,
         borderRadius: BorderRadius.circular(AppRadiusSize.r10.rr),
-        child: DecoratedBox(
+        child: Ink(
           decoration: BoxDecoration(
             color: const Color(0xFFFFFEFD),
             borderRadius: BorderRadius.circular(AppRadiusSize.r10.rr),
@@ -93,22 +90,42 @@ class _ActionCardWidgetState extends State<_ActionCardWidget> {
               ),
             ],
           ),
-          child: Padding(
-            padding: EdgeInsets.all(AppSize.cs10.csw),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                AppIcon(widget.item.iconPath, size: AppIconSize.is36.ir),
-                SizedBox(height: AppSpacing.s8.h),
-                Flexible(
-                  child: AppText.h4(
-                    widget.item.title,
-                    color: const Color(0xFF320E02),
-                    textAlign: TextAlign.center,
-                    maxLines: 2,
+          child: InkWell(
+            onTap: widget.item.onTap,
+            onHighlightChanged: (value) {
+              setState(() => isPressed = value);
+            },
+            borderRadius: BorderRadius.circular(AppRadiusSize.r10.rr),
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                color: const Color(0xFFFFFEFD),
+                borderRadius: BorderRadius.circular(AppRadiusSize.r10.rr),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.05),
+                    blurRadius: AppRadiusSize.r8.rr,
+                    offset: const Offset(0, 2),
                   ),
+                ],
+              ),
+              child: Padding(
+                padding: EdgeInsets.all(AppSize.cs10.csw),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    AppIcon(widget.item.iconPath, size: AppIconSize.is36.ir),
+                    SizedBox(height: AppSpacing.s8.h),
+                    Flexible(
+                      child: AppText.h4(
+                        widget.item.title,
+                        color: const Color(0xFF320E02),
+                        textAlign: TextAlign.center,
+                        maxLines: 2,
+                      ),
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
         ),

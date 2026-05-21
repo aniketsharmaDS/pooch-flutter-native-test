@@ -91,9 +91,9 @@ class EventsBloc extends PaginationBloc<EventInfoItemModel> {
 
   /// ✅ VERY IMPORTANT (avoid memory leak)
   @override
-  Future<void> close() {
-    _busSub.cancel();
-    return super.close();
+  Future<void> close() async {
+    await _busSub.cancel();
+    await super.close();
   }
 
   void fetchInitialEvents({

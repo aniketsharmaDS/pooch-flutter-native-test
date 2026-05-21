@@ -1,3 +1,5 @@
+import 'package:fpdart/fpdart.dart';
+import 'package:poochcare/core/errors/failure.dart';
 import 'package:poochcare/features/ecommerce/data/api/cart_api_service.dart';
 import 'package:poochcare/features/ecommerce/data/models/address/address_model.dart';
 import 'package:poochcare/features/ecommerce/data/models/cart/cart_item_model.dart';
@@ -18,7 +20,7 @@ class CartRepositoryImpl implements CartRepository {
   }
 
   @override
-  Future<int> getCartCount() async {
+  Future<Either<Failure, int>> getCartCount() async {
     return await _cartApiService.getCartCount();
   }
 

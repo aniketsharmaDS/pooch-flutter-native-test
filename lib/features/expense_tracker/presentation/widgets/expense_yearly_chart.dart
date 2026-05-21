@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:poochcare/core/theme/app_font_size.dart';
@@ -31,7 +32,7 @@ class ExpenseYearlyChart extends StatelessWidget {
       // crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         AppText.h1(
-          'Monthly Expenses for $year',
+          '${'expense.monthlyExpensesFor'.tr()} $year',
           fontSize: AppFontSize.fs16,
           color: const Color(0xFF3F3C36),
         ),
@@ -83,7 +84,7 @@ class ExpenseYearlyChart extends StatelessWidget {
                     showTitles: true,
                     getTitlesWidget: (value, meta) {
                       return Padding(
-                        padding: EdgeInsets.only(top: 8.h),
+                        padding: EdgeInsets.only(top: 2.h),
                         child: AppText.bodyS(data[value.toInt()].month),
                       );
                     },

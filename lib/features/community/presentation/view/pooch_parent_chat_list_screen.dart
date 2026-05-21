@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:poochcare/core/widgets/list_items/my_chats_list_item_card.dart';
@@ -49,7 +50,7 @@ class _PoochParentChatListScreenState extends State<PoochParentChatListScreen> {
   @override
   Widget build(BuildContext context) {
     return AppPrimaryScreenContainer(
-      title: 'My Chats',
+      title: 'community.poochParentChatListScreen.title'.tr(),
       child: SafeArea(
         child: ListView.builder(
           padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),

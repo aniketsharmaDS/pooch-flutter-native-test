@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:poochcare/core/di/service_locator.dart';
@@ -104,7 +105,11 @@ class _FoundPetDetailsScreenState extends State<FoundPetDetailsScreen> {
                     icon: AppIcons.svg.generic.share,
                     onTap: () => {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Share Event')),
+                        SnackBar(
+                          content: Text(
+                            'community.eventDetails.sharedFrom'.tr(),
+                          ),
+                        ),
                       ),
                     },
                   ),
@@ -143,7 +148,7 @@ class _FoundPetDetailsScreenState extends State<FoundPetDetailsScreen> {
     /// EMPTY
     /// =============================
     if (item == null) {
-      return const Center(child: Text('Pet not found'));
+      return Center(child: Text('community.foundPetDetails.petNotFound'.tr()));
     }
 
     /// =============================
@@ -177,10 +182,19 @@ class _FoundPetDetailsScreenState extends State<FoundPetDetailsScreen> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  AppText.h1('Happy Update!', color: AppColors.p1, maxLines: 1),
+                  AppText.h1(
+                    'community.foundPetDetails.happyUpdate'.tr(),
+                    color: AppColors.p1,
+                    maxLines: 1,
+                  ),
                   AppSpacing.s5.hBox,
                   AppText.h1(
-                    '${item.missingReport?.pet.name} has been safely found by ${item.finder.name} and is now in loving care.',
+                    'community.foundPetDetails.petFoundMessage'.tr(
+                      namedArgs: {
+                        'petName': item.missingReport?.pet.name ?? '',
+                        'finderName': item.finder.name,
+                      },
+                    ),
                     maxLines: 3,
                     color: AppColors.p1_900,
                     fontSize: AppFontSize.fs14,

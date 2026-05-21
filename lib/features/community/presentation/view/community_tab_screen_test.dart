@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:poochcare/core/theme/app_colors.dart';
@@ -35,22 +36,43 @@ class _CommunityTabScreenState extends State<CommunityTabScreen> {
       length: _pages.length,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Community'),
+          title: Text('community.communityTabTest.title'.tr()),
           backgroundColor: AppColors.primarybackground,
           elevation: 0,
-          bottom: const TabBar(
+          bottom: TabBar(
             indicatorColor: AppColors.primary,
             labelColor: AppColors.textPrimary,
             unselectedLabelColor: AppColors.textSecondary,
             isScrollable: true,
             tabs: [
-              Tab(text: 'Discover', icon: Icon(Icons.explore)),
-              Tab(text: 'Tips & Info', icon: Icon(Icons.lightbulb_outline)),
-              Tab(text: 'Events', icon: Icon(Icons.event_note)),
-              Tab(text: 'Missing Pooch', icon: Icon(Icons.pets)),
-              Tab(text: 'Found Pooch', icon: Icon(Icons.search)),
-              Tab(text: 'My Chats', icon: Icon(Icons.chat_bubble_outline)),
-              Tab(text: 'Pet Shelters', icon: Icon(Icons.business)),
+              Tab(
+                text: 'community.communityTabTest.discover'.tr(),
+                icon: const Icon(Icons.explore),
+              ),
+              Tab(
+                text: 'community.communityTabTest.tipsAndInfo'.tr(),
+                icon: const Icon(Icons.lightbulb_outline),
+              ),
+              Tab(
+                text: 'community.communityTabTest.events'.tr(),
+                icon: const Icon(Icons.event_note),
+              ),
+              Tab(
+                text: 'community.communityTabTest.missingPooch'.tr(),
+                icon: const Icon(Icons.pets),
+              ),
+              Tab(
+                text: 'community.communityTabTest.foundPooch'.tr(),
+                icon: const Icon(Icons.search),
+              ),
+              Tab(
+                text: 'community.communityTabTest.myChats'.tr(),
+                icon: const Icon(Icons.chat_bubble_outline),
+              ),
+              Tab(
+                text: 'community.communityTabTest.petShelters'.tr(),
+                icon: const Icon(Icons.business),
+              ),
             ],
           ),
         ),

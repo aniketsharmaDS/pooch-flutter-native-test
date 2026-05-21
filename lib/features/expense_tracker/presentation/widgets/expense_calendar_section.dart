@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:poochcare/core/theme/app_colors.dart';
 import 'package:poochcare/core/theme/app_font_size.dart';
@@ -8,43 +9,25 @@ import 'package:poochcare/core/widgets/texts/app_text.dart';
 class ExpenseCalendarSection extends StatelessWidget {
   const ExpenseCalendarSection({
     super.key,
-    required this.month,
+    required this.monthIndex,
     required this.year,
     required this.highlightedDates,
   });
 
-  final String month;
+  final int monthIndex;
   final int year;
   final List<int> highlightedDates;
 
-  static const List<String> _weekdays = [
-    'Su',
-    'Mo',
-    'Tu',
-    'We',
-    'Th',
-    'Fr',
-    'Sa',
-  ];
-
-  static const monthMap = {
-    'Jan': 1,
-    'Feb': 2,
-    'Mar': 3,
-    'Apr': 4,
-    'May': 5,
-    'Jun': 6,
-    'Jul': 7,
-    'Aug': 8,
-    'Sep': 9,
-    'Oct': 10,
-    'Nov': 11,
-    'Dec': 12,
-  };
-
   @override
   Widget build(BuildContext context) {
-    final monthIndex = monthMap[month] ?? 1;
+    final localeName = context.locale.toString();
+    final monthDate = DateTime(year, monthIndex);
+    final monthLabel = DateFormat.MMM(localeName).format(monthDate);
+
+    final List<String> weekdays = List.generate(7, (index) {
+      final date = DateTime.utc(2020, 1, 5 + index);
+      return DateFormat.E(localeName).format(date);
+    });
 
     final firstDayOfMonth = DateTime(year, monthIndex);
 
@@ -91,7 +74,7 @@ class ExpenseCalendarSection extends StatelessWidget {
         children: [
           /// TITLE
           AppText.h1(
-            'Daily Expenses for $month $year',
+            '${'expense.dailyExpensesFor'.tr()} $monthLabel $year',
             fontSize: AppFontSize.fs16,
             color: const Color(0xFF3F3C36),
           ),
@@ -100,7 +83,7 @@ class ExpenseCalendarSection extends StatelessWidget {
 
           /// WEEKDAYS
           Row(
-            children: _weekdays.map((day) {
+            children: weekdays.map((day) {
               return Expanded(
                 child: Center(
                   child: AppText.bodyM(day, color: const Color(0xFF320E02)),

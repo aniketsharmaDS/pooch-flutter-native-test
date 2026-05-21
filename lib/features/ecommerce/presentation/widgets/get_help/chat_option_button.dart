@@ -20,7 +20,6 @@ class GetHelpOptionButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return AppChip(
       label: text,
-
       isSelected: isSelected,
       selectedBgColor: AppColors.p2_50,
       selectedBorderColor: AppColors.p5_900,
@@ -31,7 +30,6 @@ class GetHelpOptionButton extends StatelessWidget {
       child: AppText.h2(
         text,
         fontSize: AppFontSize.fs12,
-        color: AppColors.textSecondary,
         variant: AppTextVariant.noEllipsis,
       ),
     );

@@ -381,12 +381,19 @@ class _OtpScreenState extends State<OtpScreen> {
     if (!(authState.splashCompleted &&
         authState.introCompleted &&
         authState.isAuthenticated)) {
-      await authStoreBloc.stream.firstWhere(
-        (element) =>
-            element.splashCompleted &&
-            element.introCompleted &&
-            element.isAuthenticated,
-      );
+      await authStoreBloc.stream
+          .firstWhere(
+            (element) =>
+                element.splashCompleted &&
+                element.introCompleted &&
+                element.isAuthenticated,
+          )
+          .timeout(
+            const Duration(seconds: 30),
+            onTimeout: () {
+              return authStoreBloc.state;
+            },
+          );
     }
     if (!mounted) return;
 
@@ -394,10 +401,17 @@ class _OtpScreenState extends State<OtpScreen> {
     userProfileBloc.add(const GetUserProfileEvent());
     userProfileBloc.add(const GetUserPetsEvent());
 
-    await userProfileBloc.stream.firstWhere(
-      (profileState) =>
-          !profileState.isProfileLoading && !profileState.isPetsLoading,
-    );
+    await userProfileBloc.stream
+        .firstWhere(
+          (profileState) =>
+              !profileState.isProfileLoading && !profileState.isPetsLoading,
+        )
+        .timeout(
+          const Duration(seconds: 30),
+          onTimeout: () {
+            return userProfileBloc.state;
+          },
+        );
     if (!mounted) return;
 
     context.router.replaceAll([const HomeRoute()]);

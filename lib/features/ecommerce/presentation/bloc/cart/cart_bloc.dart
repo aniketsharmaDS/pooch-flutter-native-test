@@ -130,6 +130,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
           state.copyWith(
             status: CartStatus.failure,
             errorMessage: failure.message,
+            actionId: state.actionId + 1,
           ),
         );
       },
@@ -202,13 +203,18 @@ class CartBloc extends Bloc<CartEvent, CartState> {
 
     // Optimistic update: remove from UI immediately
     if (state.cartItems != null) {
-      final updatedCartData = state.cartItems
-          ?.where((element) => event.productId != element.productId)
+      final updatedCartItems = (state.cartItems ?? [])
+          .where((element) => event.productId != element.productId)
+          .toList();
+
+      final updatedCartData = (state.cartData?.items ?? [])
+          .where((element) => element.productId != event.productId)
           .toList();
 
       emit(
         state.copyWith(
-          cartItems: updatedCartData,
+          cartData: state.cartData?.copyWith(items: updatedCartData),
+          cartItems: updatedCartItems,
           cartCount: _clampCount(previousCount - 1),
           actionId: state.actionId + 1,
         ),
@@ -224,13 +230,16 @@ class CartBloc extends Bloc<CartEvent, CartState> {
           orderSummary: orderSummary,
           totalItems: orderSummary.items?.length ?? 0,
         );
+        final updatedItems = (state.cartData?.items ?? [])
+            .where((element) => element.id != event.productId)
+            .toList();
 
         emit(
           state.copyWith(
             totalAmount: orderSummary.subTotal ?? 0,
             deliveryFee: orderSummary.deliveryFee ?? 0,
             tax: orderSummary.tax ?? 0,
-            cartData: finalCartData,
+            cartData: finalCartData.copyWith(items: updatedItems),
             cartCount: finalCartData.totalItems ?? 0,
             successMessage: 'Item removed from cart successfully',
             actionId: state.actionId + 1,

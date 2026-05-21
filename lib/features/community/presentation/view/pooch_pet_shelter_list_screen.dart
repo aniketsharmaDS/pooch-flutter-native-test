@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:poochcare/core/di/service_locator.dart';
@@ -65,7 +66,7 @@ class _PoochPetShelterListScreenState extends State<PoochPetShelterListScreen> {
   @override
   Widget build(BuildContext context) {
     return AppPrimaryScreenContainer(
-      title: 'Pet Shelters',
+      title: 'community.poochPetShelterListScreen.title'.tr(),
       child: BlocBuilder<PetShelterBloc, PaginationState<PetShelterModel>>(
         builder: (context, state) {
           return Column(
@@ -86,8 +87,7 @@ class _PoochPetShelterListScreenState extends State<PoochPetShelterListScreen> {
                   hasMore: state.hasMore,
                   hasError: state.errorMessage != null,
                   error:
-                      state.errorMessage ??
-                      'An error occurred while loading data.',
+                      state.errorMessage ?? 'community.loadingDataError'.tr(),
                   onLoadMore: _onLoadMore,
                   onRefresh: _onRefresh,
                   onRetry: () {

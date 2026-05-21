@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:auto_route/auto_route.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:poochcare/core/di/service_locator.dart';
@@ -93,7 +94,7 @@ class _CommunityTabScreenState extends State<CommunityTabScreen> {
               ActionCardGrid(
                 items: [
                   ActionCardItem(
-                    title: 'Community',
+                    title: 'community.communityTabScreen.title'.tr(),
                     iconPath: AppIcons.svg.actions.community,
                     onTap: () {
                       context.router.navigate(
@@ -110,7 +111,7 @@ class _CommunityTabScreenState extends State<CommunityTabScreen> {
                     },
                   ),
                   ActionCardItem(
-                    title: 'Tips & Guides',
+                    title: 'community.communityTabScreen.tipsAndGuides'.tr(),
                     iconPath: AppIcons.svg.actions.tipsGuide,
                     onTap: () {
                       context.router.push(
@@ -126,7 +127,7 @@ class _CommunityTabScreenState extends State<CommunityTabScreen> {
                     },
                   ),
                   ActionCardItem(
-                    title: 'Events',
+                    title: 'community.communityTabScreen.events'.tr(),
                     iconPath: AppIcons.svg.actions.events,
                     onTap: () {
                       context.router.push(
@@ -142,7 +143,7 @@ class _CommunityTabScreenState extends State<CommunityTabScreen> {
                     },
                   ),
                   ActionCardItem(
-                    title: 'Report Missing Pet',
+                    title: 'community.communityTabScreen.reportMissingPet'.tr(),
                     iconPath: AppIcons.svg.actions.reportMissing,
                     onTap: () {
                       context.router.navigate(
@@ -159,7 +160,7 @@ class _CommunityTabScreenState extends State<CommunityTabScreen> {
                     },
                   ),
                   ActionCardItem(
-                    title: 'Report Found Pet',
+                    title: 'community.communityTabScreen.reportFoundPet'.tr(),
                     iconPath: AppIcons.svg.actions.reportFound,
                     onTap: () {
                       context.router.push(
@@ -175,7 +176,7 @@ class _CommunityTabScreenState extends State<CommunityTabScreen> {
                     },
                   ),
                   ActionCardItem(
-                    title: 'Chats',
+                    title: 'community.communityTabScreen.chats'.tr(),
                     iconPath: AppIcons.svg.actions.chat,
                     onTap: () {
                       context.router.push(const PoochParentChatListRoute());
@@ -242,10 +243,11 @@ class _CommunityTabScreenState extends State<CommunityTabScreen> {
               Padding(
                 padding: EdgeInsets.all(AppSpacing.s16.w),
                 child: AppNudgeCard(
-                  cardTitle: 'Report a Lost Pet',
+                  cardTitle: 'community.communityTabScreen.reportALostPet'.tr(),
                   cardDescription:
-                      'Help the community spot your pooch and bring them home safely.',
-                  cardButtonTitle: 'Report Now',
+                      'community.communityTabScreen.reportDescription'.tr(),
+                  cardButtonTitle: 'community.communityTabScreen.reportNow'
+                      .tr(),
                   cardBackgroundImage: AppIcons.png.nudges.reportPetPoochCardBg,
                   cardTextInverse: true,
                   cardAction: () {

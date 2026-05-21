@@ -79,14 +79,14 @@ dependencies:
   flutter_facebook_auth: ^7.1.5
   firebase_crashlytics: ^5.2.0
   fl_chart: ^1.2.0
-  share_plus: ^10.0.0
+  share_plus: ^12.0.2
   url_launcher: ^6.3.0
   collection: ^1.19.1
-  syncfusion_flutter_calendar: ^32.1.23
   calendar_view: ^2.0.0
   http: ^1.6.0
   webview_flutter: ^4.13.1
   flutter_pdfview: ^1.4.4
+  fpdart: ^1.2.0
   easy_localization: ^3.0.8
 
 dev_dependencies:
@@ -140,6 +140,7 @@ flutter:
     - assets/images/png/explore/
     - assets/images/png/register/
     - assets/images/png/transitions/
+    - assets/images/png/bcs/
     - assets/lottie/
     - assets/images/png/verify_biometrics/
     - assets/videos/

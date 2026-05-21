@@ -132,7 +132,7 @@ abstract class PaginationBloc<T>
         filters: filters,
       );
 
-      // if (isClosed) return;
+      if (isClosed) return;
 
       final currentList = state.scopedItems[scope] ?? const [];
 
@@ -161,7 +161,12 @@ abstract class PaginationBloc<T>
         ),
       );
     } catch (e, st) {
-      CrashlyticsService.recordError(e, st);
+      // CrashlyticsService.recordError(e, st);
+      try {
+        CrashlyticsService.recordError(e, st);
+      } catch (_) {
+        // Prevent telemetry failures from breaking UI state updates.
+      }
       String friendlyMessage;
 
       if (e is ApiException) {

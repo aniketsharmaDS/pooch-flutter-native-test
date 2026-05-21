@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:auto_route/auto_route.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
@@ -11,6 +12,7 @@ import 'package:poochcare/core/theme/app_colors.dart';
 import 'package:poochcare/core/theme/app_icon_size.dart';
 import 'package:poochcare/core/theme/app_icons.dart';
 import 'package:poochcare/core/theme/app_spacing.dart';
+import 'package:poochcare/core/utils/share_utils.dart';
 import 'package:poochcare/core/widgets/appbar/pooch_screen_app_bar.dart';
 import 'package:poochcare/core/widgets/bottom_sheet/comment_bottom_sheet/comment_bottom_sheet.dart';
 import 'package:poochcare/core/widgets/buttons/app_button.dart';
@@ -19,7 +21,11 @@ import 'package:poochcare/core/widgets/dialogs/app_dialog.dart';
 import 'package:poochcare/core/widgets/dialogs/community_report_dialog.dart';
 import 'package:poochcare/core/widgets/list_items/tips_info_list_item_card.dart';
 import 'package:poochcare/core/widgets/screen/app_primary_bg_container.dart';
+import 'package:poochcare/features/community/data/models/share_link_response_model.dart';
 import 'package:poochcare/features/community/data/models/tips_info_item_model.dart';
+import 'package:poochcare/features/community/presentation/bloc/community/community_bloc.dart';
+import 'package:poochcare/features/community/presentation/bloc/community/community_event.dart';
+import 'package:poochcare/features/community/presentation/bloc/community/community_state.dart';
 import 'package:poochcare/features/community/presentation/bloc/tips/tips_guide_bloc.dart';
 import 'package:poochcare/features/community/presentation/view/my_tip_guide_form_screen.dart';
 import 'package:poochcare/router/app_router.dart';
@@ -41,6 +47,7 @@ class CommunityTipsGuideDetailsScreen extends StatefulWidget
     return MultiBlocProvider(
       providers: [
         BlocProvider<TipsGuideBloc>.value(value: getIt<TipsGuideBloc>()),
+        BlocProvider<CommunityBloc>(create: (_) => getIt<CommunityBloc>()),
       ],
       child: this,
     );
@@ -106,19 +113,105 @@ class _CommunityTipsGuideDetailsScreenState
                       },
                     ),
                   ],
-                  AppCircleButton(
-                    hitSlop: EdgeInsets.only(right: -AppSpacing.s3.w),
-                    variant: AppCircleButtonVariant.secondary,
-                    bgColor: AppColors.transparent,
-                    iconSize: AppIconSize.is20,
-                    showShadow: false,
-                    icon: AppIcons.svg.generic.share,
-                    onTap: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Share Tip')),
+                  BlocConsumer<CommunityBloc, CommunityDetailsState>(
+                    listenWhen: (previous, current) =>
+                        previous.recordsStatus != current.recordsStatus,
+
+                    listener: (context, state) {
+                      if (state.recordsStatus == CommunityState.success) {
+                        final ShareLinkResponseData? data =
+                            state.shareLinkResponseData;
+
+                        if (data == null) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                'community.tipDetails.failedToGetShareLinkData'
+                                    .tr(),
+                              ),
+                            ),
+                          );
+                          return;
+                        }
+
+                        String title = '';
+                        String shareText = '';
+                        if (data.contentType == 'tip') {
+                          shareText =
+                              '🐾 ${data.title}\n\n'
+                              '${data.description}\n\n'
+                              '${'community.tipDetails.sharedFrom'.tr()}';
+                        } else if (data.contentType == 'event') {
+                          shareText =
+                              '🎉 ${data.title}\n\n'
+                              '${data.description}\n\n'
+                              '📅 ${'community.eventDetails.dateLabel'.tr()} ${data.startDate ?? '-'}\n'
+                              '⏰ ${'community.eventDetails.timeLabel'.tr()} ${data.eventTime ?? '-'}\n'
+                              '📍 ${'community.eventDetails.locationLabel'.tr()} ${data.location ?? '-'}\n'
+                              '📌 ${'community.eventDetails.addressLabel'.tr()} ${data.addressDetails ?? '-'}\n'
+                              '👥 ${'community.eventDetails.attendingLabel'.tr()} ${data.attendanceCount ?? 0}\n'
+                              '${data.isPaid == true ? '💳 ${'community.eventDetails.paidEvent'.tr()}' : '🆓 ${'community.eventDetails.freeEvent'.tr()}'}\n\n'
+                              '${'community.tipDetails.sharedFrom'.tr()}';
+                        }
+
+                        ShareUtils.shareContent(
+                          title: title,
+                          description: shareText,
+                        );
+                      }
+
+                      if (state.recordsStatus == CommunityState.failure) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              state.errorMessage ??
+                                  'community.tipDetails.somethingWentWrong'
+                                      .tr(),
+                            ),
+                          ),
+                        );
+                      }
+                    },
+
+                    builder: (context, state) {
+                      final isLoading =
+                          state.recordsStatus == CommunityState.loading;
+
+                      return AppCircleButton(
+                        hitSlop: EdgeInsets.only(right: -AppSpacing.s3.w),
+                        variant: AppCircleButtonVariant.secondary,
+                        bgColor: AppColors.transparent,
+                        iconSize: AppIconSize.is20,
+                        showShadow: false,
+                        isLoading: isLoading,
+                        icon: AppIcons.svg.generic.share,
+
+                        onTap: isLoading
+                            ? null
+                            : () {
+                                context.read<CommunityBloc>().add(
+                                  FetchShareLinkEvent(
+                                    contentId: widget.tipId,
+                                    contentType: 'tip',
+                                  ),
+                                );
+                              },
                       );
                     },
                   ),
+                  // AppCircleButton(
+                  //   hitSlop: EdgeInsets.only(right: -AppSpacing.s3.w),
+                  //   variant: AppCircleButtonVariant.secondary,
+                  //   bgColor: AppColors.transparent,
+                  //   iconSize: AppIconSize.is20,
+                  //   showShadow: false,
+                  //   icon: AppIcons.svg.generic.share,
+                  //   onTap: () {
+                  //     ScaffoldMessenger.of(context).showSnackBar(
+                  //       const SnackBar(content: Text('Share Tip')),
+                  //     );
+                  //   },
+                  // ),
                 ],
               ),
             ),
@@ -148,7 +241,7 @@ class _CommunityTipsGuideDetailsScreenState
                         child: AppButton(
                           isLoading: isApiExecuting,
                           variant: AppButtonVariant.outlined,
-                          label: 'Delete Post',
+                          label: 'community.tipDetails.deletePost'.tr(),
                           onPressed: () {
                             AppDialog.show(
                               icon: Lottie.asset(
@@ -156,11 +249,12 @@ class _CommunityTipsGuideDetailsScreenState
                                 repeat: false,
                               ),
                               context: context,
-                              title: 'Delete Post?',
-                              content:
-                                  'This action cannot be undone. Are you sure you want to delete this post?',
-                              primaryLabel: 'Cancel',
-                              secondaryLabel: 'Delete',
+                              title: 'community.tipDetails.deletePostPrompt'
+                                  .tr(),
+                              content: 'community.tipDetails.deletePostContent'
+                                  .tr(),
+                              primaryLabel: 'common.cancel'.tr(),
+                              secondaryLabel: 'common.delete'.tr(),
                               onPrimary: () async {
                                 return true;
                               },
@@ -180,7 +274,7 @@ class _CommunityTipsGuideDetailsScreenState
                       Expanded(
                         child: AppButton(
                           isLoading: isApiExecuting,
-                          label: 'Edit Post',
+                          label: 'community.tipDetails.editPost'.tr(),
                           onPressed: () {
                             context.pushRoute(
                               MyTipGuideFormRoute(
@@ -216,7 +310,7 @@ class _CommunityTipsGuideDetailsScreenState
     }
 
     if (item == null) {
-      return const Center(child: Text('Tip not found'));
+      return Center(child: Text('community.tipDetails.tipNotFound'.tr()));
     }
 
     return RefreshIndicator(

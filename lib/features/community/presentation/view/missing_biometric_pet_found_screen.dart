@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:auto_route/auto_route.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:poochcare/core/di/service_locator.dart';
@@ -70,7 +71,8 @@ class _MissingBiometricPetFoundScreenState
         bottomNavigationBar: Padding(
           padding: EdgeInsets.all(12.0.w),
           child: AppButton(
-            label: 'Contact Pet Parent',
+            label: 'community.missingBiometricPetFoundScreen.contactPetParent'
+                .tr(),
             onPressed: () {
               // Will Go to chat screen with pet parent. For now, just show snackbar
               sendMessageToParent();
@@ -103,13 +105,15 @@ class _MissingBiometricPetFoundScreenState
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           AppText.h1(
-                            'It’s Match',
+                            'community.missingBiometricPetFoundScreen.title'
+                                .tr(),
                             color: AppColors.p1,
                             maxLines: 1,
                           ),
                           AppSpacing.s5.hBox,
                           AppText.h1(
-                            'This pooch matches a missing pet profile. Identity verified using biometric markers.',
+                            'community.missingBiometricPetFoundScreen.subtitle'
+                                .tr(),
                             maxLines: 3,
                             color: AppColors.p1_900,
                             fontSize: AppFontSize.fs14,

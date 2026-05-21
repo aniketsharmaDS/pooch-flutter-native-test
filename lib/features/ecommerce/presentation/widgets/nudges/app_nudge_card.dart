@@ -13,8 +13,8 @@ class AppNudgeCard extends StatelessWidget {
   final String cardButtonTitle;
   final String cardBackgroundImage;
   final VoidCallback? cardAction;
-  final bool? cardTextInverse;
-  final bool? cardVariantVet;
+  final bool cardTextInverse;
+  final bool cardVariantVet;
 
   const AppNudgeCard({
     super.key,
@@ -51,7 +51,7 @@ class AppNudgeCard extends StatelessWidget {
       padding: EdgeInsets.only(right: 8.w),
       child: ConstrainedBox(
         constraints: BoxConstraints(
-          maxWidth: cardVariantVet! ? AppSize.cs170.csw : AppSize.cs155.csw,
+          maxWidth: cardVariantVet ? AppSize.cs170.csw : AppSize.cs155.csw,
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -63,7 +63,7 @@ class AppNudgeCard extends StatelessWidget {
               maxLines: 2,
               style: TextStyle(
                 fontSize: AppFontSize.fs16,
-                color: cardTextInverse!
+                color: cardTextInverse
                     ? AppColors.buttonPrimaryText
                     : AppColors.textSecondary,
                 height: 1.1,
@@ -76,7 +76,7 @@ class AppNudgeCard extends StatelessWidget {
               style: TextStyle(
                 height: 1.1,
                 fontSize: AppFontSize.fs11,
-                color: cardTextInverse!
+                color: cardTextInverse
                     ? AppColors.buttonPrimaryText
                     : AppColors.textSecondary,
               ),

@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:poochcare/core/theme/app_colors.dart';
 import 'package:poochcare/core/theme/app_font_size.dart';
@@ -31,7 +32,7 @@ class ExpenseBreakdownSection extends StatelessWidget {
         children: [
           /// TITLE
           AppText.h1(
-            'Expense Breakdown',
+            'expense.expenseBreakdown'.tr(),
             fontSize: AppFontSize.fs14,
             color: const Color(0xFF320E02),
           ),

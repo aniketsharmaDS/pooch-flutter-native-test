@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:poochcare/core/theme/app_colors.dart';
 import 'package:poochcare/core/theme/app_font_size.dart';
@@ -13,7 +14,7 @@ class CommunityHeaderCard extends StatelessWidget {
 
   const CommunityHeaderCard({
     super.key,
-    this.title = 'Happy Update!',
+    this.title = '',
     required this.message,
     this.titleColor,
     this.messageColor,
@@ -33,7 +34,9 @@ class CommunityHeaderCard extends StatelessWidget {
         // crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           AppText.h1(
-            title,
+            title.isEmpty
+                ? 'community.communityHeaderCard.happyUpdate'.tr()
+                : title,
             color: titleColor ?? AppColors.primary,
             style: const TextStyle(fontWeight: FontWeight.w600),
           ),

@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:auto_route/auto_route.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
@@ -135,7 +136,11 @@ class _MissingPetDetailsScreenState extends State<MissingPetDetailsScreen> {
                     icon: AppIcons.svg.generic.share,
                     onTap: () => {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Share Event')),
+                        SnackBar(
+                          content: Text(
+                            'community.eventDetails.sharedFrom'.tr(),
+                          ),
+                        ),
                       ),
                     },
                   ),
@@ -189,7 +194,9 @@ class _MissingPetDetailsScreenState extends State<MissingPetDetailsScreen> {
     /// EMPTY
     /// =============================
     if (item == null) {
-      return const Center(child: Text('Pet not found'));
+      return Center(
+        child: Text('community.missingPetDetails.petNotFound'.tr()),
+      );
     }
 
     /// =============================
@@ -221,7 +228,12 @@ class _MissingPetDetailsScreenState extends State<MissingPetDetailsScreen> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    AppText.h2('Is ${item.pet.name} Home?', maxLines: 2),
+                    AppText.h2(
+                      'community.missingPetDetails.isPetHome'.tr(
+                        namedArgs: {'petName': item.pet.name},
+                      ),
+                      maxLines: 2,
+                    ),
                     AppSpacing.s5.hBox,
                     Row(
                       children: [
@@ -231,7 +243,7 @@ class _MissingPetDetailsScreenState extends State<MissingPetDetailsScreen> {
                             size: AppButtonSize.xSmall,
                             backgroundColor: AppColors.white_50,
                             isDisabled: isDeleting,
-                            label: 'No',
+                            label: 'common.no'.tr(),
                             onPressed: () {
                               context.pushRoute(
                                 PetStillMissingTransitionRoute(
@@ -246,7 +258,7 @@ class _MissingPetDetailsScreenState extends State<MissingPetDetailsScreen> {
                           child: AppButton(
                             size: AppButtonSize.xSmall,
                             isDisabled: isDeleting,
-                            label: 'Yes',
+                            label: 'common.yes'.tr(),
                             onPressed: () {
                               context.pushRoute(
                                 PetIsHomeTransitionRoute(
@@ -317,7 +329,8 @@ class _MissingPetDetailsScreenState extends State<MissingPetDetailsScreen> {
                             variant: AppButtonVariant.outlined,
                             backgroundColor: AppColors.white_50,
                             isLoading: isDeleting,
-                            label: 'Delete Post',
+                            label: 'community.missingPetDetails.deletePost'
+                                .tr(),
                             onPressed: () {
                               AppDialog.show(
                                 icon: Lottie.asset(
@@ -325,11 +338,14 @@ class _MissingPetDetailsScreenState extends State<MissingPetDetailsScreen> {
                                   repeat: false,
                                 ),
                                 context: context,
-                                title: 'Delete Post?',
+                                title:
+                                    'community.missingPetDetails.deletePostPrompt'
+                                        .tr(),
                                 content:
-                                    'This action cannot be undone. Are you sure you want to delete this post?',
-                                primaryLabel: 'Cancel',
-                                secondaryLabel: 'Delete',
+                                    'community.missingPetDetails.deletePostContent'
+                                        .tr(),
+                                primaryLabel: 'common.cancel'.tr(),
+                                secondaryLabel: 'common.delete'.tr(),
                                 onPrimary: () async {
                                   return true;
                                 },
@@ -346,7 +362,7 @@ class _MissingPetDetailsScreenState extends State<MissingPetDetailsScreen> {
                         Expanded(
                           child: AppButton(
                             isDisabled: isDeleting,
-                            label: 'Edit Post',
+                            label: 'community.missingPetDetails.editPost'.tr(),
                             onPressed: () {
                               context.pushRoute(
                                 ReportMissingPetFormRoute(
@@ -374,7 +390,9 @@ class _MissingPetDetailsScreenState extends State<MissingPetDetailsScreen> {
                     Expanded(
                       child: AppButton(
                         isLoading: isDeleting,
-                        label: 'Not Sure, Still Notify Parent',
+                        label:
+                            'community.missingPetDetails.notSureStillNotifyParent'
+                                .tr(),
                         onPressed: () {
                           sendMessageToParent();
                         },
@@ -387,7 +405,8 @@ class _MissingPetDetailsScreenState extends State<MissingPetDetailsScreen> {
                     Expanded(
                       child: AppButton(
                         isLoading: isDeleting,
-                        label: 'Contact Pet Owner',
+                        label: 'community.missingPetDetails.contactPetOwner'
+                            .tr(),
                         onPressed: () {
                           sendMessageToParent();
                         },
@@ -400,7 +419,8 @@ class _MissingPetDetailsScreenState extends State<MissingPetDetailsScreen> {
                     Expanded(
                       child: AppButton(
                         isLoading: isDeleting,
-                        label: 'I Found this Pooch',
+                        label: 'community.missingPetDetails.iFoundThisPooch'
+                            .tr(),
                         onPressed: () {
                           context.pushRoute(
                             MissingVerifyBiometricRoute(
@@ -441,21 +461,21 @@ class _MissingPetDetailsScreenState extends State<MissingPetDetailsScreen> {
 
     if (!resultNote.isCancelled && resultNote.message.trim().isEmpty) {
       CustomSnackbar.show(
-        'please add a note about the pet’s condition or any other relevant info to share with the pet parent',
+        'community.missingPetDetails.addNoteAboutPet'.tr(),
         SnackbarType.info,
       );
       return;
     }
 
     AddressResult? result = await AddressSearchBottomSheet.show(
-      title: 'Select location of the pet',
+      title: 'community.missingPetDetails.selectLocationOfThePet'.tr(),
       // ignore: use_build_context_synchronously
       context: context,
     );
 
     if (result == null) {
       CustomSnackbar.show(
-        'Please select an address where the found pet was located',
+        'community.missingPetDetails.selectAddressWherePetWasLocated'.tr(),
         SnackbarType.info,
       );
       return;

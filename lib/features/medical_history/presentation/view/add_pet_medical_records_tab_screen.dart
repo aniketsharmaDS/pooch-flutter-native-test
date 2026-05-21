@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,7 +16,8 @@ import 'package:poochcare/features/user_profile/presentation/bloc/user_profile_e
 
 @RoutePage()
 class AddPetMedicalRecordsTabScreen extends StatefulWidget {
-  const AddPetMedicalRecordsTabScreen({super.key});
+  final int initialTabIndex;
+  const AddPetMedicalRecordsTabScreen({super.key, this.initialTabIndex = 0});
 
   @override
   State<AddPetMedicalRecordsTabScreen> createState() =>
@@ -22,7 +25,8 @@ class AddPetMedicalRecordsTabScreen extends StatefulWidget {
 }
 
 class _AddPetMedicalRecordsTabScreenState
-    extends State<AddPetMedicalRecordsTabScreen> {
+    extends State<AddPetMedicalRecordsTabScreen>
+    with TickerProviderStateMixin {
   late final UserProfileBloc _userProfileBloc;
   late final MedicalHistoryFormBloc _medicalHistoryFormBloc;
   final ValueNotifier<String?> _selectedPetNotifier = ValueNotifier<String?>(
@@ -55,6 +59,8 @@ class _AddPetMedicalRecordsTabScreenState
 
   @override
   Widget build(BuildContext context) {
+    final screenHeigh = MediaQuery.sizeOf(context).height;
+    log('HomeScreen rebuilt $screenHeigh');
     return MultiBlocProvider(
       providers: [
         BlocProvider<UserProfileBloc>.value(value: _userProfileBloc),
@@ -98,6 +104,7 @@ class _AddPetMedicalRecordsTabScreenState
               children: [
                 Expanded(
                   child: AppDefaultRouteTabs(
+                    initialIndex: widget.initialTabIndex,
                     isScrollable: true,
                     tabNames: tabNames,
                     children: tabNames

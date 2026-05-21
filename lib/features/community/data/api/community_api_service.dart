@@ -121,4 +121,27 @@ class CommunityApiService {
       rethrow;
     }
   }
+
+  /// Fetch tips/guides with pagination, search, and category filtering
+  /// @param page: Current page number (1-indexed)
+  /// @param search: Search query for title/description
+  /// @param categoryId: Filter by category ID (null for all categories)
+  /// @param upcoming: Filter by upcoming events (null for all events)
+  Future<ApiResponse> getShareLink({
+    required String contentId,
+    required String contentType,
+  }) async {
+    try {
+      final Response<dynamic> response = await _dio.get<dynamic>(
+        '/share/$contentType/$contentId',
+      );
+      if (response.data is Map<String, dynamic>) {
+        return ApiResponseMapper.fromMap(response.data as Map<String, dynamic>);
+      }
+
+      return const ApiResponse(message: 'Invalid response format');
+    } catch (e) {
+      return ApiResponse(message: e.toString());
+    }
+  }
 }

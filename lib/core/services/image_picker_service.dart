@@ -238,10 +238,25 @@ class ImagePickerService {
 
     if (status.isGranted) return true;
 
+    // 🔴 CASE 1: first-time denial → ask again
     if (status.isDenied) {
       final result = await permission.request();
-
       return result.isGranted;
+    }
+
+    // 🔴 CASE 2: permanently denied → send user to settings
+    if (status.isPermanentlyDenied) {
+      CustomSnackbar.show(
+        'Permission permanently denied. Please enable it from settings.',
+        SnackbarType.error,
+      );
+      await openAppSettings(); // from permission_handler
+      return false;
+    }
+
+    // 🔴 CASE 3: restricted (iOS parental / system restriction)
+    if (status.isRestricted) {
+      return false;
     }
 
     return false;

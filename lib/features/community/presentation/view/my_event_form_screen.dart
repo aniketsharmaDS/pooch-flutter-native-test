@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:auto_route/auto_route.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -236,8 +237,8 @@ class _MyEventFormScreenState extends State<MyEventFormScreen> {
   Widget build(BuildContext context) {
     return AppPrimaryScreenContainer(
       title: widget.type == MyEventFormType.create
-          ? 'Add a new Event'
-          : 'Edit a Event',
+          ? 'community.myEventForm.addEvent'.tr()
+          : 'community.myEventForm.editEvent'.tr(),
       child: SafeArea(
         child: Column(
           children: [
@@ -264,7 +265,7 @@ class _MyEventFormScreenState extends State<MyEventFormScreen> {
                       child: Column(
                         children: [
                           AppTextField(
-                            label: 'Add event title',
+                            label: 'community.myEventForm.addEventTitle'.tr(),
                             controller: titleController,
                             isMandatory: true,
                             textInputAction: TextInputAction.next,
@@ -274,16 +275,16 @@ class _MyEventFormScreenState extends State<MyEventFormScreen> {
                           AppTextField(
                             floatingFontSize: AppFontSize.fs14,
                             isTextArea: true,
-                            label: 'Add Description',
+                            label: 'community.myEventForm.addDescription'.tr(),
                             controller: descController,
                             height: 160.h,
                             textInputAction: TextInputAction.newline,
-                            optionalText: 'Optional',
+                            optionalText: 'community.myEventForm.optional'.tr(),
                             maxCount: 150,
                           ),
                           AppSpacing.s20.hBox,
                           AppTextField(
-                            label: 'Select date',
+                            label: 'community.myEventForm.selectDate'.tr(),
                             controller: _startDateController,
                             isReadOnly: true,
                             isMandatory: true,
@@ -325,7 +326,7 @@ class _MyEventFormScreenState extends State<MyEventFormScreen> {
                           // ),
                           AppSpacing.s20.hBox,
                           AppTextField(
-                            label: 'Select time',
+                            label: 'community.myEventForm.selectTime'.tr(),
                             enabled:
                                 eventStartDate !=
                                 null, // time can only be picked after date
@@ -350,14 +351,14 @@ class _MyEventFormScreenState extends State<MyEventFormScreen> {
                           ),
                           AppSpacing.s20.hBox,
                           AppTextField(
-                            label: 'Add Address',
+                            label: 'community.myEventForm.addAddress'.tr(),
                             controller: locationController,
                             isMandatory: true,
                             textInputAction: TextInputAction.next,
                           ),
                           AppSpacing.s20.hBox,
                           AppTextField(
-                            label: 'Add location',
+                            label: 'community.myEventForm.addLocation'.tr(),
                             controller: addressController,
                             isReadOnly: true,
                             isMandatory: true,
@@ -374,7 +375,9 @@ class _MyEventFormScreenState extends State<MyEventFormScreen> {
                     AppSpacing.s40.hBox,
 
                     /// CATEGORY
-                    const PrimaryWidgetHeader(title: 'Select Category'),
+                    PrimaryWidgetHeader(
+                      title: 'community.myEventForm.selectCategory'.tr(),
+                    ),
 
                     BlocBuilder<CategoriesBloc, CategoriesState>(
                       builder: (context, state) {
@@ -403,7 +406,9 @@ class _MyEventFormScreenState extends State<MyEventFormScreen> {
                             if (categories.isEmpty) {
                               return const Padding(
                                 padding: EdgeInsets.all(16),
-                                child: Text('No categories found'),
+                                child: Text(
+                                  'community.myEventForm.noCategoriesFound',
+                                ),
                               );
                             }
 
@@ -443,8 +448,9 @@ class _MyEventFormScreenState extends State<MyEventFormScreen> {
                     AppSpacing.s30.hBox,
 
                     /// UPLOAD
-                    const PrimaryWidgetHeader(
-                      title: 'Upload Images or Document',
+                    PrimaryWidgetHeader(
+                      title: 'community.myEventForm.uploadImagesOrDocument'
+                          .tr(),
                     ),
 
                     Padding(
@@ -452,10 +458,10 @@ class _MyEventFormScreenState extends State<MyEventFormScreen> {
                         horizontal: AppSpacing.s16.w,
                       ),
                       child: UploadImageWidget(
-                        buttonText: 'Upload',
-                        customeSupport:
-                            'Upload medical reports, prescriptions and vaccination certificates.',
-                        maxSizeLabel: 'Max 2MB',
+                        buttonText: 'community.myEventForm.upload'.tr(),
+                        customeSupport: 'community.myEventForm.uploadSupport'
+                            .tr(),
+                        maxSizeLabel: 'community.myEventForm.maxSize'.tr(),
                         initialUrls: remoteFiles,
                         onFilesChanged: _onFilesChanged,
                         onRemoteChanged: _onRemoteChanged,
@@ -489,16 +495,16 @@ class _MyEventFormScreenState extends State<MyEventFormScreen> {
                                 text: TextSpan(
                                   children: [
                                     TextSpan(
-                                      text:
-                                          'By submitting this tip, you agree to our ',
+                                      text: 'community.myEventForm.termsPrefix'
+                                          .tr(),
                                       style: AppTypography.support.copyWith(
                                         color: AppColors.black,
                                         fontSize: AppFontSize.fs10,
                                       ),
                                     ),
                                     TextSpan(
-                                      text:
-                                          'Terms & Conditions and Community Guidelines.',
+                                      text: 'community.myEventForm.termsSuffix'
+                                          .tr(),
                                       style: AppTypography.support.copyWith(
                                         color: AppColors.black,
                                         decoration: TextDecoration.underline,
@@ -539,7 +545,7 @@ class _MyEventFormScreenState extends State<MyEventFormScreen> {
                     /// SUBMIT
                     AppButton(
                       isLoading: isSubmitting,
-                      label: 'Submit',
+                      label: 'community.myEventForm.submit'.tr(),
                       onPressed: isSubmitEnabled
                           ? () => _createEvent(false)
                           : null,
@@ -753,13 +759,13 @@ class _MyEventFormScreenState extends State<MyEventFormScreen> {
         icon: Lottie.asset(AppIcons.lottie.successful, repeat: false),
         context: context,
         title: isDraft
-            ? 'Event Saved as Draft'
-            : 'Event Submitted Successfully!',
+            ? 'community.myEventForm.eventSavedAsDraft'.tr()
+            : 'community.myEventForm.eventSubmittedSuccessfully'.tr(),
         content: isDraft
-            ? 'Your Event has been saved as a draft and will be reviewed when you choose to submit it.'
-            : 'Your Event will be reviewed by our team and published to the community once approved.',
-        primaryLabel: 'Done',
-        secondaryLabel: 'Close',
+            ? 'community.myEventForm.eventDraftContent'.tr()
+            : 'community.myEventForm.eventSuccessContent'.tr(),
+        primaryLabel: 'community.myEventForm.done'.tr(),
+        secondaryLabel: 'community.myEventForm.close'.tr(),
         onPrimary: () async {
           Navigator.of(context).pop();
           return true;
@@ -774,11 +780,10 @@ class _MyEventFormScreenState extends State<MyEventFormScreen> {
       AppDialog.show(
         icon: Lottie.asset(AppIcons.lottie.successful, repeat: false),
         context: context,
-        title: 'Oops! There was an error.',
-        content:
-            'Your event was not saved successfully. Please retry posting again.',
-        primaryLabel: 'Try Again',
-        secondaryLabel: 'Later',
+        title: 'community.myEventForm.errorTitle'.tr(),
+        content: 'community.myEventForm.eventRetryContent'.tr(),
+        primaryLabel: 'community.myEventForm.tryAgain'.tr(),
+        secondaryLabel: 'community.myEventForm.later'.tr(),
         onPrimary: () async {
           // Navigator.of(context).pop();
           _createEvent(isDraft);

@@ -7,6 +7,8 @@ import 'package:poochcare/core/theme/app_icons.dart';
 import 'package:poochcare/core/theme/app_spacing.dart';
 import 'package:poochcare/features/ecommerce/presentation/bloc/buy_pet_landing/buy_pet_landing_bloc.dart';
 import 'package:poochcare/features/ecommerce/presentation/bloc/buy_pet_landing/buy_pet_landing_state.dart';
+import 'package:poochcare/features/ecommerce/presentation/bloc/cart/cart_bloc.dart';
+import 'package:poochcare/features/ecommerce/presentation/bloc/cart/cart_event.dart';
 import 'package:poochcare/features/ecommerce/presentation/view/buy_pet/common_pet_listing_screen.dart';
 import 'package:poochcare/features/ecommerce/presentation/widgets/buy_pet/common_pet_section.dart';
 import 'package:poochcare/features/ecommerce/presentation/widgets/buy_pet/most_popular_section.dart';
@@ -36,6 +38,7 @@ class _BuyPetLandingScreenState extends State<BuyPetLandingScreen> {
 
     // load full landing data
     context.read<BuyPetLandingBloc>().add(const FetchLandingData());
+    getIt<CartBloc>().add(const FetchCartCountEvent());
   }
 
   @override
@@ -59,14 +62,14 @@ class _BuyPetLandingScreenState extends State<BuyPetLandingScreen> {
                 await Future<void>.delayed(const Duration(milliseconds: 500));
               },
               child: Padding(
-                padding: EdgeInsets.symmetric(vertical: AppSpacing.s20.h),
+                padding: EdgeInsets.symmetric(vertical: AppSpacing.s10.h),
                 child: ListView(
                   physics: const AlwaysScrollableScrollPhysics(),
                   children: [
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        AppSpacing.s10.hBox,
+                        // AppSpacing.s10.hBox,
                         Padding(
                           padding: EdgeInsets.symmetric(
                             horizontal: AppSpacing.s16.w,
@@ -146,7 +149,9 @@ class _BuyPetLandingScreenState extends State<BuyPetLandingScreen> {
                             cardButtonTitle: 'Join Now',
                             cardBackgroundImage:
                                 AppIcons.png.nudges.joinPoochCommunityCardBg,
-                            cardAction: () {},
+                            cardAction: () {
+                              context.router.push(const CommunityTabRoute());
+                            },
                           ),
                         ),
                         if (state.isLoading ||

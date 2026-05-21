@@ -7,6 +7,7 @@ import 'package:poochcare/features/insight/data/models/clinic_list_response_mode
 import 'package:poochcare/features/insight/data/models/clinic_subs_plans_response_model.dart';
 import 'package:poochcare/features/insight/data/models/clinic_subs_preview_response_model.dart';
 import 'package:poochcare/features/insight/data/models/subscribed_clinics_response_model.dart';
+import 'package:poochcare/features/insight/data/models/symptom_response.dart';
 
 class ClinicsRepository {
   ClinicsRepository(this._api);
@@ -143,5 +144,10 @@ class ClinicsRepository {
       findPayload: findPayload,
     );
     _appointmentsCache = null;
+  }
+
+  /// Get all symptoms
+  Future<SymptomResponse> getSymptoms() {
+    return _api.getSymptoms();
   }
 }
